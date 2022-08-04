@@ -26,14 +26,15 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Net.Http;
+using Microsoft.Extensions.Hosting;
 
 namespace Gov.Cscp.Victims.Public
 {
     public class Startup
     {
         public IConfiguration Configuration { get; }
-        private IHostingEnvironment CurrentEnvironment { get; set; }
-        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        private IWebHostEnvironment CurrentEnvironment { get; set; }
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
             CurrentEnvironment = env;
@@ -54,10 +55,10 @@ namespace Gov.Cscp.Victims.Public
             services.AddHttpClient<IDocumentMergeService, DocumentMergeService>().AddHttpMessageHandler<KeycloakHandler>();
 
             services.AddMemoryCache();
-
             // for security reasons, the following headers are set.
             services.AddMvc(opts =>
             {
+                opts.EnableEndpointRouting = false;
                 // default deny
                 var policy = new AuthorizationPolicyBuilder()
                  .RequireAuthenticatedUser()
@@ -80,8 +81,8 @@ namespace Gov.Cscp.Victims.Public
                 }
 
             })
-            .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-            .AddJsonOptions(
+            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+            .AddNewtonsoftJson(
                     opts =>
                     {
                         opts.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
@@ -90,6 +91,8 @@ namespace Gov.Cscp.Victims.Public
 
                         // ReferenceLoopHandling is set to Ignore to prevent JSON parser issues with the user / roles model.
                         opts.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+
+                        //opts.PayloadSerializerOptions.WriteIndented = true;
                     });
 
             // setup siteminder authentication (core 2.0)
@@ -142,7 +145,7 @@ namespace Gov.Cscp.Victims.Public
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             var log = loggerFactory.CreateLogger("Startup");
 
@@ -225,7 +228,6 @@ namespace Gov.Cscp.Victims.Public
                 Secure = CookieSecurePolicy.Always,
                 MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.None
             });
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

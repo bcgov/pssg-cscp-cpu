@@ -243,7 +243,7 @@ namespace Gov.Cscp.Victims.Public.Authentication
             {
                 ClaimsPrincipal principal;
                 HttpContext context = Request.HttpContext;
-                IHostingEnvironment hostingEnv = (IHostingEnvironment)context.RequestServices.GetService(typeof(IHostingEnvironment));
+                IWebHostEnvironment hostingEnv = (IWebHostEnvironment)context.RequestServices.GetService(typeof(IWebHostEnvironment));
 
                 UserSettings userSettings = new UserSettings();
 
