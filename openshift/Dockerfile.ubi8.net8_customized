@@ -86,6 +86,7 @@ RUN INSTALL_PKGS="python38 python38-devel python38-setuptools python38-pip  \
 # yum cache files may still exist (and quite large in size)
     rm -rf /var/cache/yum/*	
 	
+
 #RUN mkdir /opt/app-root/src
 WORKDIR /opt/app-root/src
 RUN npm config list
