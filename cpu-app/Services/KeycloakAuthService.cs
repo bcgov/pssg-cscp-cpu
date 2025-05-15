@@ -1,9 +1,9 @@
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 
 namespace Gov.Cscp.Victims.Public.Services
 {
@@ -22,7 +22,9 @@ namespace Gov.Cscp.Victims.Public.Services
         public KeycloakAuthService(IConfiguration configuration, HttpClient httpClient)
         {
             _client = httpClient;
-            _client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+            _client.DefaultRequestHeaders.Accept.Add(
+                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded")
+            );
             _configuration = configuration;
             _accessTokenExpiration = DateTime.Now;
             _token = "";
@@ -39,10 +41,12 @@ namespace Gov.Cscp.Victims.Public.Services
                     string grantType = _configuration["KEYCLOAK_GRANT_TYPE"];
                     string clientSecret = _configuration["KEYCLOAK_CLIENT_SECRET"];
 
-                    if (!string.IsNullOrEmpty(authUrl) &&
-                        !string.IsNullOrEmpty(clientId) &&
-                        !string.IsNullOrEmpty(grantType) &&
-                        !string.IsNullOrEmpty(clientSecret))
+                    if (
+                        !string.IsNullOrEmpty(authUrl)
+                        && !string.IsNullOrEmpty(clientId)
+                        && !string.IsNullOrEmpty(grantType)
+                        && !string.IsNullOrEmpty(clientSecret)
+                    )
                     {
                         var pairs = new List<KeyValuePair<string, string>>
                         {
@@ -52,19 +56,30 @@ namespace Gov.Cscp.Victims.Public.Services
                         };
 
                         var content = new FormUrlEncodedContent(pairs);
-                        _client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+                        _client.DefaultRequestHeaders.Accept.Add(
+                            new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(
+                                "application/x-www-form-urlencoded"
+                            )
+                        );
                         var _httpResponse = await _client.PostAsync(authUrl, content);
                         var _responseContent = await _httpResponse.Content.ReadAsStringAsync();
 
-                        JObject response = JObject.Parse(_httpResponse.Content.ReadAsStringAsync().GetAwaiter().GetResult());
+                        JObject response = JObject.Parse(
+                            _httpResponse.Content.ReadAsStringAsync().GetAwaiter().GetResult()
+                        );
                         string token = response.GetValue("access_token").ToString();
                         int expirationSeconds;
-                        bool secondsParsed = int.TryParse(response.GetValue("expires_in").ToString(), out expirationSeconds);
+                        bool secondsParsed = int.TryParse(
+                            response.GetValue("expires_in").ToString(),
+                            out expirationSeconds
+                        );
 
                         if (!secondsParsed)
                         {
                             expirationSeconds = 300;
-                            throw new Exception("The expiration seconds were not parsed so a default of one hour is used.");
+                            throw new Exception(
+                                "The expiration seconds were not parsed so a default of one hour is used."
+                            );
                         }
                         if (token == null)
                         {
