@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
+using Serilog;
 
 namespace Gov.Cscp.Victims.Public.Services
 {
@@ -18,6 +19,7 @@ namespace Gov.Cscp.Victims.Public.Services
         private IConfiguration _configuration;
         private DateTime _accessTokenExpiration;
         private string _token;
+        private readonly ILogger _logger;
 
         public KeycloakAuthService(IConfiguration configuration, HttpClient httpClient)
         {
@@ -28,12 +30,17 @@ namespace Gov.Cscp.Victims.Public.Services
             _configuration = configuration;
             _accessTokenExpiration = DateTime.Now;
             _token = "";
+            _logger = Log.Logger;
         }
 
         public async Task<string> GetToken()
         {
-            if (DateTime.Now.CompareTo(_accessTokenExpiration) > 0)
+            _logger.Debug("GetToken called. Now={Now}, Expiration={Expiration}", DateTime.Now, _accessTokenExpiration);
+
+            if (DateTime.Now > _accessTokenExpiration)
             {
+                _logger.Debug("Token expired or missing—acquiring new token.");
+
                 try
                 {
                     string authUrl = _configuration["KEYCLOAK_URL"];
@@ -41,71 +48,78 @@ namespace Gov.Cscp.Victims.Public.Services
                     string grantType = _configuration["KEYCLOAK_GRANT_TYPE"];
                     string clientSecret = _configuration["KEYCLOAK_CLIENT_SECRET"];
 
+                    _logger.Debug(
+                        "Config values: Url={Url}, ClientId={ClientId}, GrantType={GrantType}",
+                        authUrl,
+                        clientId,
+                        grantType
+                    );
+
                     if (
-                        !string.IsNullOrEmpty(authUrl)
-                        && !string.IsNullOrEmpty(clientId)
-                        && !string.IsNullOrEmpty(grantType)
-                        && !string.IsNullOrEmpty(clientSecret)
+                        string.IsNullOrEmpty(authUrl)
+                        || string.IsNullOrEmpty(clientId)
+                        || string.IsNullOrEmpty(grantType)
+                        || string.IsNullOrEmpty(clientSecret)
                     )
-                    {
-                        var pairs = new List<KeyValuePair<string, string>>
-                        {
-                            new KeyValuePair<string, string>("client_id", clientId),
-                            new KeyValuePair<string, string>("grant_type", grantType),
-                            new KeyValuePair<string, string>("client_secret", clientSecret),
-                        };
-
-                        var content = new FormUrlEncodedContent(pairs);
-                        _client.DefaultRequestHeaders.Accept.Add(
-                            new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(
-                                "application/x-www-form-urlencoded"
-                            )
-                        );
-                        var _httpResponse = await _client.PostAsync(authUrl, content);
-                        var _responseContent = await _httpResponse.Content.ReadAsStringAsync();
-
-                        JObject response = JObject.Parse(
-                            _httpResponse.Content.ReadAsStringAsync().GetAwaiter().GetResult()
-                        );
-                        string token = response.GetValue("access_token").ToString();
-                        int expirationSeconds;
-                        bool secondsParsed = int.TryParse(
-                            response.GetValue("expires_in").ToString(),
-                            out expirationSeconds
-                        );
-
-                        if (!secondsParsed)
-                        {
-                            expirationSeconds = 300;
-                            throw new Exception(
-                                "The expiration seconds were not parsed so a default of one hour is used."
-                            );
-                        }
-                        if (token == null)
-                        {
-                            //token problem
-                            return "";
-                            throw new Exception("The token couldn't be parsed.");
-                        }
-
-                        // set global access token expiry time to the value returned subtract 60 seconds for minute long authentication communication delays
-                        this._accessTokenExpiration = DateTime.Now.AddSeconds(expirationSeconds - 60);
-                        this._token = token;
-                        return token;
-                    }
-                    else
                     {
                         throw new Exception("Keycloak URL, client ID, grant type, or client secret is not configured.");
                     }
+
+                    var pairs = new List<KeyValuePair<string, string>>
+                    {
+                        new("client_id", clientId),
+                        new("grant_type", grantType),
+                        new("client_secret", clientSecret),
+                    };
+
+                    var content = new FormUrlEncodedContent(pairs);
+                    _logger.Debug("Sending POST to {Url} with form data.", authUrl);
+
+                    var response = await _client.PostAsync(authUrl, content);
+                    var responseContent = await response.Content.ReadAsStringAsync();
+
+                    _logger.Debug(
+                        "Received HTTP {StatusCode}. Response content (truncated)={Content}",
+                        response.StatusCode,
+                        responseContent.Length > 200 ? responseContent.Substring(0, 200) + "…" : responseContent
+                    );
+
+                    var json = JObject.Parse(responseContent);
+                    string token = json.Value<string>("access_token");
+                    _logger.Debug(
+                        "Parsed access_token (first 10 chars)={TokenStart}…",
+                        token?.Substring(0, Math.Min(10, token.Length))
+                    );
+
+                    if (token == null)
+                        throw new Exception("Keycloak token is null.");
+
+                    if (!int.TryParse(json.Value<string>("expires_in"), out int expirationSeconds))
+                    {
+                        _logger.Debug("Failed to parse expires_in—using default 300s.");
+                        expirationSeconds = 300;
+                    }
+                    _logger.Debug(
+                        "Token expires in {Seconds}s; setting expiration to now + {SecondsMinusBuffer}s.",
+                        expirationSeconds,
+                        expirationSeconds - 60
+                    );
+
+                    _accessTokenExpiration = DateTime.Now.AddSeconds(expirationSeconds - 60);
+                    _token = token;
+
+                    return token;
                 }
                 catch (Exception e)
                 {
-                    throw e;
+                    _logger.Error(e, "Error occurred while acquiring Keycloak token.");
+                    throw;
                 }
             }
             else
             {
-                return this._token;
+                _logger.Debug("Returning cached token; valid until {Expiration}.", _accessTokenExpiration);
+                return _token;
             }
         }
     }
