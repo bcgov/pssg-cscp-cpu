@@ -95,13 +95,11 @@ namespace Gov.Cscp.Victims.Public.Services
                     }
                     else
                     {
-                        return "error";
-                        throw new Exception("No configured connection to Dynamics.");
+                        throw new Exception("Keycloak URL, client ID, grant type, or client secret is not configured.");
                     }
                 }
                 catch (Exception e)
                 {
-                    return "error";
                     throw e;
                 }
             }
