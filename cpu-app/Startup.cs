@@ -306,6 +306,9 @@ namespace Gov.Cscp.Victims.Public
 
 
                 Log.Logger = new LoggerConfiguration()
+                    .MinimumLevel.Debug()
+                    .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Information)
+                    .MinimumLevel.Override("System",   Serilog.Events.LogEventLevel.Information)
                     .Enrich.FromLogContext()
                     .Enrich.WithExceptionDetails()
                     .WriteTo.Console()
