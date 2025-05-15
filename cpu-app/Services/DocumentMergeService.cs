@@ -1,12 +1,9 @@
-using System;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using Gov.Cscp.Victims.Public.Models;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Net.Http;
+using System.Net;
+using System.Threading.Tasks;
+using System;
 using Serilog;
 
 namespace Gov.Cscp.Victims.Public.Services
@@ -44,82 +41,30 @@ namespace Gov.Cscp.Victims.Public.Services
 
         private async Task<HttpClientResult> DocumentMerge(HttpMethod method, string requestJson)
         {
-            // 1) Read endpoint and IDs
-            var endpointUrl = _configuration["JAG_DOCUMENT_MERGE_URL"];
-            var correlationId = _configuration["JAG_CORRELATION_ID"];
-            var clientId = _configuration["JAG_CLIENT_ID"];
+            string endpointUrl = _configuration["JAG_DOCUMENT_MERGE_URL"];
 
-            _logger.Debug("DocumentMerge called with method={Method} endpoint={Endpoint}", method, endpointUrl);
-            _logger.Debug("Request JSON: {RequestJson}", requestJson);
+            // Console.WriteLine(endpointUrl);
+            // Console.WriteLine(requestJson);
 
-            // 2) Build request
-            var request = new HttpRequestMessage(method, endpointUrl)
-            {
-                Content = new StringContent(requestJson, Encoding.UTF8, "application/json")
-            };
-            request.Headers.Add("X-Correlation-ID", correlationId);
-            request.Headers.Add("X-Client-ID", clientId);
+            HttpRequestMessage _httpRequest = new HttpRequestMessage(method, endpointUrl);
+            _httpRequest.Headers.Add("X-Correlation-ID", _configuration["JAG_CORRELATION_ID"]);
+            _httpRequest.Headers.Add("X-Client-ID", _configuration["JAG_CLIENT_ID"]);
+            _httpRequest.Content = new StringContent(requestJson, System.Text.Encoding.UTF8, "application/json");
 
-            // 3) Send and capture status
-            HttpResponseMessage response;
-            try
-            {
-                response = await _client.SendAsync(request);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "HTTP request to {Endpoint} failed", endpointUrl);
-                throw;
-            }
+            HttpResponseMessage _httpResponse = await _client.SendAsync(_httpRequest);
+            HttpStatusCode _statusCode = _httpResponse.StatusCode;
 
-            var statusCode = response.StatusCode;
-            _logger.Debug("Received HTTP {StatusCode} from {Endpoint}", statusCode, endpointUrl);
+            _logger.Debug("Received HTTP {StatusCode} from {Endpoint}", _statusCode, endpointUrl);
 
-            // 4) Read the body
-            string responseContent = null;
-            try
-            {
-                responseContent = await response.Content.ReadAsStringAsync();
-                _logger.Debug("Response content string length={Length}", responseContent?.Length ?? 0);
-                _logger.Debug("Full response content: {ResponseContent}", responseContent);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Failed to read response content from {Endpoint}", endpointUrl);
-                throw;
-            }
+            string _responseContent = await _httpResponse.Content.ReadAsStringAsync();
 
-            // 5) Parse JSON
-            JObject parsed = null;
-            try
-            {
-                parsed = JObject.Parse(responseContent);
-                _logger.Debug("Successfully parsed response JSON");
-            }
-            catch (JsonReaderException jex)
-            {
-                _logger.Error(jex, "JSON parse error. Response content was:\n{ResponseContent}", responseContent);
-                throw; // rethrow so you still see the original stack
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(
-                    ex,
-                    "Unexpected error parsing JSON. Response content:\n{ResponseContent}",
-                    responseContent
-                );
-                throw;
-            }
+            HttpClientResult result = new HttpClientResult();
+            result.statusCode = _statusCode;
+            result.responseMessage = _httpResponse;
+            result.result = Newtonsoft.Json.Linq.JObject.Parse(_responseContent);
 
-            // 6) Wrap up
-            var result = new HttpClientResult
-            {
-                statusCode = statusCode,
-                responseMessage = response,
-                result = parsed
-            };
+            // Console.WriteLine(result.result);
 
-            _logger.Debug("DocumentMerge returning result with status={StatusCode}", statusCode);
             return result;
         }
     }
