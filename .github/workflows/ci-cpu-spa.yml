@@ -78,7 +78,6 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: javascript-typescript,csharp
-          db-location: ./.github/codeql-databases
 
       # ---- Build Angular UI ----
       - name: Install Angular Dependencies
@@ -96,10 +95,15 @@ jobs:
       - name: Build .NET Application
         run: dotnet build cpu-app/cpu-app.csproj --no-restore --configuration Release
 
-      - name: Perform CodeQL Analysis
+      - name: Perform CodeQL Analysis (C#)
         uses: github/codeql-action/analyze@v3
         with:
-          category: "/language:multi/cpu-app"
+          category: "/language:csharp"
+
+      - name: Perform CodeQL Analysis (JS/TS)
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:javascript-typescript"
 
   # ------------------------------------------------------------------------------------
   #  Job: trivy_scan
