@@ -36,7 +36,7 @@
 #   --------------------------------------------------------------------------------------------  #
 #   - Backend: ASP.NET Core (.NET 8)                                                              #
 #   - Frontend: Angular (in cpu-app/ClientApp)                                                    #
-#   - Build: Docker builds both, .NET app serves Angular SPA                                      #
+#   - Build: Docker builds both, .NET app serves Angular SPA.                                     #
 #                                                                                                 #
 ##################################################################################################
 
