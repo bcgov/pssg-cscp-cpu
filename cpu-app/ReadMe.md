@@ -54,3 +54,4 @@ Change TResult to TDto for IQueryRepository and IFindRepository
 Get latest changes from VSD 
   Invoice, InvoiceRepository, InvoiceMapper
   Manager.Contract.Dto
+  
