@@ -453,8 +453,14 @@ namespace Gov.Cscp.Victims.Public
                 )
                 .Enrich.WithProperty("UTC_Timestamp", DateTime.UtcNow.ToString("o"));
 
-            // Set minimum level based on environment
-            if (env.IsDevelopment())
+            // Set minimum level: LOG_LEVEL env var takes precedence, then environment default
+            var logLevelEnv = Configuration["LOG_LEVEL"];
+            Console.WriteLine($"Configuring Serilog with minimum level: {logLevelEnv}");
+            if (!string.IsNullOrEmpty(logLevelEnv) && Enum.TryParse<Serilog.Events.LogEventLevel>(logLevelEnv, ignoreCase: true, out var parsedLevel))
+            {
+                loggerConfiguration.MinimumLevel.Is(parsedLevel);
+            }
+            else if (env.IsDevelopment())
             {
                 loggerConfiguration.MinimumLevel.Debug();
             }

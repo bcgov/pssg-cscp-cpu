@@ -50,7 +50,10 @@ namespace Gov.Cscp.Victims.Public.Services
             endpointUrl = _dynamicsOptions.GetDynamicsApiEndpointUrl() + endpointUrl;
             requestJson = requestJson.Replace("fortunecookie", "@odata.");
 
-            _logger.Debug("Calling Dynamics endpointUrl: {0}", endpointUrl);
+            _logger.Debug("Dynamics request: {Method} {Url}", method.Method, endpointUrl);
+            _logger.Debug("Dynamics request body: {RequestBody}", requestJson);
+
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
             HttpRequestMessage _httpRequest = new HttpRequestMessage(method, endpointUrl);
             _httpRequest.Content = new StringContent(requestJson, System.Text.Encoding.UTF8, "application/json");
@@ -58,7 +61,13 @@ namespace Gov.Cscp.Victims.Public.Services
             HttpResponseMessage _httpResponse = await _client.SendAsync(_httpRequest);
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
 
+            stopwatch.Stop();
+            _logger.Debug("Dynamics response: {StatusCode} ({StatusCodeInt}) in {ElapsedMs}ms for {Method} {Url}",
+                _statusCode, (int)_statusCode, stopwatch.ElapsedMilliseconds, method.Method, endpointUrl);
+
             string _responseContent = await _httpResponse.Content.ReadAsStringAsync();
+
+            _logger.Debug("Dynamics response body: {ResponseBody}", _responseContent);
 
             HttpClientResult result = new HttpClientResult();
             result.statusCode = _statusCode;
@@ -75,7 +84,10 @@ namespace Gov.Cscp.Victims.Public.Services
                 _logger.Error(new HttpOperationException("Error calling API function. Source = CPU"), "Error calling API function Dynamics endpoint. Source = CPU.");
             }
 
-            // Console.WriteLine(result.result);
+            _logger.Debug("Dynamics result: IsSuccess={IsSuccess}, StatusCode={StatusCode} ({StatusCodeInt})",
+                result.result.ContainsKey("IsSuccess") ? result.result["IsSuccess"].ToString() : "N/A",
+                result.statusCode,
+                (int)result.statusCode);
 
             return result;
         }
