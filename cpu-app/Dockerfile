@@ -44,7 +44,7 @@
 # ======================
 # Angular  Build Stage
 # ======================
-FROM node:20-alpine AS angular-build 
+FROM node:22.23.1-alpine@sha256:16e22a550f3863206a3f701448c45f7912c6896a62de43add43bb9c86130c3e2 AS angular-build 
 # as per package.json
 
 ARG BUILD_IMAGE_NAME
@@ -70,7 +70,7 @@ RUN npm run build
 # ======================
 # .NET Build Stage
 # ======================
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS dotnet-build
+FROM mcr.microsoft.com/dotnet/sdk:8.0@sha256:89ce6291bde9acdf59594e79fb8277c6d84c46e4b1f5bf126a4f18766e4bd597 AS dotnet-build
 
 ARG BUILD_IMAGE_NAME
 ARG BUILD_VERSION
@@ -89,7 +89,7 @@ RUN dotnet publish cpu-app/cpu-app.csproj -c Release -o /app/publish --no-restor
 # ======================
 # Runtime Image
 # ======================
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0@sha256:9822a6201c64c9f38b8a190832a7ae21cd30150d509b3ea170fd83b4f4e6166a AS runtime
 
 ARG BUILD_IMAGE_NAME
 ARG BUILD_VERSION
