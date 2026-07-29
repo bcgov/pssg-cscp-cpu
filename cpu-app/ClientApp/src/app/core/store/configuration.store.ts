@@ -7,6 +7,7 @@ import {
   withState,
 } from "@ngrx/signals";
 import { rxMethod } from "@ngrx/signals/rxjs-interop";
+import * as moment from "moment-timezone";
 import { catchError, of, pipe, switchMap, tap } from "rxjs";
 import { ConfigurationService } from "../api/services/configuration/configuration.service";
 import { Configuration } from "../models/configuration.interface";
@@ -31,6 +32,23 @@ export const ConfigurationStore = signalStore(
     featureHideReportSaveButton: computed(
       () => store.configuration()?.featureHideReportSaveButton ?? false,
     ),
+    outageMessage: computed(() => store.configuration()?.outageMessage ?? null),
+    outageStartDate: computed(
+      () => store.configuration()?.outageStartDate ?? null,
+    ),
+    outageEndDate: computed(() => store.configuration()?.outageEndDate ?? null),
+  })),
+  withComputed((store) => ({
+    showAnnouncementBanner: computed(() => {
+      const message = store.outageMessage();
+      const startDate = store.outageStartDate();
+      const endDate = store.outageEndDate();
+      if (!message || !startDate || !endDate) return false;
+      const current = moment().tz("America/Vancouver");
+      const start = moment(startDate).tz("America/Vancouver");
+      const end = moment(endDate).tz("America/Vancouver");
+      return current.isBetween(start, end, null, "[]");
+    }),
   })),
   withMethods((store) => {
     const configurationService = inject(ConfigurationService);
