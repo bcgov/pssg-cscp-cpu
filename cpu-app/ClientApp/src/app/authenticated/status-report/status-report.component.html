@@ -3,36 +3,40 @@
     <div class="row">
       <div class="col-md-4">
         <section class="application-nav sticky-top">
-          <div style="max-height: 90%;">
+          <div style="max-height: 90%">
             @if (trans) {
               <div class="card organization-box">
                 <div class="card-header">
-                  {{ trans.organizationName ||'Organization'}}
+                  {{ trans.organizationName || "Organization" }}
                 </div>
                 <div class="card-body">
                   <p class="card-text">
-                    <strong>Contract No</strong><br>
-                    {{trans.contractNumber}}
+                    <strong>Contract No</strong><br />
+                    {{ trans.contractNumber }}
                   </p>
                   <p class="card-text">
-                    <strong>Contracted Hours</strong><br>
-                    {{trans.contractedHours}}
+                    <strong>Contracted Hours</strong><br />
+                    {{ trans.contractedHours }}
                   </p>
                   <p class="card-text">
-                    <strong>Program</strong><br>
-                    {{trans.programName}}{{trans.programType ? ' - ' + trans.programType: ''}}
+                    <strong>Program</strong><br />
+                    {{ trans.programName
+                    }}{{ trans.programType ? " - " + trans.programType : "" }}
                   </p>
                 </div>
               </div>
             }
           </div>
           <app-icon-stepper></app-icon-stepper>
-          <button class="btn btn-primary mt-2 exit-button" (click)="exit()">Exit</button>
+          <button class="btn btn-primary mt-2 exit-button" (click)="exit()">
+            Exit
+          </button>
           @if (!hideReportSaveButton) {
             <button
               class="btn btn-primary mt-2"
               [class.is-disabled]="saving"
-              (click)="save()">
+              (click)="save()"
+            >
               Save
             </button>
           }
@@ -42,67 +46,158 @@
         @if (stepperElements && currentStepperElement) {
           <div>
             <div class="page-header">
-              <h1>{{trans.title}}</h1>
+              <h1>{{ trans.title }}</h1>
             </div>
             @for (group of trans.statusReportQuestions; track group) {
               <span>
-                @if (this.currentStepperElement.itemName===group.name) {
+                @if (this.currentStepperElement.itemName === group.name) {
                   <span>
-                    <h2 class="blue-header">{{group.name}}</h2>
+                    <h2 class="blue-header">{{ group.name }}</h2>
                     @for (q of group.questions; track q; let i = $index) {
                       <div class="mb-3">
-                        <ng-template #questionTooltip>
-                          <p>{{q.tooltip}}</p>
-                        </ng-template>
-                        @if (q.type==='string') {
+                        @if (q.type === "string") {
                           <span>
-                            @if (q.multiChoiceAnswers==null) {
+                            @if (q.multiChoiceAnswers == null) {
                               <span>
-                                <label [for]="q.uuid" [class.is-required]="q.isChildQuestionExplanationRequired" class="form-label fw-normal">{{i+1}}. {{q.label}} @if (q.tooltip) {
-                                  <app-tool-tip [trigger]="questionTooltip"></app-tool-tip>
-                                }</label>
-                                <textarea [(ngModel)]="q.string" class="form-control" [id]="q.uuid" rows="3" placeholder="Type here&hellip;"></textarea>
+                                <label
+                                  [for]="q.uuid"
+                                  [class.is-required]="
+                                    q.isChildQuestionExplanationRequired
+                                  "
+                                  class="form-label fw-normal"
+                                  >{{ i + 1 }}. {{ q.label }}
+                                  @if (q.tooltip) {
+                                    <app-tool-tip
+                                      [trigger]="q.tooltip"
+                                    ></app-tool-tip>
+                                  }
+                                </label>
+                                <textarea
+                                  [(ngModel)]="q.string"
+                                  class="form-control"
+                                  [id]="q.uuid"
+                                  rows="3"
+                                  placeholder="Type here&hellip;"
+                                ></textarea>
                               </span>
                             }
-                            @if (q.multiChoiceAnswers!=null) {
+                            @if (q.multiChoiceAnswers != null) {
                               <span>
-                                <label [for]="q.uuid" class="form-label fw-normal">{{i+1}}. {{q.label}} @if (q.tooltip) {
-                                  <app-tool-tip [trigger]="questionTooltip"></app-tool-tip>
-                                }</label>
-                                <select [(ngModel)]="q.string" class="form-control" [id]="q.uuid" placeholder="Oops here&hellip;">
-                                  @for (choices of q.multiChoiceAnswers; track choices) {
-                                    <option [value]="choices.label">{{choices.label}}</option>
+                                <label
+                                  [for]="q.uuid"
+                                  class="form-label fw-normal"
+                                  >{{ i + 1 }}. {{ q.label }}
+                                  @if (q.tooltip) {
+                                    <app-tool-tip
+                                      [trigger]="q.tooltip"
+                                    ></app-tool-tip>
+                                  }
+                                </label>
+                                <select
+                                  [(ngModel)]="q.string"
+                                  class="form-control"
+                                  [id]="q.uuid"
+                                  placeholder="Oops here&hellip;"
+                                >
+                                  @for (
+                                    choices of q.multiChoiceAnswers;
+                                    track choices
+                                  ) {
+                                    <option [value]="choices.label">
+                                      {{ choices.label }}
+                                    </option>
                                   }
                                 </select>
                               </span>
                             }
                           </span>
                         }
-                        @if (q.type==='boolean') {
+                        @if (q.type === "boolean") {
                           <span>
-                            <p class="mb-0 is-required">{{i+1}}. {{q.label}} @if (q.tooltip) {
-                              <app-tool-tip [trigger]="questionTooltip"></app-tool-tip>
-                            }</p>
+                            <p class="mb-0 is-required">
+                              {{ i + 1 }}. {{ q.label }}
+                              @if (q.tooltip) {
+                                <app-tool-tip
+                                  [trigger]="q.tooltip"
+                                ></app-tool-tip>
+                              }
+                            </p>
                             <div class="form-check form-check-inline">
-                              <input [(ngModel)]="q.boolean" class="form-check-input" type="radio" [name]="q.uuid" [attr.name]="q.uuid" [id]="q.uuid" [value]="true" (change)="checkForRequiredChildQuestion(q, group.questions)">
-                              <label class="form-check-label form-label fw-normal" [for]="q.uuid">
+                              <input
+                                [(ngModel)]="q.boolean"
+                                class="form-check-input"
+                                type="radio"
+                                [name]="q.uuid"
+                                [attr.name]="q.uuid"
+                                [id]="q.uuid"
+                                [value]="true"
+                                (change)="
+                                  checkForRequiredChildQuestion(
+                                    q,
+                                    group.questions
+                                  )
+                                "
+                              />
+                              <label
+                                class="form-check-label form-label fw-normal"
+                                [for]="q.uuid"
+                              >
                                 Yes
                               </label>
                             </div>
                             <div class="form-check form-check-inline">
-                              <input [(ngModel)]="q.boolean" class="form-check-input" type="radio" [name]="q.uuid" [attr.name]="q.uuid" [id]="q.uuid+'2'" [value]="false" (change)="checkForRequiredChildQuestion(q, group.questions)">
-                              <label class="form-check-label form-label fw-normal" [for]="q.uuid+'2'">
+                              <input
+                                [(ngModel)]="q.boolean"
+                                class="form-check-input"
+                                type="radio"
+                                [name]="q.uuid"
+                                [attr.name]="q.uuid"
+                                [id]="q.uuid + '2'"
+                                [value]="false"
+                                (change)="
+                                  checkForRequiredChildQuestion(
+                                    q,
+                                    group.questions
+                                  )
+                                "
+                              />
+                              <label
+                                class="form-check-label form-label fw-normal"
+                                [for]="q.uuid + '2'"
+                              >
                                 No
                               </label>
                             </div>
                           </span>
                         }
-                        @if (q.type==='number') {
+                        @if (q.type === "number") {
                           <span>
-                            <label [for]="q.uuid" class="is-required form-label fw-normal">{{i+1}}. {{q.label}} @if (q.tooltip) {
-                              <app-tool-tip [trigger]="questionTooltip"></app-tool-tip>
-                            }</label>
-                            <input [(ngModel)]="q.numberMask" type="text" mask="separator.2" separatorLimit="1000" thousandSeparator="," class="form-control number-input" [id]="q.uuid" (input)="formHelper.maskToPositiveNumber($event.target, q, 'number')">
+                            <label
+                              [for]="q.uuid"
+                              class="is-required form-label fw-normal"
+                              >{{ i + 1 }}. {{ q.label }}
+                              @if (q.tooltip) {
+                                <app-tool-tip
+                                  [trigger]="q.tooltip"
+                                ></app-tool-tip>
+                              }
+                            </label>
+                            <input
+                              [(ngModel)]="q.numberMask"
+                              type="text"
+                              mask="separator.2"
+                              separatorLimit="1000"
+                              thousandSeparator=","
+                              class="form-control number-input"
+                              [id]="q.uuid"
+                              (input)="
+                                formHelper.maskToPositiveNumber(
+                                  $event.target,
+                                  q,
+                                  'number'
+                                )
+                              "
+                            />
                           </span>
                         }
                       </div>
@@ -116,18 +211,39 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-4">
-      </div>
+      <div class="col-md-4"></div>
       <div class="col-md-8">
-        <span>@if (stepperIndex > 0) {
-          <button class="btn btn-primary mt-2 previous-button" (click)="setPreviousStepper()">Previous</button>
-        }</span>
-        <span>@if (stepperIndex < stepperElements.length - 1) {
-          <button class="btn btn-primary mt-2 next-button" (click)="setNextStepper()">Continue</button>
-        }</span>
-        <span>@if (stepperIndex == stepperElements.length -1) {
-          <button class="btn btn-primary mt-2 submit-button" [class.is-disabled]="saving" (click)="submit()">Submit</button>
-        }</span>
+        <span>
+          @if (stepperIndex > 0) {
+            <button
+              class="btn btn-primary mt-2 previous-button"
+              (click)="setPreviousStepper()"
+            >
+              Previous
+            </button>
+          }
+        </span>
+        <span>
+          @if (stepperIndex < stepperElements.length - 1) {
+            <button
+              class="btn btn-primary mt-2 next-button"
+              (click)="setNextStepper()"
+            >
+              Continue
+            </button>
+          }
+        </span>
+        <span>
+          @if (stepperIndex == stepperElements.length - 1) {
+            <button
+              class="btn btn-primary mt-2 submit-button"
+              [class.is-disabled]="saving"
+              (click)="submit()"
+            >
+              Submit
+            </button>
+          }
+        </span>
       </div>
     </div>
   </div>
