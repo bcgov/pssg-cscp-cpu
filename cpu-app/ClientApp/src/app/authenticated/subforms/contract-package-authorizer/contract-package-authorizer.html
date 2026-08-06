@@ -1,26 +1,36 @@
 <h2 class="blue-header">Standard Authorization &amp; Signature</h2>
 <div>
-    <app-person-picker [isDisabled]="isDisabled" (input)="onInput()" [title]="'Authorized Signing Officer'" [(person)]="signature.signer"></app-person-picker>
-    <div *ngIf="signature.signer" class="mt-3 mb-3">
-        <h5>By signing and submitting, the parties have executed this agreement as follows.</h5>
+  <app-person-picker [isDisabled]="isDisabled" (input)="onInput()" [title]="'Authorized Signing Officer'" [(person)]="signature.signer"></app-person-picker>
+  @if (signature.signer) {
+    <div class="mt-3 mb-3">
+      <h5>By signing and submitting, the parties have executed this agreement as follows.</h5>
     </div>
-    <div class="card mt-2" *ngIf="signature.signer">
-        <div class="card-body">
-            <h5 class="card-title">Please add your signature here with you finger or other pointing device 2222.</h5>
-        </div>
-        <div class="mx-auto bg-light mb-2">
-            <signature-pad [options]="signaturePadOptions" (drawStart)="drawStart()"></signature-pad>
-        </div>
-        <div class="card-footer">
-            <button *ngIf="!isDisabled" class="btn btn-secondary me-2" (click)="clearSignature()">Clear</button>
-            <span *ngIf="!signature.signatureDate">
-                <button class="btn btn-primary float-right" (click)="acceptSignature()">Sign</button>
-            </span>
-            <span *ngIf="signature.signatureDate">
-                <button class="btn btn-outline-success me-2 float-right" disabled>
-                    Signed on {{signature.signatureDate|date}}
-                </button>
-            </span>
-        </div>
+  }
+  @if (signature.signer) {
+    <div class="card mt-2">
+      <div class="card-body">
+        <h5 class="card-title">Please add your signature here with you finger or other pointing device 2222.</h5>
+      </div>
+      <div class="mx-auto bg-light mb-2">
+        <signature-pad [options]="signaturePadOptions" (drawStart)="drawStart()"></signature-pad>
+      </div>
+      <div class="card-footer">
+        @if (!isDisabled) {
+          <button class="btn btn-secondary me-2" (click)="clearSignature()">Clear</button>
+        }
+        @if (!signature.signatureDate) {
+          <span>
+            <button class="btn btn-primary float-right" (click)="acceptSignature()">Sign</button>
+          </span>
+        }
+        @if (signature.signatureDate) {
+          <span>
+            <button class="btn btn-outline-success me-2 float-right" disabled>
+              Signed on {{signature.signatureDate|date}}
+            </button>
+          </span>
+        }
+      </div>
     </div>
+  }
 </div>

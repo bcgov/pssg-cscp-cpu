@@ -1,34 +1,42 @@
 <div class="mb-3">
-  <label *ngIf="label" [for]="id" class="form-label fw-normal">
-    {{ label }}<span *ngIf="isRequired" style="color: #d93e45"> *</span>
+  @if (label) {
+    <label [for]="id" class="form-label fw-normal">
+      {{ label }}@if (isRequired) {
+      <span style="color: #d93e45"> *</span>
+    }
   </label>
+}
 
-  @if (controlType === "select") {
-    <select
-      [formControl]="control"
-      [id]="id"
-      [name]="id"
-      [class.is-invalid]="hasError"
-      class="form-control"
+@if (controlType === "select") {
+  <select
+    [formControl]="control"
+    [id]="id"
+    [name]="id"
+    [class.is-invalid]="hasError"
+    class="form-control"
     >
-      <option value="" *ngIf="placeholder">
+    @if (placeholder) {
+      <option value="">
         {{ placeholder }}
       </option>
-      <option *ngFor="let option of options" [ngValue]="option.value">
+    }
+    @for (option of options; track option) {
+      <option [ngValue]="option.value">
         {{ option.label }}
       </option>
-    </select>
-  } @else {
-    <input
-      [formControl]="control"
-      [type]="type"
-      [id]="id"
-      [name]="id"
-      [placeholder]="placeholder"
-      [mask]="mask"
-      [class.is-invalid]="hasError"
-      class="form-control"
-      (blur)="onBlur()"
+    }
+  </select>
+} @else {
+  <input
+    [formControl]="control"
+    [type]="type"
+    [id]="id"
+    [name]="id"
+    [placeholder]="placeholder"
+    [mask]="mask"
+    [class.is-invalid]="hasError"
+    class="form-control"
+    (blur)="onBlur()"
     />
   }
 

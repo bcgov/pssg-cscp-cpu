@@ -1,110 +1,128 @@
-<div *ngIf="trans">
-  <div class="row">
-    <div class="col">
-      <h1>
-        Service Provider Dashboard
-      </h1>
-    </div>
-  </div>
-  <div class="row mb-4">
-    <div class="organization-box-width">
-      <app-organization-profile-box [type]="'dashboard'"></app-organization-profile-box>
-    </div>
-    <div class="col">
-      <app-ministry-contact-box></app-ministry-contact-box>
-
-      <!-- for testing -->
-      <!-- <button class="btn btn-primary btn-lg me-2 mb-2" routerLink="/authenticated/new_user_new_organization">Test New Org/User</button>
-      <button class="btn btn-primary btn-lg me-2 mb-2" [routerLink]="'/authenticated/new_user/'">Test New User</button> -->
-      <!-- <button class="btn btn-primary btn-lg me-2 mb-2" [routerLink]="'/test'">Test</button> -->
-      <!-- end of testing -->
-
-
-    </div>
-  </div>
-  <div *ngIf="!upcomingContracts.length&&!currentContracts.length&&!pastContracts.length; else showContracts" class="row">
-    <div class="col">
-      <div class="card mb-4">
-        <div class="card-header contracts-header">No active contracts</div>
-        <div class="card-body">
-          <div class="row mb-1">
-            <div class="col">
-              There are no active contracts associated with your account. Your contracts will appear here soon.
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <ng-template #showContracts>
+@if (trans) {
+  <div>
     <div class="row">
       <div class="col">
-        <div class="card mb-4">
-          <div class="card-header current-contracts-header">Current Fiscal Year Contracts - {{currentYear}} to {{currentYear + 1}}</div>
-          <div *ngIf="currentContracts.length" class="card-body">
-            <span *ngFor="let contract of currentContracts">
-              <div class="row mb-1">
-                <div class="col">
-                  <app-task-list [contract]="contract"></app-task-list>
-                </div>
-              </div>
-            </span>
-          </div>
-          <div *ngIf="currentContracts.length==0" class="card-body">
-            <div class="row mb-1">
-              <div class="col">
-                No current contracts at this time.
-              </div>
-            </div>
-          </div>
-        </div>
+        <h1>
+          Service Provider Dashboard
+        </h1>
       </div>
     </div>
-    <div class="row">
+    <div class="row mb-4">
+      <div class="organization-box-width">
+        <app-organization-profile-box [type]="'dashboard'"></app-organization-profile-box>
+      </div>
       <div class="col">
-        <div class="card mb-4">
-          <div class="card-header upcoming-contracts-header">Upcoming Fiscal Year Contracts - {{currentYear + 1}} to {{currentYear + 2}}</div>
-          <div *ngIf="upcomingContracts.length" class="card-body">
-            <span *ngFor="let contract of upcomingContracts">
+        <app-ministry-contact-box></app-ministry-contact-box>
+        <!-- for testing -->
+        <!-- <button class="btn btn-primary btn-lg me-2 mb-2" routerLink="/authenticated/new_user_new_organization">Test New Org/User</button>
+        <button class="btn btn-primary btn-lg me-2 mb-2" [routerLink]="'/authenticated/new_user/'">Test New User</button> -->
+        <!-- <button class="btn btn-primary btn-lg me-2 mb-2" [routerLink]="'/test'">Test</button> -->
+        <!-- end of testing -->
+      </div>
+    </div>
+    @if (!upcomingContracts.length&&!currentContracts.length&&!pastContracts.length) {
+      <div class="row">
+        <div class="col">
+          <div class="card mb-4">
+            <div class="card-header contracts-header">No active contracts</div>
+            <div class="card-body">
               <div class="row mb-1">
                 <div class="col">
-                  <app-task-list [contract]="contract"></app-task-list>
+                  There are no active contracts associated with your account. Your contracts will appear here soon.
                 </div>
-              </div>
-            </span>
-          </div>
-          <div *ngIf="upcomingContracts.length==0" class="card-body">
-            <div class="row mb-1">
-              <div class="col">
-                No upcoming contracts at this time.
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="card mb-4">
-          <div class="card-header previous-contracts-header">Previous Fiscal Years Contracts</div>
-          <div *ngIf="pastContracts.length" class="card-body">
-            <span *ngFor="let contract of pastContracts">
-              <div class="row mb-1">
-                <div class="col">
-                  <app-task-list [contract]="contract"></app-task-list>
+    } @else {
+      <div class="row">
+        <div class="col">
+          <div class="card mb-4">
+            <div class="card-header current-contracts-header">Current Fiscal Year Contracts - {{currentYear}} to {{currentYear + 1}}</div>
+            @if (currentContracts.length) {
+              <div class="card-body">
+                @for (contract of currentContracts; track contract) {
+                  <span>
+                    <div class="row mb-1">
+                      <div class="col">
+                        <app-task-list [contract]="contract"></app-task-list>
+                      </div>
+                    </div>
+                  </span>
+                }
+              </div>
+            }
+            @if (currentContracts.length==0) {
+              <div class="card-body">
+                <div class="row mb-1">
+                  <div class="col">
+                    No current contracts at this time.
+                  </div>
                 </div>
               </div>
-            </span>
-          </div>
-          <div *ngIf="pastContracts.length==0" class="card-body">
-            <div class="row mb-1">
-              <div class="col">
-                No past contracts at this time.
-              </div>
-            </div>
+            }
           </div>
         </div>
       </div>
-    </div>
-  </ng-template>
-</div>
+      <div class="row">
+        <div class="col">
+          <div class="card mb-4">
+            <div class="card-header upcoming-contracts-header">Upcoming Fiscal Year Contracts - {{currentYear + 1}} to {{currentYear + 2}}</div>
+            @if (upcomingContracts.length) {
+              <div class="card-body">
+                @for (contract of upcomingContracts; track contract) {
+                  <span>
+                    <div class="row mb-1">
+                      <div class="col">
+                        <app-task-list [contract]="contract"></app-task-list>
+                      </div>
+                    </div>
+                  </span>
+                }
+              </div>
+            }
+            @if (upcomingContracts.length==0) {
+              <div class="card-body">
+                <div class="row mb-1">
+                  <div class="col">
+                    No upcoming contracts at this time.
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="card mb-4">
+            <div class="card-header previous-contracts-header">Previous Fiscal Years Contracts</div>
+            @if (pastContracts.length) {
+              <div class="card-body">
+                @for (contract of pastContracts; track contract) {
+                  <span>
+                    <div class="row mb-1">
+                      <div class="col">
+                        <app-task-list [contract]="contract"></app-task-list>
+                      </div>
+                    </div>
+                  </span>
+                }
+              </div>
+            }
+            @if (pastContracts.length==0) {
+              <div class="card-body">
+                <div class="row mb-1">
+                  <div class="col">
+                    No past contracts at this time.
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+}

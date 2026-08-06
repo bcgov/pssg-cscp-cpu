@@ -1,71 +1,74 @@
-<div *ngIf="address">
-  <div class="row">
-    <div class="col-md">
-      <div class="mb-3">
-        <label class="form-label fw-normal">Address Line 1</label>
-        <input [disabled]="isDisabled" type="text" class="form-control required" [(ngModel)]="address.line1" #line1="ngModel" [required]="addressRequired">
-        <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(line1)">
-          Ok
+@if (address) {
+  <div>
+    <div class="row">
+      <div class="col-md">
+        <div class="mb-3">
+          <label class="form-label fw-normal">Address Line 1</label>
+          <input [disabled]="isDisabled" type="text" class="form-control required" [(ngModel)]="address.line1" #line1="ngModel" [required]="addressRequired">
+          <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(line1)">
+            Ok
+          </div>
+          <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedbackOld(line1)">
+            Try Again
+          </div>
         </div>
-        <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedbackOld(line1)">
-          Try Again
+      </div>
+      <div class="col-md">
+        <div class="mb-3">
+          <label class="form-label fw-normal">Address Line 2 (Optional)</label>
+          <input [disabled]="isDisabled" type="text" class="form-control required" [(ngModel)]="address.line2" #line2="ngModel">
+          <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(line2)">
+            Ok
+          </div>
+          <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedbackOld(line2)">
+            Try Again
+          </div>
         </div>
       </div>
     </div>
-    <div class="col-md">
-      <div class="mb-3">
-        <label class="form-label fw-normal">Address Line 2 (Optional)</label>
-        <input [disabled]="isDisabled" type="text" class="form-control required" [(ngModel)]="address.line2" #line2="ngModel">
-        <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(line2)">
-          Ok
+    <div class="row">
+      <div class="col-md">
+        <div class="mb-3">
+          <label class="form-label fw-normal">City</label>
+          <input [disabled]="isDisabled" type="text" class="form-control" [(ngModel)]="address.city" #city="ngModel" [required]="addressRequired">
+          <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(city)">
+            Ok
+          </div>
+          <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedbackOld(city)">
+            Try Again
+          </div>
         </div>
-        <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedbackOld(line2)">
-          Try Again
+      </div>
+      <div class="col-md">
+        <div class="mb-3">
+          <label class="form-label fw-normal">Province</label>
+          <select [disabled]="isDisabled" class="form-control" [(ngModel)]="address.province" #province="ngModel" [required]="addressRequired">
+            @for (area of country.areas; track area) {
+              <option [value]="area">{{area}}</option>
+            }
+          </select>
+          <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(province)">
+            Ok
+          </div>
+          <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedbackOld(province)">
+            Try Again
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md">
+        <div class="mb-3">
+          <label class="form-label fw-normal">Postal Code</label>
+          <input [disabled]="isDisabled" uppercase type="text" class="form-control" [(ngModel)]="address.postalCode" #postalCode="ngModel" (input)="formHelper.trimPostalCode($event.target)" [pattern]="postalRegex" placeholder="X1X 2Y2 or X1X2Y2" [required]="addressRequired">
+          <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(postalCode)" style="display: inherit">
+            Ok
+          </div>
+          <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedback(address.postalCode, postalRegex, postalCode)" style="display: inherit">
+            Try Again
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md">
-      <div class="mb-3">
-        <label class="form-label fw-normal">City</label>
-        <input [disabled]="isDisabled" type="text" class="form-control" [(ngModel)]="address.city" #city="ngModel" [required]="addressRequired">
-        <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(city)">
-          Ok
-        </div>
-        <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedbackOld(city)">
-          Try Again
-        </div>
-      </div>
-    </div>
-    <div class="col-md">
-      <div class="mb-3">
-        <label class="form-label fw-normal">Province</label>
-        <select [disabled]="isDisabled" class="form-control" [(ngModel)]="address.province" #province="ngModel" [required]="addressRequired">
-          <option *ngFor="let area of country.areas" [value]="area">{{area}}</option>
-        </select>
-        <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(province)">
-          Ok
-        </div>
-        <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedbackOld(province)">
-          Try Again
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md">
-      <div class="mb-3">
-        <label class="form-label fw-normal">Postal Code</label>
-        <input [disabled]="isDisabled" uppercase type="text" class="form-control" [(ngModel)]="address.postalCode" #postalCode="ngModel" (input)="formHelper.trimPostalCode($event.target)" [pattern]="postalRegex" placeholder="X1X 2Y2 or X1X2Y2" [required]="addressRequired">
-        <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(postalCode)" style="display: inherit">
-          Ok
-        </div>
-        <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedback(address.postalCode, postalRegex, postalCode)" style="display: inherit">
-          Try Again
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+}

@@ -1,64 +1,72 @@
 <div class="container">
-  <div class="loading-indicator" *ngIf="saving">
-    <mat-spinner mode="indeterminate"></mat-spinner>
-  </div>
+  @if (saving) {
+    <div class="loading-indicator">
+      <mat-spinner mode="indeterminate"></mat-spinner>
+    </div>
+  }
   <div class="row" [class.dark-overlay]="saving">
     <div class="col-md-4">
       <section class="application-nav sticky-top">
         <div style="max-height: 90%;">
-          <div class="card organization-box" *ngIf="trans">
-            <div class="card-header">
-              {{ trans.organizationName ||'Organization'}}
+          @if (trans) {
+            <div class="card organization-box">
+              <div class="card-header">
+                {{ trans.organizationName ||'Organization'}}
+              </div>
+              <div class="card-body">
+                <p class="card-text">
+                  <strong>Contract No</strong><br>
+                  {{contractNumber}}
+                </p>
+              </div>
             </div>
-            <div class="card-body">
-              <p class="card-text">
-                <strong>Contract No</strong><br>
-                {{contractNumber}}
-              </p>
-            </div>
-          </div>
+          }
         </div>
         <div style="max-height: 90%;">
-          <ng-container *ngIf="isLoading">
+          @if (isLoading) {
             <ul class="list-group">
               <li class="stepper-item list-group-item d-flex justify-content-between align-items-center">
                 <span>
                   Loading...
                 </span>
-
                 <span>
                   <i class="text-secondary spinner-border spinner-border-sm"></i>
                 </span>
               </li>
             </ul>
-          </ng-container>
-          <ng-container *ngIf="!isLoading">
+          }
+          @if (!isLoading) {
             <app-icon-stepper></app-icon-stepper>
-          </ng-container>
+          }
         </div>
         <button class="btn btn-primary mt-2" (click)="exit()">Exit</button>
       </section>
     </div>
     <div class="col">
-      <div *ngIf="currentStepperElement && !isLoading">
-        <div class="page-header" *ngIf="currentStepperElement.discriminator != 'auth'">
-          <h1>{{currentStepperElement.itemName}}</h1>
+      @if (currentStepperElement && !isLoading) {
+        <div>
+          @if (currentStepperElement.discriminator != 'auth') {
+            <div class="page-header">
+              <h1>{{currentStepperElement.itemName}}</h1>
+            </div>
+          }
+          @if (currentStepperElement.discriminator == 'document') {
+            <div class="pdf-container">
+              <object [data]="currentStepperElement.object.fileData | safe" [name]="currentStepperElement.object.fileName" type="application/pdf" class="pdf-object">
+              </object>
+            </div>
+          }
+          @if (currentStepperElement.discriminator == 'auth') {
+            <div>
+              <div class="pdf-container">
+                <object [data]="currentStepperElement.object.fileData | safe" [name]="currentStepperElement.object.fileName" type="application/pdf" class="pdf-object">
+                </object>
+              </div>
+              <app-contract-package-authorizer [(signature)]="signature"></app-contract-package-authorizer>
+            </div>
+          }
         </div>
-
-        <div class="pdf-container" *ngIf="currentStepperElement.discriminator == 'document'">
-          <object [data]="currentStepperElement.object.fileData | safe" [name]="currentStepperElement.object.fileName" type="application/pdf" class="pdf-object">
-          </object>
-        </div>
-
-        <div *ngIf="currentStepperElement.discriminator == 'auth'">
-          <div class="pdf-container">
-            <object [data]="currentStepperElement.object.fileData | safe" [name]="currentStepperElement.object.fileName" type="application/pdf" class="pdf-object">
-            </object>
-          </div>
-          <app-contract-package-authorizer [(signature)]="signature"></app-contract-package-authorizer>
-        </div>
-
-      </div>
+      }
     </div>
   </div>
 
@@ -66,9 +74,15 @@
     <div class="col-md-4">
     </div>
     <div class="col-md-8">
-      <span><button *ngIf="stepperIndex > 0" class="btn btn-primary mt-2 previous-button" (click)="setPreviousStepper()">Previous</button></span>
-      <span><button *ngIf="stepperIndex < stepperElements.length - 1" class="btn btn-primary mt-2 next-button" (click)="setNextStepper()">Next</button></span>
-      <span><button *ngIf="stepperIndex == stepperElements.length -1" class="btn btn-primary mt-2 submit-button" [class.is-disabled]="saving || !signature.signatureDate || !signature.signer" (click)="submit()">Submit</button></span>
+      <span>@if (stepperIndex > 0) {
+        <button class="btn btn-primary mt-2 previous-button" (click)="setPreviousStepper()">Previous</button>
+      }</span>
+      <span>@if (stepperIndex < stepperElements.length - 1) {
+        <button class="btn btn-primary mt-2 next-button" (click)="setNextStepper()">Next</button>
+      }</span>
+      <span>@if (stepperIndex == stepperElements.length -1) {
+        <button class="btn btn-primary mt-2 submit-button" [class.is-disabled]="saving || !signature.signatureDate || !signature.signer" (click)="submit()">Submit</button>
+      }</span>
     </div>
   </div>
 </div>

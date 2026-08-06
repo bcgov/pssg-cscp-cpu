@@ -3,102 +3,114 @@
 <app-expense-table style="display: none;" [(defaultExpenseItems)]="programBudget.programDeliveryCosts" [(expenseItems)]="programBudget.programDeliveryOtherExpenses" [otherDescription]="'Other program-related expenses. Please include expenses one per line.'" (meta)="collectMeta( $event, sections[1])" [type]="'hidden_pdc'"></app-expense-table>
 <app-expense-table style="display: none;" [(defaultExpenseItems)]="programBudget.administrationCosts" [(expenseItems)]="programBudget.administrationOtherExpenses" [otherDescription]="'Other administration expenses.'" (meta)="collectMeta( $event, sections[2])" [type]="'hidden_ac'"></app-expense-table>
 <ul class="nav nav-pills mb-2">
-  <li *ngFor="let tab of tabs">
-    <a class="nav-link nav-tab" [class.active]="tab===programBudget.currentTab" (click)="setCurrentTab(tab)">{{tab}}</a>
-  </li>
-</ul>
-<div *ngIf="programBudget.currentTab===tabs[0]">
-  <h2 class="blue-header">{{programBudget.currentTab}}</h2>
-  <ol>
-    <li>For each program applied for, a separate Budget Proposal must be completed. </li>
-    <li>For
-      <strong>
-        Police-based Victim Service
-      </strong>
-      programs that are cost-shared with municipality / regional district, the maximum
-      <strong>
-        "In-kind Contribution"
-      </strong>
-      amount that may be claimed for under "Municipal" or "Regional District" is 20% cash. "In-kind contributions" include costs for facilities (e.g. rent, utilities and maintenance), telephone, fax, and office supplies, etc.</li>
-    <li>For each program, your budget should confirm that you are providing the number of service hours as stated in your contract.</li>
+  @for (tab of tabs; track tab) {
     <li>
-      <strong>
-        Your Budget Proposal must be balanced and equal to the amount identified in the final program budget letter.
-      </strong>
+      <a class="nav-link nav-tab" [class.active]="tab===programBudget.currentTab" (click)="setCurrentTab(tab)">{{tab}}</a>
     </li>
-  </ol>
-  <ng-template #programRevenueSources>
-    <p>Input additional funding from other sources and please specify from which organization</p>
-  </ng-template>
-
-  <h2 class="blue-header">Program Revenue Sources <app-tool-tip iconColor="white" [trigger]="programRevenueSources"></app-tool-tip>
+  }
+</ul>
+@if (programBudget.currentTab===tabs[0]) {
+  <div>
+    <h2 class="blue-header">{{programBudget.currentTab}}</h2>
+    <ol>
+      <li>For each program applied for, a separate Budget Proposal must be completed. </li>
+      <li>For
+        <strong>
+          Police-based Victim Service
+        </strong>
+        programs that are cost-shared with municipality / regional district, the maximum
+        <strong>
+          "In-kind Contribution"
+        </strong>
+      amount that may be claimed for under "Municipal" or "Regional District" is 20% cash. "In-kind contributions" include costs for facilities (e.g. rent, utilities and maintenance), telephone, fax, and office supplies, etc.</li>
+      <li>For each program, your budget should confirm that you are providing the number of service hours as stated in your contract.</li>
+      <li>
+        <strong>
+          Your Budget Proposal must be balanced and equal to the amount identified in the final program budget letter.
+        </strong>
+      </li>
+    </ol>
+    <ng-template #programRevenueSources>
+      <p>Input additional funding from other sources and please specify from which organization</p>
+    </ng-template>
+    <h2 class="blue-header">Program Revenue Sources <app-tool-tip iconColor="white" [trigger]="programRevenueSources"></app-tool-tip>
   </h2>
   <app-revenue-source-table [(revenueSources)]="programBudget.revenueSources" (revenueSourcesChange)="getTotalGrand($event)" [isDisabled]="isDisabled"></app-revenue-source-table>
 </div>
-<div *ngIf="programBudget.currentTab===tabs[1]">
-  <div class="sticky-top sticky-bottom-border">
-    <div>
-      <p><strong>VSCP Approved Amount:</strong> {{vscpApprovedAmount | currency}}</p>
-    </div>
-    <div>
-      <p><strong>Total Program Revenue:</strong> {{totalGrand | currency}}</p>
-    </div>
-    <div>
-      <p><strong>Amount Left to Spend:</strong> {{remainingAmount | currency}}</p>
-    </div>
-    <ng-template #programExpenditures>
-      <p>This section will update as you input values below</p>
-    </ng-template>
-    <span *ngIf="meta[sections[0]] &&	meta[sections[1]] &&	meta[sections[2]]">
-      <h2 class="blue-header no-bottom-margin">Total Program Expenditures <app-tool-tip iconColor="white" [trigger]="programExpenditures"></app-tool-tip>
-      </h2>
-      <table class="table table-striped expense-table">
-        <thead>
-          <tr>
-            <th scope="row">Expense Area</th>
-            <th scope="row">Total Cost</th>
-            <th scope="row" class="long-header-name">Funded From VSCP</th>
-            <th scope="row" class="long-header-name">Percentage of VSCP Funding</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngIf="meta[sections[0]]">
-            <td>{{sections[0]}}</td>
-            <td>{{meta[sections[0]].totalCost||0 | currency}}</td>
-            <td>{{meta[sections[0]].totalVscp||0 | currency}}</td>
-            <td>{{meta[sections[0]].totalPercentFundedByVscp||0}}%</td>
-          </tr>
-          <tr *ngIf="meta[sections[1]]">
-            <td>{{sections[1]}}</td>
-            <td>{{meta[sections[1]].totalCost||0 | currency}}</td>
-            <td>{{meta[sections[1]].totalVscp||0 | currency}}</td>
-            <td>{{meta[sections[1]].totalPercentFundedByVscp||0}}%</td>
-          </tr>
-          <tr *ngIf="meta[sections[2]]">
-            <td>{{sections[2]}}</td>
-            <td>{{meta[sections[2]].totalCost||0 | currency}}</td>
-            <td>{{meta[sections[2]].totalVscp||0 | currency}}</td>
-            <td>{{meta[sections[2]].totalPercentFundedByVscp||0}}%</td>
-          </tr>
-          <tr>
-            <th scope="row">Total Program Expenditures</th>
-            <td>{{meta['totals'].totalCost||0 | currency}}</td>
-            <td>{{meta['totals'].totalVscp||0 | currency}}</td>
-            <td>{{meta['totals'].totalPercentFundedByVscp||0}}%</td>
-          </tr>
-        </tbody>
-      </table>
-    </span>
+}
+@if (programBudget.currentTab===tabs[1]) {
+  <div>
+    <div class="sticky-top sticky-bottom-border">
+      <div>
+        <p><strong>VSCP Approved Amount:</strong> {{vscpApprovedAmount | currency}}</p>
+      </div>
+      <div>
+        <p><strong>Total Program Revenue:</strong> {{totalGrand | currency}}</p>
+      </div>
+      <div>
+        <p><strong>Amount Left to Spend:</strong> {{remainingAmount | currency}}</p>
+      </div>
+      <ng-template #programExpenditures>
+        <p>This section will update as you input values below</p>
+      </ng-template>
+      @if (meta[sections[0]] &&	meta[sections[1]] &&	meta[sections[2]]) {
+        <span>
+          <h2 class="blue-header no-bottom-margin">Total Program Expenditures <app-tool-tip iconColor="white" [trigger]="programExpenditures"></app-tool-tip>
+        </h2>
+        <table class="table table-striped expense-table">
+          <thead>
+            <tr>
+              <th scope="row">Expense Area</th>
+              <th scope="row">Total Cost</th>
+              <th scope="row" class="long-header-name">Funded From VSCP</th>
+              <th scope="row" class="long-header-name">Percentage of VSCP Funding</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (meta[sections[0]]) {
+              <tr>
+                <td>{{sections[0]}}</td>
+                <td>{{meta[sections[0]].totalCost||0 | currency}}</td>
+                <td>{{meta[sections[0]].totalVscp||0 | currency}}</td>
+                <td>{{meta[sections[0]].totalPercentFundedByVscp||0}}%</td>
+              </tr>
+            }
+            @if (meta[sections[1]]) {
+              <tr>
+                <td>{{sections[1]}}</td>
+                <td>{{meta[sections[1]].totalCost||0 | currency}}</td>
+                <td>{{meta[sections[1]].totalVscp||0 | currency}}</td>
+                <td>{{meta[sections[1]].totalPercentFundedByVscp||0}}%</td>
+              </tr>
+            }
+            @if (meta[sections[2]]) {
+              <tr>
+                <td>{{sections[2]}}</td>
+                <td>{{meta[sections[2]].totalCost||0 | currency}}</td>
+                <td>{{meta[sections[2]].totalVscp||0 | currency}}</td>
+                <td>{{meta[sections[2]].totalPercentFundedByVscp||0}}%</td>
+              </tr>
+            }
+            <tr>
+              <th scope="row">Total Program Expenditures</th>
+              <td>{{meta['totals'].totalCost||0 | currency}}</td>
+              <td>{{meta['totals'].totalVscp||0 | currency}}</td>
+              <td>{{meta['totals'].totalPercentFundedByVscp||0}}%</td>
+            </tr>
+          </tbody>
+        </table>
+      </span>
+    }
   </div>
   <ng-template #salariesAndBenefits>
     <p>This section of the Budget Proposal may include only salaries, benefits and payroll deductions for direct front line service staff (including sub-contractors if applicable), program supervision, and clinical supervision (if applicable)</p>
   </ng-template>
-
   <h2 class="blue-header">{{sections[0]}} <app-tool-tip iconColor="white" [trigger]="salariesAndBenefits"></app-tool-tip>
-  </h2>
-  <app-personnel-expense-table [(salariesAndBenefits)]="programBudget.salariesAndBenefits" [(vscpApprovedAmount)]="vscpApprovedAmount" [isDisabled]="isDisabled" (meta)="collectMeta( $event, sections[0])" [type]="'sb'"></app-personnel-expense-table>
-  <h2 class="blue-header">{{sections[1]}}</h2>
-  <app-expense-table [(defaultExpenseItems)]="programBudget.programDeliveryCosts" [(expenseItems)]="programBudget.programDeliveryOtherExpenses" [(vscpApprovedAmount)]="vscpApprovedAmount" [isDisabled]="isDisabled" [otherDescription]="'Other program-related expenses. Please include expenses one per line.'" (meta)="collectMeta( $event, sections[1])" [type]="'pdc'"></app-expense-table>
-  <h2 class="blue-header">{{sections[2]}}</h2>
-  <app-expense-table [(defaultExpenseItems)]="programBudget.administrationCosts" [(expenseItems)]="programBudget.administrationOtherExpenses" [(vscpApprovedAmount)]="vscpApprovedAmount" [isDisabled]="isDisabled" [otherDescription]="'Other administration expenses.'" (meta)="collectMeta( $event, sections[2])" [type]="'ac'"></app-expense-table>
+</h2>
+<app-personnel-expense-table [(salariesAndBenefits)]="programBudget.salariesAndBenefits" [(vscpApprovedAmount)]="vscpApprovedAmount" [isDisabled]="isDisabled" (meta)="collectMeta( $event, sections[0])" [type]="'sb'"></app-personnel-expense-table>
+<h2 class="blue-header">{{sections[1]}}</h2>
+<app-expense-table [(defaultExpenseItems)]="programBudget.programDeliveryCosts" [(expenseItems)]="programBudget.programDeliveryOtherExpenses" [(vscpApprovedAmount)]="vscpApprovedAmount" [isDisabled]="isDisabled" [otherDescription]="'Other program-related expenses. Please include expenses one per line.'" (meta)="collectMeta( $event, sections[1])" [type]="'pdc'"></app-expense-table>
+<h2 class="blue-header">{{sections[2]}}</h2>
+<app-expense-table [(defaultExpenseItems)]="programBudget.administrationCosts" [(expenseItems)]="programBudget.administrationOtherExpenses" [(vscpApprovedAmount)]="vscpApprovedAmount" [isDisabled]="isDisabled" [otherDescription]="'Other administration expenses.'" (meta)="collectMeta( $event, sections[2])" [type]="'ac'"></app-expense-table>
 </div>
+}

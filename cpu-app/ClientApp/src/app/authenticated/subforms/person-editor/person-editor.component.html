@@ -1,142 +1,150 @@
-<div *ngIf="person">
-  <div class="row">
-    <div class="col-md">
-      <div class="mb-3">
-        <label for="firstName" class="form-label fw-normal">First Name</label>
-        <span *ngIf="!me">
-          <input [disabled]="isDisabled" type="text" class="form-control required" id="firstName{{idNum}}" name="firstName" [(ngModel)]="person.firstName" #firstName="ngModel" [pattern]="nameRegex">
-          <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(firstName)">
+@if (person) {
+  <div>
+    <div class="row">
+      <div class="col-md">
+        <div class="mb-3">
+          <label for="firstName" class="form-label fw-normal">First Name</label>
+          @if (!me) {
+            <span>
+              <input [disabled]="isDisabled" type="text" class="form-control required" id="firstName{{idNum}}" name="firstName" [(ngModel)]="person.firstName" #firstName="ngModel" [pattern]="nameRegex">
+              <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(firstName)">
+                Ok
+              </div>
+              <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedbackOld(firstName)">
+                Try Again
+              </div>
+            </span>
+          }
+          @if (me) {
+            <span>
+              <input [disabled]="isDisabled" type="text" class="form-control" id="firstName{{idNum}}" name="firstName" [value]="person.firstName" disabled>
+            </span>
+          }
+        </div>
+      </div>
+      <div class="col-md">
+        <div class="mb-3">
+          <label for="middleName" class="form-label fw-normal">Middle Name (Optional)</label>
+          <input [disabled]="isDisabled" type="text" class="form-control" id="middleName{{idNum}}" name="middleName" [(ngModel)]="person.middleName" #middleName="ngModel" [pattern]="nameRegex">
+        </div>
+      </div>
+      <div class="col-md">
+        <div class="mb-3">
+          <label for="lastName" class="form-label fw-normal">Last Name</label>
+          @if (!me) {
+            <span>
+              <input [disabled]="isDisabled" type="text" class="form-control" id="lastName{{idNum}}" name="lastName" [(ngModel)]="person.lastName" #lastName="ngModel" [pattern]="nameRegex">
+              <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(lastName)">
+                Ok
+              </div>
+              <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedbackOld(lastName)">
+                Try Again
+              </div>
+            </span>
+          }
+          @if (me) {
+            <span>
+              <input [disabled]="isDisabled" type="text" class="form-control" id="lastName{{idNum}}" name="lastName" [value]="person.lastName" disabled>
+            </span>
+          }
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md">
+        <div class="mb-3">
+          <label for="title" class="form-label fw-normal">Title</label>
+          <input [disabled]="isDisabled" type="text" class="form-control" id="title{{idNum}}" name="title" [(ngModel)]="person.title" #title="ngModel" maxlength="100">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md">
+        <div class="mb-3">
+          <label for="emailAddress" class="form-label fw-normal">Email</label>
+          <input [disabled]="isDisabled" type="text" class="form-control" id="emailAddress{{idNum}}" name="emailAddress" [(ngModel)]="person.email" #emailAddress="ngModel" (input)="formHelper.trimInput($event.target)" [pattern]="emailRegex">
+          <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(emailAddress)">
             Ok
           </div>
-          <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedbackOld(firstName)">
+          <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedbackOld(emailAddress)">
             Try Again
           </div>
-        </span>
-        <span *ngIf="me">
-          <input [disabled]="isDisabled" type="text" class="form-control" id="firstName{{idNum}}" name="firstName" [value]="person.firstName" disabled>
-        </span>
+        </div>
       </div>
     </div>
-    <div class="col-md">
-      <div class="mb-3">
-        <label for="middleName" class="form-label fw-normal">Middle Name (Optional)</label>
-        <input [disabled]="isDisabled" type="text" class="form-control" id="middleName{{idNum}}" name="middleName" [(ngModel)]="person.middleName" #middleName="ngModel" [pattern]="nameRegex">
-      </div>
-    </div>
-    <div class="col-md">
-      <div class="mb-3">
-        <label for="lastName" class="form-label fw-normal">Last Name</label>
-        <span *ngIf="!me">
-          <input [disabled]="isDisabled" type="text" class="form-control" id="lastName{{idNum}}" name="lastName" [(ngModel)]="person.lastName" #lastName="ngModel" [pattern]="nameRegex">
-          <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(lastName)">
+    <div class="row">
+      <div class="col-md">
+        <div class="mb-3">
+          <label for="phoneNumber2" class="form-label fw-normal">Work Phone</label>
+          <input [disabled]="isDisabled" type="text" mask='(000) 000 0000' class="form-control" id="phoneNumber2{{idNum}}" name="phoneNumber2" [(ngModel)]="person.phone2" #phoneNumber2="ngModel" [pattern]="phoneRegex">
+          <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(phoneNumber2)">
             Ok
           </div>
-          <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedbackOld(lastName)">
+          <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedback(person.phone2, phoneRegex, phoneNumber2)">
             Try Again
           </div>
-        </span>
-        <span *ngIf="me">
-          <input [disabled]="isDisabled" type="text" class="form-control" id="lastName{{idNum}}" name="lastName" [value]="person.lastName" disabled>
-        </span>
+        </div>
+      </div>
+      <div class="col-md">
+        <div class="mb-3">
+          <label for="ext2" class="form-label fw-normal">Ext. (Optional)</label>
+          <input [disabled]="isDisabled" type="text" mask='0000' [validation]="false" class="form-control" id="ext2{{idNum}}" name="ext2" [(ngModel)]="person.phone2Extension" #ext2="ngModel">
+        </div>
       </div>
     </div>
+    <div class="row">
+      <div class="col-md">
+        <div class="mb-3">
+          <label for="phoneNumber" class="form-label fw-normal">Mobile Number (Optional)</label>
+          <input [disabled]="isDisabled" type="text" mask='(000) 000 0000' class="form-control" id="phoneNumber{{idNum}}" name="phoneNumber" [(ngModel)]="person.phone" #phoneNumber="ngModel" [pattern]="phoneRegex">
+          <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(phoneNumber)">
+            Ok
+          </div>
+          <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedback(person.phone, phoneRegex, phoneNumber)">
+            Try Again
+          </div>
+        </div>
+      </div>
+      <div class="col-md">
+        <div class="mb-3">
+          <label for="ext" class="form-label fw-normal">Ext. (Optional)</label>
+          <input [disabled]="isDisabled" type="text" mask='0000' [validation]="false" class="form-control" id="ext{{idNum}}" name="ext" [(ngModel)]="person.phoneExtension" #ext="ngModel">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md">
+        <div class="mb-3">
+          <label for="faxNumber" class="form-label fw-normal">Fax Number (Optional)</label>
+          <input [disabled]="isDisabled" type="text" mask='(000) 000 0000' class="form-control" id="faxNumber{{idNum}}" name="faxNumber" [(ngModel)]="person.fax" #faxNumber="ngModel" [pattern]="phoneRegex">
+          <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(faxNumber)">
+            Ok
+          </div>
+          <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedback(person.fax, phoneRegex,faxNumber)">
+            Try Again
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-check">
+      <input [disabled]="isDisabled" [(ngModel)]="person.addressSameAsAgency" class="form-check-input" type="checkbox" id="sameAsPrimaryAgencyAddress" name="sameAsPrimaryAgencyAddress" (click)="setAddressSameAsAgency()">
+      <label class="form-check-label form-label fw-normal" for="sameAsPrimaryAgencyAddress">
+        Same as primary address of Agency.
+      </label>
+    </div>
+    <app-address2 [isDisabled]="isDisabled || person.addressSameAsAgency" [(address)]="person.address"></app-address2>
+    @if (!isPoliceContact) {
+      <label class="form-check-label form-label fw-normal" for="employmentStatus">
+        Employment Status
+      </label>
+      <select [disabled]="isDisabled" class="form-control" name="employmentStatus" [(ngModel)]="person.employmentStatus">
+        <option value="null">--</option>
+        <option value="Full-Time">Full-Time</option>
+        <option value="Sub-Contracted">Sub-Contracted</option>
+        <option value="Part-Time">Part-Time</option>
+        <option value="Leave of Absence">Leave of Absence</option>
+        <option value="Volunteer">Volunteer</option>
+      </select>
+    }
   </div>
-  <div class="row">
-    <div class="col-md">
-      <div class="mb-3">
-        <label for="title" class="form-label fw-normal">Title</label>
-        <input [disabled]="isDisabled" type="text" class="form-control" id="title{{idNum}}" name="title" [(ngModel)]="person.title" #title="ngModel" maxlength="100">
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md">
-      <div class="mb-3">
-        <label for="emailAddress" class="form-label fw-normal">Email</label>
-        <input [disabled]="isDisabled" type="text" class="form-control" id="emailAddress{{idNum}}" name="emailAddress" [(ngModel)]="person.email" #emailAddress="ngModel" (input)="formHelper.trimInput($event.target)" [pattern]="emailRegex">
-        <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(emailAddress)">
-          Ok
-        </div>
-        <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedbackOld(emailAddress)">
-          Try Again
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md">
-      <div class="mb-3">
-        <label for="phoneNumber2" class="form-label fw-normal">Work Phone</label>
-        <input [disabled]="isDisabled" type="text" mask='(000) 000 0000' class="form-control" id="phoneNumber2{{idNum}}" name="phoneNumber2" [(ngModel)]="person.phone2" #phoneNumber2="ngModel" [pattern]="phoneRegex">
-        <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(phoneNumber2)">
-          Ok
-        </div>
-        <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedback(person.phone2, phoneRegex, phoneNumber2)">
-          Try Again
-        </div>
-      </div>
-    </div>
-    <div class="col-md">
-      <div class="mb-3">
-        <label for="ext2" class="form-label fw-normal">Ext. (Optional)</label>
-        <input [disabled]="isDisabled" type="text" mask='0000' [validation]="false" class="form-control" id="ext2{{idNum}}" name="ext2" [(ngModel)]="person.phone2Extension" #ext2="ngModel">
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md">
-      <div class="mb-3">
-        <label for="phoneNumber" class="form-label fw-normal">Mobile Number (Optional)</label>
-        <input [disabled]="isDisabled" type="text" mask='(000) 000 0000' class="form-control" id="phoneNumber{{idNum}}" name="phoneNumber" [(ngModel)]="person.phone" #phoneNumber="ngModel" [pattern]="phoneRegex">
-        <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(phoneNumber)">
-          Ok
-        </div>
-        <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedback(person.phone, phoneRegex, phoneNumber)">
-          Try Again
-        </div>
-      </div>
-    </div>
-    <div class="col-md">
-      <div class="mb-3">
-        <label for="ext" class="form-label fw-normal">Ext. (Optional)</label>
-        <input [disabled]="isDisabled" type="text" mask='0000' [validation]="false" class="form-control" id="ext{{idNum}}" name="ext" [(ngModel)]="person.phoneExtension" #ext="ngModel">
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md">
-      <div class="mb-3">
-        <label for="faxNumber" class="form-label fw-normal">Fax Number (Optional)</label>
-        <input [disabled]="isDisabled" type="text" mask='(000) 000 0000' class="form-control" id="faxNumber{{idNum}}" name="faxNumber" [(ngModel)]="person.fax" #faxNumber="ngModel" [pattern]="phoneRegex">
-        <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(faxNumber)">
-          Ok
-        </div>
-        <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedback(person.fax, phoneRegex,faxNumber)">
-          Try Again
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="form-check">
-    <input [disabled]="isDisabled" [(ngModel)]="person.addressSameAsAgency" class="form-check-input" type="checkbox" id="sameAsPrimaryAgencyAddress" name="sameAsPrimaryAgencyAddress" (click)="setAddressSameAsAgency()">
-    <label class="form-check-label form-label fw-normal" for="sameAsPrimaryAgencyAddress">
-      Same as primary address of Agency.
-    </label>
-  </div>
-  <app-address2 [isDisabled]="isDisabled || person.addressSameAsAgency" [(address)]="person.address"></app-address2>
-
-  <ng-container *ngIf="!isPoliceContact">
-    <label class="form-check-label form-label fw-normal" for="employmentStatus">
-      Employment Status
-    </label>
-    <select [disabled]="isDisabled" class="form-control" name="employmentStatus" [(ngModel)]="person.employmentStatus">
-      <option value="null">--</option>
-      <option value="Full-Time">Full-Time</option>
-      <option value="Sub-Contracted">Sub-Contracted</option>
-      <option value="Part-Time">Part-Time</option>
-      <option value="Leave of Absence">Leave of Absence</option>
-      <option value="Volunteer">Volunteer</option>
-    </select>
-  </ng-container>
-</div>
+}

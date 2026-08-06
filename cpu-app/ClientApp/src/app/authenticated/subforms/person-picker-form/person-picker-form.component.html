@@ -6,8 +6,10 @@
   [options]="personOptions"
   placeholder="Select a person"
   [errorMessage]="errorMessage"
->
+  >
 </app-form-field>
-<div *ngIf="control?.value && person">
-  <app-person-card [person]="person"></app-person-card>
-</div>
+@if (control?.value && person) {
+  <div>
+    <app-person-card [person]="person"></app-person-card>
+  </div>
+}

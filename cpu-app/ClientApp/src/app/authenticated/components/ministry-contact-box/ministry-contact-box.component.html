@@ -1,19 +1,21 @@
-<div *ngIf="trans.ministryContact" class="card">
-  <div class="card-header">
-    Ministry Contact
-  </div>
-  <div class="card-body">
-    <div class="card-title">
-      <strong>Program Manager</strong><br>
-      {{nameAssemble(trans.ministryContact.firstName, null, trans.ministryContact.lastName)}}
+@if (trans.ministryContact) {
+  <div class="card">
+    <div class="card-header">
+      Ministry Contact
     </div>
-    <p class="card-text">
-      <strong>Phone</strong><br>
-      <a href="tel:{{trans.ministryContact.phone}}">{{trans.ministryContact.phone | phone}}</a>
-    </p>
-    <p class="card-text">
-      <strong>Email</strong><br>
-      <a href="mailto:{{trans.ministryContact.email}}">{{trans.ministryContact.email}}</a>
-    </p>
+    <div class="card-body">
+      <div class="card-title">
+        <strong>Program Manager</strong><br>
+        {{nameAssemble(trans.ministryContact.firstName, null, trans.ministryContact.lastName)}}
+      </div>
+      <p class="card-text">
+        <strong>Phone</strong><br>
+        <a href="tel:{{trans.ministryContact.phone}}">{{trans.ministryContact.phone | phone}}</a>
+      </p>
+      <p class="card-text">
+        <strong>Email</strong><br>
+        <a href="mailto:{{trans.ministryContact.email}}">{{trans.ministryContact.email}}</a>
+      </p>
+    </div>
   </div>
-</div>
+}

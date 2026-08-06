@@ -7,35 +7,43 @@
     <th></th>
   </thead>
   <tbody>
-    <tr *ngFor="let source of revenueSources; let i=index">
-      <ng-container *ngIf="source.isActive">
-        <td>
-          {{source.revenueSourceName}}
-          <span *ngIf="source.revenueSourceName===revenueSourceTypes[4]">
-            <input [disabled]="isDisabled" class="form-control mt-1" type="text" [(ngModel)]="source.other" placeholder="Specify" id="other_{{i}}">
-          </span>
+    @for (source of revenueSources; track source; let i = $index) {
+      <tr>
+        @if (source.isActive) {
+          <td>
+            {{source.revenueSourceName}}
+            @if (source.revenueSourceName===revenueSourceTypes[4]) {
+              <span>
+                <input [disabled]="isDisabled" class="form-control mt-1" type="text" [(ngModel)]="source.other" placeholder="Specify" id="other_{{i}}">
+              </span>
+            }
+          </td>
+          <td>
+            <input class="form-control" (input)="formHelper.moneyMaskToNumber($event.target, source, 'cash'); calculateTotals()" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="source.cashMask" min="0" id="cash_{{i}}" [disabled]="source.revenueSourceName == 'Ministry of PSSG - VSCP' || isDisabled">
+          </td>
+          <td>
+            <input class="form-control" (input)="formHelper.moneyMaskToNumber($event.target, source, 'inKindContribution'); calculateTotals()" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="source.inKindContributionMask" min="0" id="kind_{{i}}" [disabled]="source.revenueSourceName == 'Ministry of PSSG - VSCP' || isDisabled">
+          </td>
+          <td>
+            <input class="form-control" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="source.totalMask" id="total_{{i}}" disabled>
+          </td>
+          <td>
+            @if (source.revenueSourceName===revenueSourceTypes[4] && !isDisabled) {
+              <div (click)="removeRevenueSource(i)" class="align-middle remove-row-button">
+                <i class="fas fa-times-circle text-danger"></i>
+              </div>
+            }
+          </td>
+        }
+      </tr>
+    }
+    @if (!isDisabled) {
+      <tr>
+        <td colspan="5" class="add-row-td-text">
+          <button class="btn btn-info align-right" (click)="addRevenueSource()">Add Other Revenue Source</button>
         </td>
-        <td>
-          <input class="form-control" (input)="formHelper.moneyMaskToNumber($event.target, source, 'cash'); calculateTotals()" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="source.cashMask" min="0" id="cash_{{i}}" [disabled]="source.revenueSourceName == 'Ministry of PSSG - VSCP' || isDisabled">
-        </td>
-        <td>
-          <input class="form-control" (input)="formHelper.moneyMaskToNumber($event.target, source, 'inKindContribution'); calculateTotals()" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="source.inKindContributionMask" min="0" id="kind_{{i}}" [disabled]="source.revenueSourceName == 'Ministry of PSSG - VSCP' || isDisabled">
-        </td>
-        <td>
-          <input class="form-control" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="source.totalMask" id="total_{{i}}" disabled>
-        </td>
-        <td>
-          <div (click)="removeRevenueSource(i)" class="align-middle remove-row-button" *ngIf="source.revenueSourceName===revenueSourceTypes[4] && !isDisabled">
-            <i class="fas fa-times-circle text-danger"></i>
-          </div>
-        </td>
-      </ng-container>
-    </tr>
-    <tr *ngIf="!isDisabled">
-      <td colspan="5" class="add-row-td-text">
-        <button class="btn btn-info align-right" (click)="addRevenueSource()">Add Other Revenue Source</button>
-      </td>
-    </tr>
+      </tr>
+    }
     <tr>
       <th>Total </th>
       <th>{{totalCash | currency}}</th>

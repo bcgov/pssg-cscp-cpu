@@ -18,9 +18,9 @@
   </div>
   <div class="form-check">
     <input [disabled]="isDisabled" #compliantWorkersCompensation="ngModel" [(ngModel)]="transmogrifierProgramApplication.administrativeInformation.compliantWorkersCompensation" class="form-check-input" type="checkbox" value="" id="compliantWorkersCompensation" name="compliantWorkersCompensation"> <label class="form-check-label form-label fw-normal" for="compliantWorkersCompensation" required>
-      Workers Compensation Act (WorkSafe BC)?
-    </label>
-  </div>
+    Workers Compensation Act (WorkSafe BC)?
+  </label>
+</div>
 </div>
 
 <label class="form-label fw-normal">
@@ -36,16 +36,18 @@
     <label class="form-check-label form-label fw-normal" for="staffUnionized2">No</label>
   </div>
 </div>
-<div *ngIf="transmogrifierProgramApplication.administrativeInformation.staffUnionized" class="mb-3">
-  <label for="staffUnion" class="form-label fw-normal">Which union?</label>
-  <input [disabled]="isDisabled" #staffUnion="ngModel" [(ngModel)]="transmogrifierProgramApplication.administrativeInformation.staffUnion" type="text" class="form-control" id="staffUnion" name="staffUnion" placeholder="i.e. CUPE">
-  <div class="valid-feedback" [hidden]="showValidFeedback(staffUnion)" style="display: inherit">
-    Ok
+@if (transmogrifierProgramApplication.administrativeInformation.staffUnionized) {
+  <div class="mb-3">
+    <label for="staffUnion" class="form-label fw-normal">Which union?</label>
+    <input [disabled]="isDisabled" #staffUnion="ngModel" [(ngModel)]="transmogrifierProgramApplication.administrativeInformation.staffUnion" type="text" class="form-control" id="staffUnion" name="staffUnion" placeholder="i.e. CUPE">
+    <div class="valid-feedback" [hidden]="showValidFeedback(staffUnion)" style="display: inherit">
+      Ok
+    </div>
+    <div class="invalid-feedback" [hidden]="showInvalidFeedback(staffUnion)" style="display: inherit">
+      Union name is
+    </div>
   </div>
-  <div class="invalid-feedback" [hidden]="showInvalidFeedback(staffUnion)" style="display: inherit">
-    Union name is
-  </div>
-</div>
+}
 
 <div class="mb-3">
   <label for="ccseaMemberType" class="form-label fw-normal">Is your organization a member of the Community Social Services Employers Association of BC (CSSEA)</label>

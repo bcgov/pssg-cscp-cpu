@@ -1,42 +1,44 @@
-<div *ngIf="contactInformation">
-  <div class="row">
-    <div class="col-md">
-      <div class="mb-3">
-        <label for="emailAddress" class="form-label fw-normal">Email</label>
-        <input [disabled]="isDisabled" type="text" class="form-control" id="emailAddress" name="emailAddress" [(ngModel)]="contactInformation.emailAddress" #emailAddress="ngModel" (input)="formHelper.trimInput($event.target)" [pattern]="emailRegex" required>
-        <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(emailAddress)">
-          Ok
+@if (contactInformation) {
+  <div>
+    <div class="row">
+      <div class="col-md">
+        <div class="mb-3">
+          <label for="emailAddress" class="form-label fw-normal">Email</label>
+          <input [disabled]="isDisabled" type="text" class="form-control" id="emailAddress" name="emailAddress" [(ngModel)]="contactInformation.emailAddress" #emailAddress="ngModel" (input)="formHelper.trimInput($event.target)" [pattern]="emailRegex" required>
+          <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(emailAddress)">
+            Ok
+          </div>
+          <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedback(contactInformation.emailAddress, emailRegex, emailAddress)">
+            Try Again
+          </div>
         </div>
-        <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedback(contactInformation.emailAddress, emailRegex, emailAddress)">
-          Try Again
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md">
+        <div class="mb-3">
+          <label for="phoneNumber" class="form-label fw-normal">Phone Number</label>
+          <input [disabled]="isDisabled" type="text" mask='(000) 000 0000' class="form-control" id="phoneNumber" name="phoneNumber" [(ngModel)]="contactInformation.phoneNumber" #phoneNumber="ngModel" [pattern]="phoneRegex" required>
+          <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(phoneNumber)">
+            Ok
+          </div>
+          <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedback(contactInformation.phoneNumber, phoneRegex, phoneNumber)">
+            Try Again
+          </div>
+        </div>
+      </div>
+      <div class="col-md">
+        <div class="mb-3">
+          <label for="faxNumber" class="form-label fw-normal">Fax Number (Optional)</label>
+          <input [disabled]="isDisabled" type="text" mask='(000) 000 0000' class="form-control" id="faxNumber" name="faxNumber" [(ngModel)]="contactInformation.faxNumber" #faxNumber="ngModel" [pattern]="phoneRegex">
+          <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(faxNumber)">
+            Ok
+          </div>
+          <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedback(contactInformation.faxNumber, phoneRegex, faxNumber)">
+            Try Again
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md">
-      <div class="mb-3">
-        <label for="phoneNumber" class="form-label fw-normal">Phone Number</label>
-        <input [disabled]="isDisabled" type="text" mask='(000) 000 0000' class="form-control" id="phoneNumber" name="phoneNumber" [(ngModel)]="contactInformation.phoneNumber" #phoneNumber="ngModel" [pattern]="phoneRegex" required>
-        <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(phoneNumber)">
-          Ok
-        </div>
-        <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedback(contactInformation.phoneNumber, phoneRegex, phoneNumber)">
-          Try Again
-        </div>
-      </div>
-    </div>
-    <div class="col-md">
-      <div class="mb-3">
-        <label for="faxNumber" class="form-label fw-normal">Fax Number (Optional)</label>
-        <input [disabled]="isDisabled" type="text" mask='(000) 000 0000' class="form-control" id="faxNumber" name="faxNumber" [(ngModel)]="contactInformation.faxNumber" #faxNumber="ngModel" [pattern]="phoneRegex">
-        <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(faxNumber)">
-          Ok
-        </div>
-        <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedback(contactInformation.faxNumber, phoneRegex, faxNumber)">
-          Try Again
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+}

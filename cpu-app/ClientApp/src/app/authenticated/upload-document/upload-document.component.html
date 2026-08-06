@@ -1,22 +1,28 @@
 <div class="container upload-documents-page-container">
-  <div class="loading-indicator" *ngIf="downloadingDocument">
-    <mat-spinner mode="indeterminate"></mat-spinner>
-  </div>
+  @if (downloadingDocument) {
+    <div class="loading-indicator">
+      <mat-spinner mode="indeterminate"></mat-spinner>
+    </div>
+  }
   <div class="row" [class.dark-overlay]="downloadingDocument">
     <div class="col-md-4">
       <section class="application-nav sticky-top">
         <div style="max-height: 90%;">
-          <div class="card organization-box" *ngIf="trans">
-            <div class="card-header">
-              {{ trans.organizationName ||'Organization'}}
+          @if (trans) {
+            <div class="card organization-box">
+              <div class="card-header">
+                {{ trans.organizationName ||'Organization'}}
+              </div>
+              @if (isContractUpload) {
+                <div class="card-body">
+                  <p class="card-text">
+                    <strong>Contract No</strong><br>
+                    {{contractNumber}}
+                  </p>
+                </div>
+              }
             </div>
-            <div class="card-body" *ngIf="isContractUpload">
-              <p class="card-text">
-                <strong>Contract No</strong><br>
-                {{contractNumber}}
-              </p>
-            </div>
-          </div>
+          }
         </div>
         <button class="btn btn-primary mt-2" (click)="exit()" [class.is-disabled]="downloadingDocument">Exit</button>
       </section>
@@ -29,27 +35,31 @@
         <div>
 
           <div class="list-group list-container mb-2">
-            <div class="row list-group-item" *ngFor="let doc of documentsToAdd; let i=index">
-              <div class="col-md-3">
-                <span class="file-name-container">
-                  {{doc.filename}}
-                </span>
+            @for (doc of documentsToAdd; track doc; let i = $index) {
+              <div class="row list-group-item">
+                <div class="col-md-3">
+                  <span class="file-name-container">
+                    {{doc.filename}}
+                  </span>
+                </div>
+                <div class="col-md-9 file-type-col">
+                  <span class="file-type-container">
+                    <label class="file-type-label">File Type</label>
+                    <select class="form-control file-type-select" [(ngModel)]="doc.subject" #doctype="ngModel">
+                      @for (type of document_types; track type) {
+                        <option [value]="type">{{type}}</option>
+                      }
+                    </select>
+                    @if (doc.subject === 'Other') {
+                      <input type="text" class="form-control other-input" [(ngModel)]="doc.subjectOther" #city="ngModel">
+                    }
+                  </span>
+                  <span (click)="removeFile(i)">
+                    <i class="fas fa-times-circle text-danger"></i>
+                  </span>
+                </div>
               </div>
-              <div class="col-md-9 file-type-col">
-                <span class="file-type-container">
-                  <label class="file-type-label">File Type</label>
-                  <select class="form-control file-type-select" [(ngModel)]="doc.subject" #doctype="ngModel">
-                    <option *ngFor="let type of document_types" [value]="type">{{type}}</option>
-                  </select>
-                  <ng-container *ngIf="doc.subject === 'Other'">
-                    <input type="text" class="form-control other-input" [(ngModel)]="doc.subjectOther" #city="ngModel">
-                  </ng-container>
-                </span>
-                <span (click)="removeFile(i)">
-                  <i class="fas fa-times-circle text-danger"></i>
-                </span>
-              </div>
-            </div>
+            }
           </div>
 
           <div class="alert alert-info" role="alert">
@@ -74,16 +84,20 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngIf="loadingDocuments">
-                  <td>Loading...</td>
-                  <td><i class="text-secondary spinner-border spinner-border-sm"></i></td>
-                </tr>
-                <tr *ngFor="let doc of existingDocuments; let i=index;">
-                  <td><span class="download-link" (click)="download(doc)">{{doc.filename}}</span></td>
-                  <td>
-                    {{doc.overwritetime | date:'yyyy-MM-dd'}}
-                  </td>
-                </tr>
+                @if (loadingDocuments) {
+                  <tr>
+                    <td>Loading...</td>
+                    <td><i class="text-secondary spinner-border spinner-border-sm"></i></td>
+                  </tr>
+                }
+                @for (doc of existingDocuments; track doc; let i = $index) {
+                  <tr>
+                    <td><span class="download-link" (click)="download(doc)">{{doc.filename}}</span></td>
+                    <td>
+                      {{doc.overwritetime | date:'yyyy-MM-dd'}}
+                    </td>
+                  </tr>
+                }
               </tbody>
             </table>
           </ng-container>

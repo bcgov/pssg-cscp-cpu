@@ -1,23 +1,25 @@
-<ul *ngIf="stepperElements && currentStepperElement" class="list-group">
-  <li
-    *ngFor="let item of stepperElements"
-    class="stepper-item list-group-item d-flex justify-content-between align-items-center"
-    [class.active]="item.id === currentStepperElement.id"
-    style="cursor: default"
-  >
-    <span>
-      {{ item.itemName }}<br />
-      <small
-        [class]="levels[item.formState][1] + ' ' + levels[item.formState][3]"
-      >
-        {{ levels[item.formState][0] }}
-      </small>
-    </span>
-
-    <span [class.stepper-selected]="item.id === currentStepperElement.id">
-      <i
-        [class]="levels[item.formState][1] + ' ' + levels[item.formState][2]"
-      ></i>
-    </span>
-  </li>
-</ul>
+@if (stepperElements && currentStepperElement) {
+  <ul class="list-group">
+    @for (item of stepperElements; track item) {
+      <li
+        class="stepper-item list-group-item d-flex justify-content-between align-items-center"
+        [class.active]="item.id === currentStepperElement.id"
+        style="cursor: default"
+        >
+        <span>
+          {{ item.itemName }}<br />
+          <small
+            [class]="levels[item.formState][1] + ' ' + levels[item.formState][3]"
+            >
+            {{ levels[item.formState][0] }}
+          </small>
+        </span>
+        <span [class.stepper-selected]="item.id === currentStepperElement.id">
+          <i
+            [class]="levels[item.formState][1] + ' ' + levels[item.formState][2]"
+          ></i>
+        </span>
+      </li>
+    }
+  </ul>
+}

@@ -1,16 +1,20 @@
 <div>
-  <p *ngIf="organizationName" class="h4">
-    <small>
-      Organization Name
-    </small>
-    <br>
-    {{organizationName}}
-  </p>
-  <p *ngIf="contractNumber" class="h4">
-    <small>
-      Contract Number
-    </small>
-    <br>
-    {{contractNumber}}
-  </p>
-</div>
+  @if (organizationName) {
+    <p class="h4">
+      <small>
+        Organization Name
+      </small>
+      <br>
+        {{organizationName}}
+      </p>
+    }
+    @if (contractNumber) {
+      <p class="h4">
+        <small>
+          Contract Number
+        </small>
+        <br>
+          {{contractNumber}}
+        </p>
+      }
+    </div>

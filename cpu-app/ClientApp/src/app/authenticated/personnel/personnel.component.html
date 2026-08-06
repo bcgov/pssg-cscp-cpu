@@ -12,58 +12,64 @@
           class="btn btn-primary mt-2"
           [class.is-disabled]="saving"
           (click)="save()"
-        >
+          >
           Save
         </button>
       </section>
     </div>
 
     <div class="col">
-      <div *ngIf="stepperElements && currentStepperElement">
-        <div *ngFor="let person of trans.persons; let i = index">
-          <span
-            *ngIf="person.personId === currentStepperElement.object['personId']"
-          >
-            <div class="page-header">
-              <h1>
-                {{
-                  nameAssemble(
-                    person.firstName,
-                    person.middleName,
-                    person.lastName
-                  ) || "Person"
-                }}
-              </h1>
+      @if (stepperElements && currentStepperElement) {
+        <div>
+          @for (person of trans.persons; track person; let i = $index) {
+            <div>
+              @if (person.personId === currentStepperElement.object['personId']) {
+                <span
+                  >
+                  <div class="page-header">
+                    <h1>
+                      {{
+                      nameAssemble(
+                      person.firstName,
+                      person.middleName,
+                      person.lastName
+                      ) || "Person"
+                      }}
+                    </h1>
+                  </div>
+                  <app-person-editor-form
+                    [personForm]="getPersonForm(person.personId)"
+                    >
+                  </app-person-editor-form>
+                  @if (!person.me) {
+                    <button
+                      [class.is-disabled]="saving"
+                      class="btn btn-danger mt-2 me-2"
+                      (click)="remove(person)"
+                      >
+                      Deactivate Staff
+                    </button>
+                  }
+                  <button
+                    [class.is-disabled]="saving"
+                    class="btn btn-primary mt-2 me-2"
+                    (click)="cancel(person)"
+                    >
+                    Cancel
+                  </button>
+                  <button
+                    [class.is-disabled]="saving"
+                    class="btn btn-primary mt-2 me-2"
+                    (click)="saveAndExit()"
+                    >
+                    Save and Exit
+                  </button>
+                </span>
+              }
             </div>
-            <app-person-editor-form
-              [personForm]="getPersonForm(person.personId)"
-            >
-            </app-person-editor-form>
-            <button
-              *ngIf="!person.me"
-              [class.is-disabled]="saving"
-              class="btn btn-danger mt-2 me-2"
-              (click)="remove(person)"
-            >
-              Deactivate Staff
-            </button>
-            <button
-              [class.is-disabled]="saving"
-              class="btn btn-primary mt-2 me-2"
-              (click)="cancel(person)"
-            >
-              Cancel
-            </button>
-            <button
-              [class.is-disabled]="saving"
-              class="btn btn-primary mt-2 me-2"
-              (click)="saveAndExit()"
-            >
-              Save and Exit
-            </button>
-          </span>
+          }
         </div>
-      </div>
+      }
     </div>
   </div>
 </div>

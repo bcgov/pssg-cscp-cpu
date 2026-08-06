@@ -1,94 +1,99 @@
-<div class="container" *ngIf="trans">
+@if (trans) {
+  <div class="container">
     <div class="row">
-        <div class="col-md-4">
-            <section class="application-nav sticky-top">
-                <div style="max-height: 90%;">
-                    <div class="card organization-box" *ngIf="trans">
-                        <div class="card-header">
-                            {{ trans.organizationName ||'Organization'}}
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">
-                                <strong>Contract No</strong><br>
-                                {{trans.contractNumber}}
-                            </p>
-                            <p class="card-text">
-                                <strong>Program</strong><br>
-                                {{trans.programName}}
-                            </p>
-                        </div>
-                    </div>
+      <div class="col-md-4">
+        <section class="application-nav sticky-top">
+          <div style="max-height: 90%;">
+            @if (trans) {
+              <div class="card organization-box">
+                <div class="card-header">
+                  {{ trans.organizationName ||'Organization'}}
                 </div>
-                <button class="btn btn-primary mt-2 me-2" *ngIf="!isCompleted" [class.is-disabled]="saving" (click)="save(true)">Save and Exit</button>
-                <button class="btn btn-primary mt-2" *ngIf="!isCompleted" [class.is-disabled]="saving" (click)="save()">Save</button>
-                <button class="btn btn-primary mt-2" *ngIf="isCompleted" (click)="exit()">Exit</button>
-            </section>
-
+                <div class="card-body">
+                  <p class="card-text">
+                    <strong>Contract No</strong><br>
+                    {{trans.contractNumber}}
+                  </p>
+                  <p class="card-text">
+                    <strong>Program</strong><br>
+                    {{trans.programName}}
+                  </p>
+                </div>
+              </div>
+            }
+          </div>
+          @if (!isCompleted) {
+            <button class="btn btn-primary mt-2 me-2" [class.is-disabled]="saving" (click)="save(true)">Save and Exit</button>
+          }
+          @if (!isCompleted) {
+            <button class="btn btn-primary mt-2" [class.is-disabled]="saving" (click)="save()">Save</button>
+          }
+          @if (isCompleted) {
+            <button class="btn btn-primary mt-2" (click)="exit()">Exit</button>
+          }
+        </section>
+      </div>
+      <div class="col">
+        <div class="page-header">
+          <h1>Program Surplus Plan</h1>
         </div>
-        <div class="col">
-            <div class="page-header">
-                <h1>Program Surplus Plan</h1>
-            </div>
-
-            <div class="amount-totals-container">
-                <p><strong>Surplus Amount: </strong> {{surplus_amount | currency}}</p>
-                <p><strong>Remaining Amount: </strong> {{remaining_amount | currency}}</p>
-            </div>
-
-
-            <h2 class="blue-header no-bottom-margin">
-                Program Delivery Costs
-            </h2>
-
-            <table class="table table-striped expense-table">
-                <thead>
-                    <th scope="row">Program Delivery Expenditure</th>
-                    <th scope="row">Amount</th>
-                    <th scope="row">Justification / Details</th>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let line of trans.lineItems">
-                        <td>
-                            {{line.expense_name}}
-                        </td>
-                        <td>
-                            <input [disabled]="isCompleted" class="form-control" (input)="formHelper.moneyMaskToNumber($event.target, line, 'proposed_amount'); calculateTotals()" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="line.proposed_amount_mask" min="0">
-                        </td>
-                        <td>
-                            <input [disabled]="isCompleted" class="form-control" type="text" [(ngModel)]="line.justification">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="col">Total</th>
-                        <td><strong>{{total_amount | currency}}</strong></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <p>Should you decide not to allocate the surplus from previous year's contract to any of the
-                above expenditure, please kindly return a cheque with the surplus amount payable to:<br>
-                <strong>Ministry of Finance c/o Contract Administration, VSCP</strong></p>
-
-            <p>Please kindly main cheque to:<br>
-                <strong>302 – 815 Hornby Street<br>
-                    Vancouver, B.C.<br>
-                    V6Z 2E6</strong>
-            </p>
-
-            <div class="form-check mt-4">
-                <input [disabled]="isCompleted" [(ngModel)]="trans.pay_with_cheque" type="checkbox" id="pay_with_cheque" name="pay_with_cheque" class="form-check-input">
-                <label for="pay_with_cheque" class="form-label fw-normal">
-                    Select if you elect to return all surplus funds in cheque
-                </label>
-            </div>
+        <div class="amount-totals-container">
+          <p><strong>Surplus Amount: </strong> {{surplus_amount | currency}}</p>
+          <p><strong>Remaining Amount: </strong> {{remaining_amount | currency}}</p>
         </div>
-
-    </div>
-    <div class="row mt-4">
+        <h2 class="blue-header no-bottom-margin">
+          Program Delivery Costs
+        </h2>
+        <table class="table table-striped expense-table">
+          <thead>
+            <th scope="row">Program Delivery Expenditure</th>
+            <th scope="row">Amount</th>
+            <th scope="row">Justification / Details</th>
+          </thead>
+          <tbody>
+            @for (line of trans.lineItems; track line) {
+              <tr>
+                <td>
+                  {{line.expense_name}}
+                </td>
+                <td>
+                  <input [disabled]="isCompleted" class="form-control" (input)="formHelper.moneyMaskToNumber($event.target, line, 'proposed_amount'); calculateTotals()" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="line.proposed_amount_mask" min="0">
+                </td>
+                <td>
+                  <input [disabled]="isCompleted" class="form-control" type="text" [(ngModel)]="line.justification">
+                </td>
+              </tr>
+            }
+            <tr>
+              <th scope="col">Total</th>
+              <td><strong>{{total_amount | currency}}</strong></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+        <p>Should you decide not to allocate the surplus from previous year's contract to any of the
+          above expenditure, please kindly return a cheque with the surplus amount payable to:<br>
+          <strong>Ministry of Finance c/o Contract Administration, VSCP</strong></p>
+          <p>Please kindly main cheque to:<br>
+            <strong>302 – 815 Hornby Street<br>
+              Vancouver, B.C.<br>
+            V6Z 2E6</strong>
+          </p>
+          <div class="form-check mt-4">
+            <input [disabled]="isCompleted" [(ngModel)]="trans.pay_with_cheque" type="checkbox" id="pay_with_cheque" name="pay_with_cheque" class="form-check-input">
+            <label for="pay_with_cheque" class="form-label fw-normal">
+              Select if you elect to return all surplus funds in cheque
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4">
         <div class="col-md-4"></div>
         <div class="col">
-            <button (click)="submit()" *ngIf="!isCompleted" [class.is-disabled]="saving" class="btn btn-primary submit-button">Submit Surplus Plan</button>
+          @if (!isCompleted) {
+            <button (click)="submit()" [class.is-disabled]="saving" class="btn btn-primary submit-button">Submit Surplus Plan</button>
+          }
         </div>
+      </div>
     </div>
-</div>
+  }

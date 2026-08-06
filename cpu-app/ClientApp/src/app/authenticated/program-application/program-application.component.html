@@ -1,121 +1,155 @@
-<div *ngIf="trans" class="container">
-  <div class="row">
-    <div class="col-md-4">
-      <section class="application-nav sticky-top">
-        <div style="max-height: 90%;">
-          <div class="card organization-box" *ngIf="trans">
-            <div class="card-header">
-              {{ trans.organizationName ||'Organization'}}
-            </div>
-            <div class="card-body">
-              <p class="card-text">
-                <strong>Contract No</strong><br>
-                {{trans.contractNumber}}
-              </p>
-            </div>
+@if (trans) {
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <section class="application-nav sticky-top">
+          <div style="max-height: 90%;">
+            @if (trans) {
+              <div class="card organization-box">
+                <div class="card-header">
+                  {{ trans.organizationName ||'Organization'}}
+                </div>
+                <div class="card-body">
+                  <p class="card-text">
+                    <strong>Contract No</strong><br>
+                    {{trans.contractNumber}}
+                  </p>
+                </div>
+              </div>
+            }
           </div>
-        </div>
-
-        <div style="max-height: 90%;">
-          <app-icon-stepper></app-icon-stepper>
-        </div>
-        <button class="btn btn-primary mt-2 me-2" *ngIf="!isCompleted && !programError" [class.is-disabled]="saving || trans.signature.signatureDate || programError" (click)="save(true, true)">Save and Exit</button>
-        <button class="btn btn-primary mt-2" *ngIf="!isCompleted && !programError" [class.is-disabled]="saving || programError" (click)="save()">Save</button>
-        <button class="btn btn-primary mt-2" *ngIf="isCompleted || programError" (click)="exit()">Exit</button>
-      </section>
+          <div style="max-height: 90%;">
+            <app-icon-stepper></app-icon-stepper>
+          </div>
+          @if (!isCompleted && !programError) {
+            <button class="btn btn-primary mt-2 me-2" [class.is-disabled]="saving || trans.signature.signatureDate || programError" (click)="save(true, true)">Save and Exit</button>
+          }
+          @if (!isCompleted && !programError) {
+            <button class="btn btn-primary mt-2" [class.is-disabled]="saving || programError" (click)="save()">Save</button>
+          }
+          @if (isCompleted || programError) {
+            <button class="btn btn-primary mt-2" (click)="exit()">Exit</button>
+          }
+        </section>
+      </div>
+      <div class="col-md-8">
+        @if (stepperElements && currentStepperElement) {
+          <div>
+            <div class="page-header">
+              <h1>{{currentStepperElement.itemName}}</h1>
+            </div>
+            @for (item of stepperElements; track item) {
+              <div>
+                @if (isCurrentStepperElement(item)) {
+                  <div>
+                    @if (item.discriminator === discriminators[0]) {
+                      <div>
+                        <h2 class="blue-header">
+                          Organization Legal Name
+                        </h2>
+                        <div class="row">
+                          <div class="col-md">
+                            <div class="mb-3">
+                              <label for="orgName" class="form-label fw-normal">Legal Name of Organization</label>
+                              <input [value]="trans.organizationName" type="text" class="form-control" id="orgName" name="orgName" disabled>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md">
+                            <div class="mb-3">
+                              <label for="city" class="form-label fw-normal">Contract Number</label>
+                              <input [value]="trans.contractNumber" type="text" class="form-control" id="contractNumber" name="contractNumber" disabled>
+                            </div>
+                          </div>
+                        </div>
+                        <h2 class="blue-header">Primary Organization Contact Information</h2>
+                        <app-primary-contact-info [(contactInformation)]="trans.contactInformation" [isDisabled]="isCompleted"></app-primary-contact-info>
+                        <app-address2 [(address)]="trans.contactInformation.mainAddress" [isDisabled]="isCompleted" [addressRequired]="true"></app-address2>
+                        <h2 class="blue-header mt-4">Mailing Address</h2>
+                        <div class="form-check">
+                          <input [disabled]="isCompleted" [(ngModel)]="trans.contactInformation.mailingAddressSameAsMainAddress" class="form-check-input" type="checkbox" id="mailingAddressSameAsMainAddress" name="mailingAddressSameAsMainAddress" (change)="setMailingAddressSameAsMainAddress()">
+                          <label class="form-check-label form-label fw-normal" for="mailingAddressSameAsMainAddress">
+                            Please select this check box if mailing address is the same as Primary Organization Contact Address
+                          </label>
+                        </div>
+                        <app-address2 [isDisabled]="trans.contactInformation.mailingAddressSameAsMainAddress" [(address)]="trans.contactInformation.mailingAddress" [isDisabled]="isCompleted" [addressRequired]="!trans.contactInformation.mailingAddressSameAsMainAddress"></app-address2>
+                        <h2 class="blue-header mt-4">Organization Contact(s)</h2>
+                        <p>If the contractor contact or board contact information has changed, please update personal contact information.</p>
+                        <app-person-picker [title]="'Contractor Contact'" [(person)]="trans.contactInformation.executiveContact" [isDisabled]="isCompleted">
+                        </app-person-picker>
+                        <div class="form-check mt-4">
+                          <input [disabled]="isCompleted" [(ngModel)]="trans.contactInformation.hasBoardContact" type="checkbox" id="hasBoardOfDirectors" name="hasBoardOfDirectors" class="form-check-input">
+                          <label for="hasBoardOfDirectors" class="form-label fw-normal">
+                            Please select this check box if your organization has a Board of Directors.
+                          </label>
+                        </div>
+                        @if (trans.contactInformation.hasBoardContact) {
+                          <span>
+                            <app-person-picker [title]="'Board Contact (For societies only)'" [(person)]="trans.contactInformation.boardContact" [isDisabled]="isCompleted"></app-person-picker>
+                          </span>
+                        }
+                        @if (!isCompleted) {
+                          <button class="btn btn-primary mt-2 btn-add-program-staff" (click)="showAddPersonDialog()">Add Missing Staff</button>
+                        }
+                      </div>
+                    }
+                    @if (item.discriminator === discriminators[1]) {
+                      <div>
+                        <app-administrative-information [(transmogrifierProgramApplication)]="trans" [isDisabled]="isCompleted">
+                        </app-administrative-information>
+                      </div>
+                    }
+                    @if (item.discriminator === discriminators[2]) {
+                      <div>
+                        <app-cg-liability [(cgLiability)]="trans.cglInsurance" [isDisabled]="isCompleted"></app-cg-liability>
+                      </div>
+                    }
+                    @if (item.discriminator === discriminators[3]) {
+                      <div>
+                        @for (program of trans.programApplications; track program; let i = $index) {
+                          <span>
+                            @if (program.programId===item.object.data['programId']) {
+                              <span>
+                                <app-program [(programApplication)]="trans.programApplications[i]" [isDisabled]="isCompleted"></app-program>
+                              </span>
+                            }
+                          </span>
+                        }
+                      </div>
+                    }
+                    @if (item.discriminator === discriminators[4]) {
+                      <div>
+                        <app-review-application [trans]="trans" [(currentTab)]="currentReviewApplicationTab" (tabIndexChange)="reviewApplicationTabChange($event)"></app-review-application>
+                      </div>
+                    }
+                    @if (item.discriminator === discriminators[5]) {
+                      <div>
+                        <app-program-authorizer [(signature)]="trans.signature" [isDisabled]="isCompleted" formType="Program Application"></app-program-authorizer>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
     </div>
-
-    <div class="col-md-8">
-      <div *ngIf="stepperElements && currentStepperElement">
-        <div class="page-header">
-          <h1>{{currentStepperElement.itemName}}</h1>
-        </div>
-        <div *ngFor="let item of stepperElements">
-          <div *ngIf="isCurrentStepperElement(item)">
-            <div *ngIf="item.discriminator === discriminators[0]">
-              <h2 class="blue-header">
-                Organization Legal Name
-              </h2>
-              <div class="row">
-                <div class="col-md">
-                  <div class="mb-3">
-                    <label for="orgName" class="form-label fw-normal">Legal Name of Organization</label>
-                    <input [value]="trans.organizationName" type="text" class="form-control" id="orgName" name="orgName" disabled>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md">
-                  <div class="mb-3">
-                    <label for="city" class="form-label fw-normal">Contract Number</label>
-                    <input [value]="trans.contractNumber" type="text" class="form-control" id="contractNumber" name="contractNumber" disabled>
-                  </div>
-                </div>
-              </div>
-              <h2 class="blue-header">Primary Organization Contact Information</h2>
-              <app-primary-contact-info [(contactInformation)]="trans.contactInformation" [isDisabled]="isCompleted"></app-primary-contact-info>
-              <app-address2 [(address)]="trans.contactInformation.mainAddress" [isDisabled]="isCompleted" [addressRequired]="true"></app-address2>
-
-              <h2 class="blue-header mt-4">Mailing Address</h2>
-              <div class="form-check">
-                <input [disabled]="isCompleted" [(ngModel)]="trans.contactInformation.mailingAddressSameAsMainAddress" class="form-check-input" type="checkbox" id="mailingAddressSameAsMainAddress" name="mailingAddressSameAsMainAddress" (change)="setMailingAddressSameAsMainAddress()">
-                <label class="form-check-label form-label fw-normal" for="mailingAddressSameAsMainAddress">
-                  Please select this check box if mailing address is the same as Primary Organization Contact Address
-                </label>
-              </div>
-              <app-address2 [isDisabled]="trans.contactInformation.mailingAddressSameAsMainAddress" [(address)]="trans.contactInformation.mailingAddress" [isDisabled]="isCompleted" [addressRequired]="!trans.contactInformation.mailingAddressSameAsMainAddress"></app-address2>
-
-              <h2 class="blue-header mt-4">Organization Contact(s)</h2>
-              <p>If the contractor contact or board contact information has changed, please update personal contact information.</p>
-              <app-person-picker [title]="'Contractor Contact'" [(person)]="trans.contactInformation.executiveContact" [isDisabled]="isCompleted">
-              </app-person-picker>
-
-              <div class="form-check mt-4">
-                <input [disabled]="isCompleted" [(ngModel)]="trans.contactInformation.hasBoardContact" type="checkbox" id="hasBoardOfDirectors" name="hasBoardOfDirectors" class="form-check-input">
-                <label for="hasBoardOfDirectors" class="form-label fw-normal">
-                  Please select this check box if your organization has a Board of Directors.
-                </label>
-              </div>
-              <span *ngIf="trans.contactInformation.hasBoardContact">
-                <app-person-picker [title]="'Board Contact (For societies only)'" [(person)]="trans.contactInformation.boardContact" [isDisabled]="isCompleted"></app-person-picker>
-              </span>
-
-              <button *ngIf="!isCompleted" class="btn btn-primary mt-2 btn-add-program-staff" (click)="showAddPersonDialog()">Add Missing Staff</button>
-
-            </div>
-            <div *ngIf="item.discriminator === discriminators[1]">
-              <app-administrative-information [(transmogrifierProgramApplication)]="trans" [isDisabled]="isCompleted">
-              </app-administrative-information>
-            </div>
-            <div *ngIf="item.discriminator === discriminators[2]">
-              <app-cg-liability [(cgLiability)]="trans.cglInsurance" [isDisabled]="isCompleted"></app-cg-liability>
-            </div>
-            <div *ngIf="item.discriminator === discriminators[3]">
-              <span *ngFor="let program of trans.programApplications; let i = index">
-                <span *ngIf="program.programId===item.object.data['programId']">
-                  <app-program [(programApplication)]="trans.programApplications[i]" [isDisabled]="isCompleted"></app-program>
-                </span>
-              </span>
-            </div>
-            <div *ngIf="item.discriminator === discriminators[4]">
-              <app-review-application [trans]="trans" [(currentTab)]="currentReviewApplicationTab" (tabIndexChange)="reviewApplicationTabChange($event)"></app-review-application>
-            </div>
-            <div *ngIf="item.discriminator === discriminators[5]">
-              <app-program-authorizer [(signature)]="trans.signature" [isDisabled]="isCompleted" formType="Program Application"></app-program-authorizer>
-            </div>
-          </div>
-        </div>
+    <div class="row">
+      <div class="col-md-4">
+      </div>
+      <div class="col-md-8">
+        <span>@if (stepperIndex > 0) {
+          <button class="btn btn-primary mt-2 previous-button" (click)="setPreviousStepper()">Previous</button>
+        }</span>
+        <span>@if (stepperIndex < stepperElements.length - 1 || (currentStepperElement.discriminator == discriminators[4] && currentReviewApplicationTab != (reviewApplicationTabs.length - 1))) {
+          <button [class.is-disabled]="saving || programError" class="btn btn-primary mt-2 next-button" (click)="setNextStepper()">{{isCompleted?'':'Save and '}}Continue</button>
+        }</span>
+        <span>@if (stepperIndex == stepperElements.length -1  && !isCompleted) {
+          <button class="btn btn-primary mt-2 submit-button" [class.is-disabled]="!trans.signature.signatureDate || saving || programError" (click)="submit()">Submit</button>
+        }</span>
       </div>
     </div>
   </div>
-
-  <div class="row">
-    <div class="col-md-4">
-    </div>
-    <div class="col-md-8">
-      <span><button *ngIf="stepperIndex > 0" class="btn btn-primary mt-2 previous-button" (click)="setPreviousStepper()">Previous</button></span>
-      <span><button *ngIf="stepperIndex < stepperElements.length - 1 || (currentStepperElement.discriminator == discriminators[4] && currentReviewApplicationTab != (reviewApplicationTabs.length - 1))" [class.is-disabled]="saving || programError" class="btn btn-primary mt-2 next-button" (click)="setNextStepper()">{{isCompleted?'':'Save and '}}Continue</button></span>
-      <span><button *ngIf="stepperIndex == stepperElements.length -1  && !isCompleted" class="btn btn-primary mt-2 submit-button" [class.is-disabled]="!trans.signature.signatureDate || saving || programError" (click)="submit()">Submit</button></span>
-    </div>
-  </div>
-</div>
+}

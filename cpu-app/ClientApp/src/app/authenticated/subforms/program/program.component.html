@@ -1,145 +1,169 @@
 <form name="form" (input)="onInput()" novalidate>
 
   <ul class="nav nav-pills mb-2">
-    <li *ngFor="let tab of tabs">
-      <a class="nav-link nav-tab" [class.active]="tab===programApplication.currentTab" (click)="setCurrentTab(tab)">{{tab}}</a>
-    </li>
+    @for (tab of tabs; track tab) {
+      <li>
+        <a class="nav-link nav-tab" [class.active]="tab===programApplication.currentTab" (click)="setCurrentTab(tab)">{{tab}}</a>
+      </li>
+    }
   </ul>
 
-  <div *ngIf="programApplication.currentTab===tabs[0]">
-    <h2 class="blue-header">Main Program Information</h2>
-    <div class="mb-3">
-      <label for="serviceArea" class="form-label fw-normal">Assignment Area</label>
-      <input [disabled]="isDisabled" class="form-control" type="text" [ngModel]="programApplication.assignmentArea" id="serviceArea" name="serviceArea" disabled>
-    </div>
-    <div class="mb-3">
-      <label for="programLocation" class="form-label fw-normal">Program Location</label>
-      <input [disabled]="isDisabled" class="form-control" type="text" [ngModel]="programApplication.programLocation" id="programLocation" name="programLocation" disabled>
-    </div>
-    <div class="mb-3 flex-container" *ngIf="programApplication.serviceAreas && programApplication.serviceAreas.length > 0">
-      <div *ngFor="let seviceArea of programApplication.serviceAreas; let i=index" class="col-md-6">
-        <label for="serviceArea{{i}}" class="form-label fw-normal">Service Area {{i+1}}</label>
-        <input [disabled]="isDisabled" class="form-control" type="text" [ngModel]="seviceArea" id="serviceArea{{i}}" name="serviceArea{{i}}" disabled>
+  @if (programApplication.currentTab===tabs[0]) {
+    <div>
+      <h2 class="blue-header">Main Program Information</h2>
+      <div class="mb-3">
+        <label for="serviceArea" class="form-label fw-normal">Assignment Area</label>
+        <input [disabled]="isDisabled" class="form-control" type="text" [ngModel]="programApplication.assignmentArea" id="serviceArea" name="serviceArea" disabled>
       </div>
-    </div>
-    <div class="mb-3">
-      <label for="estimatedContractValue" class="form-label fw-normal">Estimated Contract Value</label>
-      <input [disabled]="isDisabled" class="form-control" type="text" prefix="$" mask="separator.2" thousandSeparator="," [(ngModel)]="programApplication.estimatedContractValueMask" id="estimatedContractValue" name="estimatedContractValue" disabled [validation]="false">
-    </div>
-    <div class="mb-3">
-      <label for="numberOfHours" class="form-label fw-normal">Contracted Service Hours per Week</label>
-      <input [disabled]="isDisabled" [(ngModel)]="programApplication.numberOfHours" suffix=" Hours" mask="9999" type="text" id="numberOfHours" name="numberOfHours" class="form-control" disabled [validation]="false">
-    </div>
-
-    <h2 class="blue-header">Primary Program Contact Information</h2>
-    <app-primary-contact-info [isDisabled]="isDisabled" [(contactInformation)]="programApplication"></app-primary-contact-info>
-    <div class="form-check">
-      <input [(ngModel)]="programApplication.isTransitionHouse" class="form-check-input" type="checkbox" id="isTransitionHouse" name="isTransitionHouse">
-      <label class="form-check-label form-label fw-normal" for="isTransitionHouse">
-        Is this Program location a transition house or safe home?
-      </label>
-    </div>
-    <app-address2 [(address)]="programApplication.mainAddress" [isDisabled]="isDisabled" [addressRequired]="!programApplication.isTransitionHouse"></app-address2>
-
-
-
-    <h2 class="blue-header">Mailing Address</h2>
-    <div class="form-check">
-      <input [disabled]="isDisabled" [(ngModel)]="programApplication.mailingAddressSameAsMainAddress" class="form-check-input" type="checkbox" id="mailingAddressSameAsMainAddress" name="mailingAddressSameAsMainAddress" (change)="setMailingAddressSameAsMainAddress()">
-      <label class="form-check-label form-label fw-normal" for="mailingAddressSameAsMainAddress">
-        Please select this check box if mailing address is the same as Primary Program Contact Address
-      </label>
-    </div>
-    <app-address2 [isDisabled]="programApplication.mailingAddressSameAsMainAddress" [(address)]="programApplication.mailingAddress" [isDisabled]="isDisabled" [addressRequired]="!programApplication.isTransitionHouse && !programApplication.mailingAddressSameAsMainAddress"></app-address2>
-
-    <span class="mb-4">
-      <h2 class="blue-header">Program Contact</h2>
-      <app-person-picker [isDisabled]="isDisabled" [title]="'Please select a program contact.'" [(person)]="programApplication.programContact" [idNum]="0">
-      </app-person-picker>
-    </span>
-    <h2 class="blue-header mt-2">Program Staff</h2>
-    <app-person-picker-list [isDisabled]="isDisabled" [label]="'Select Program Staff'" [(personsObj)]="personsObj" (personsChange)="onProgramStaffChange($event)"></app-person-picker-list>
-    <button *ngIf="!isDisabled" class="btn btn-primary mt-2 btn-add-program-staff" (click)="showAddProgramStaffDialog()">Add Missing Program Staff or Sub-contractor</button>
-
-    <h2 class="blue-header mt-2">Sub-contracted Staff</h2>
-    <div class="form-check">
-      <input [disabled]="isDisabled" [(ngModel)]="programApplication.hasSubContractedStaff" class="form-check-input" type="checkbox" id="hasSubContractedStaff" name="hasSubContractedStaff" (change)="hasSubContractedStaffChange()">
-      <label class="form-check-label form-label fw-normal" for="hasSubContractedStaff">
-        Select if this program employs sub-contractors
-      </label>
-    </div>
-
-    <div *ngIf="programApplication.hasSubContractedStaff">
-      <app-person-picker-list [isDisabled]="isDisabled" [isSubContractedList]="true" [label]="'Sub-contracted Staff'" [(personsObj)]="subContractedPersonsObj" (personsChange)="onSubContractedStaffChange($event)"></app-person-picker-list>
-    </div>
-
-    <div *ngIf="programApplication.isPoliceBased">
-      <div>
-        <h2 class="blue-header mt-2">For Police-Based Victim Service program only</h2>
-        <div class="form-check">
-          <input [disabled]="isDisabled" [(ngModel)]="programApplication.hasPoliceContact" class="form-check-input" type="checkbox" id="hasPoliceContact" name="hasPoliceContact">
-          <label class="form-check-label form-label fw-normal" for="hasPoliceContact">
-            Select if your Police Based Victim Services Program has a police contact
-          </label>
-        </div>
-        <div *ngIf="programApplication.hasPoliceContact">
-          <h5>Police Detachment / Department Supervisor</h5>
-          <app-person-editor [isDisabled]="isDisabled" [(person)]="programApplication.policeContact" [isPoliceContact]="true" [idNum]="1" (setAddress)="setAddressSameAsAgency($event)" (clearAddress)="clearAddress($event)"></app-person-editor>
-        </div>
+      <div class="mb-3">
+        <label for="programLocation" class="form-label fw-normal">Program Location</label>
+        <input [disabled]="isDisabled" class="form-control" type="text" [ngModel]="programApplication.programLocation" id="programLocation" name="programLocation" disabled>
       </div>
-
-      <div *ngIf="programApplication.hasPoliceContact" class="shared-cost-contact-div">
-        <div class="form-check">
-          <input [(ngModel)]="programApplication.hasSharedCostContact" class="form-check-input" type="checkbox" id="hasSharedCostContactCheckbox" name="hasSharedCostContactCheckbox">
-          <label class="form-check-label form-label fw-normal" for="hasSharedCostContactCheckbox">
-            Please select the check box to complete your cost share contact information with local Government:
-          </label>
+      @if (programApplication.serviceAreas && programApplication.serviceAreas.length > 0) {
+        <div class="mb-3 flex-container">
+          @for (seviceArea of programApplication.serviceAreas; track seviceArea; let i = $index) {
+            <div class="col-md-6">
+              <label for="serviceArea{{i}}" class="form-label fw-normal">Service Area {{i+1}}</label>
+              <input [disabled]="isDisabled" class="form-control" type="text" [ngModel]="seviceArea" id="serviceArea{{i}}" name="serviceArea{{i}}" disabled>
+            </div>
+          }
         </div>
-        <div *ngIf="programApplication.hasSharedCostContact">
-          <label for="governmentFunder" class="form-label fw-normal">Name of Government Funder / Agency</label>
-          <input [disabled]="isDisabled" type="text" class="form-control" id="governmentFunder" name="governmentFunder" [(ngModel)]="programApplication.governmentFunder" #governmentFunder="ngModel">
-          <app-person-editor [isDisabled]="isDisabled" [(person)]="programApplication.sharedCostContact" [isPoliceContact]="true" [idNum]="2" (setAddress)="setAddressSameAsAgency($event)" (clearAddress)="clearAddress($event)"></app-person-editor>
-        </div>
+      }
+      <div class="mb-3">
+        <label for="estimatedContractValue" class="form-label fw-normal">Estimated Contract Value</label>
+        <input [disabled]="isDisabled" class="form-control" type="text" prefix="$" mask="separator.2" thousandSeparator="," [(ngModel)]="programApplication.estimatedContractValueMask" id="estimatedContractValue" name="estimatedContractValue" disabled [validation]="false">
       </div>
+      <div class="mb-3">
+        <label for="numberOfHours" class="form-label fw-normal">Contracted Service Hours per Week</label>
+        <input [disabled]="isDisabled" [(ngModel)]="programApplication.numberOfHours" suffix=" Hours" mask="9999" type="text" id="numberOfHours" name="numberOfHours" class="form-control" disabled [validation]="false">
+      </div>
+      <h2 class="blue-header">Primary Program Contact Information</h2>
+      <app-primary-contact-info [isDisabled]="isDisabled" [(contactInformation)]="programApplication"></app-primary-contact-info>
+      <div class="form-check">
+        <input [(ngModel)]="programApplication.isTransitionHouse" class="form-check-input" type="checkbox" id="isTransitionHouse" name="isTransitionHouse">
+        <label class="form-check-label form-label fw-normal" for="isTransitionHouse">
+          Is this Program location a transition house or safe home?
+        </label>
+      </div>
+      <app-address2 [(address)]="programApplication.mainAddress" [isDisabled]="isDisabled" [addressRequired]="!programApplication.isTransitionHouse"></app-address2>
+      <h2 class="blue-header">Mailing Address</h2>
+      <div class="form-check">
+        <input [disabled]="isDisabled" [(ngModel)]="programApplication.mailingAddressSameAsMainAddress" class="form-check-input" type="checkbox" id="mailingAddressSameAsMainAddress" name="mailingAddressSameAsMainAddress" (change)="setMailingAddressSameAsMainAddress()">
+        <label class="form-check-label form-label fw-normal" for="mailingAddressSameAsMainAddress">
+          Please select this check box if mailing address is the same as Primary Program Contact Address
+        </label>
+      </div>
+      <app-address2 [isDisabled]="programApplication.mailingAddressSameAsMainAddress" [(address)]="programApplication.mailingAddress" [isDisabled]="isDisabled" [addressRequired]="!programApplication.isTransitionHouse && !programApplication.mailingAddressSameAsMainAddress"></app-address2>
+      <span class="mb-4">
+        <h2 class="blue-header">Program Contact</h2>
+        <app-person-picker [isDisabled]="isDisabled" [title]="'Please select a program contact.'" [(person)]="programApplication.programContact" [idNum]="0">
+        </app-person-picker>
+      </span>
+      <h2 class="blue-header mt-2">Program Staff</h2>
+      <app-person-picker-list [isDisabled]="isDisabled" [label]="'Select Program Staff'" [(personsObj)]="personsObj" (personsChange)="onProgramStaffChange($event)"></app-person-picker-list>
+      @if (!isDisabled) {
+        <button class="btn btn-primary mt-2 btn-add-program-staff" (click)="showAddProgramStaffDialog()">Add Missing Program Staff or Sub-contractor</button>
+      }
+      <h2 class="blue-header mt-2">Sub-contracted Staff</h2>
+      <div class="form-check">
+        <input [disabled]="isDisabled" [(ngModel)]="programApplication.hasSubContractedStaff" class="form-check-input" type="checkbox" id="hasSubContractedStaff" name="hasSubContractedStaff" (change)="hasSubContractedStaffChange()">
+        <label class="form-check-label form-label fw-normal" for="hasSubContractedStaff">
+          Select if this program employs sub-contractors
+        </label>
+      </div>
+      @if (programApplication.hasSubContractedStaff) {
+        <div>
+          <app-person-picker-list [isDisabled]="isDisabled" [isSubContractedList]="true" [label]="'Sub-contracted Staff'" [(personsObj)]="subContractedPersonsObj" (personsChange)="onSubContractedStaffChange($event)"></app-person-picker-list>
+        </div>
+      }
+      @if (programApplication.isPoliceBased) {
+        <div>
+          <div>
+            <h2 class="blue-header mt-2">For Police-Based Victim Service program only</h2>
+            <div class="form-check">
+              <input [disabled]="isDisabled" [(ngModel)]="programApplication.hasPoliceContact" class="form-check-input" type="checkbox" id="hasPoliceContact" name="hasPoliceContact">
+              <label class="form-check-label form-label fw-normal" for="hasPoliceContact">
+                Select if your Police Based Victim Services Program has a police contact
+              </label>
+            </div>
+            @if (programApplication.hasPoliceContact) {
+              <div>
+                <h5>Police Detachment / Department Supervisor</h5>
+                <app-person-editor [isDisabled]="isDisabled" [(person)]="programApplication.policeContact" [isPoliceContact]="true" [idNum]="1" (setAddress)="setAddressSameAsAgency($event)" (clearAddress)="clearAddress($event)"></app-person-editor>
+              </div>
+            }
+          </div>
+          @if (programApplication.hasPoliceContact) {
+            <div class="shared-cost-contact-div">
+              <div class="form-check">
+                <input [(ngModel)]="programApplication.hasSharedCostContact" class="form-check-input" type="checkbox" id="hasSharedCostContactCheckbox" name="hasSharedCostContactCheckbox">
+                <label class="form-check-label form-label fw-normal" for="hasSharedCostContactCheckbox">
+                  Please select the check box to complete your cost share contact information with local Government:
+                </label>
+              </div>
+              @if (programApplication.hasSharedCostContact) {
+                <div>
+                  <label for="governmentFunder" class="form-label fw-normal">Name of Government Funder / Agency</label>
+                  <input [disabled]="isDisabled" type="text" class="form-control" id="governmentFunder" name="governmentFunder" [(ngModel)]="programApplication.governmentFunder" #governmentFunder="ngModel">
+                  <app-person-editor [isDisabled]="isDisabled" [(person)]="programApplication.sharedCostContact" [isPoliceContact]="true" [idNum]="2" (setAddress)="setAddressSameAsAgency($event)" (clearAddress)="clearAddress($event)"></app-person-editor>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
     </div>
-  </div>
+  }
   <ng-template #hoursOfOperation>
     <p>If hours vary from day to day, please add on operation hours</p>
   </ng-template>
-  <div *ngIf="programApplication.currentTab===tabs[1]">
-    <h2 class="blue-header">Hours of Operation (not including on-call / stand-by hours) <app-tool-tip iconColor="white" [trigger]="hoursOfOperation"></app-tool-tip>
+  @if (programApplication.currentTab===tabs[1]) {
+    <div>
+      <h2 class="blue-header">Hours of Operation (not including on-call / stand-by hours) <app-tool-tip iconColor="white" [trigger]="hoursOfOperation"></app-tool-tip>
     </h2>
-    <div *ngFor="let hours of programApplication.operationHours; let i=index">
-      <ng-container *ngIf="hours.isActive">
-        <app-hours [isDisabled]="isDisabled" [(hours)]="programApplication.operationHours[i]"></app-hours>
-        <div class="retain-height" *ngIf="!isDisabled">
-          <a (click)="removeOperationHours(i)" class="align-right btn btn-sm btn-outline-danger text-danger mt-1 mb-2">Remove</a>
-        </div>
-      </ng-container>
-    </div>
+    @for (hours of programApplication.operationHours; track hours; let i = $index) {
+      <div>
+        @if (hours.isActive) {
+          <app-hours [isDisabled]="isDisabled" [(hours)]="programApplication.operationHours[i]"></app-hours>
+          @if (!isDisabled) {
+            <div class="retain-height">
+              <a (click)="removeOperationHours(i)" class="align-right btn btn-sm btn-outline-danger text-danger mt-1 mb-2">Remove</a>
+            </div>
+          }
+        }
+      </div>
+    }
     <div>
       <div class="row">
         <div class="col-md-12">
-          <button *ngIf="!isDisabled" class="btn btn-info mb-4 mt-2 align-right" (click)="addOperationHours()">Add Operation Hours</button>
+          @if (!isDisabled) {
+            <button class="btn btn-info mb-4 mt-2 align-right" (click)="addOperationHours()">Add Operation Hours</button>
+          }
         </div>
       </div>
-
     </div>
     <h2 class="blue-header">Program On-call / Stand-by Hours of Operation</h2>
-    <div *ngFor="let hours of programApplication.standbyHours; let i=index">
-      <ng-container *ngIf="hours.isActive">
-        <app-hours [isDisabled]="isDisabled" [(hours)]="programApplication.standbyHours[i]"></app-hours>
-        <div class="retain-height" *ngIf="!isDisabled">
-          <a (click)="removeStandbyHours(i)" class="align-right btn btn-sm btn-outline-danger text-danger mt-1 mb-2">Remove</a>
-        </div>
-      </ng-container>
-    </div>
+    @for (hours of programApplication.standbyHours; track hours; let i = $index) {
+      <div>
+        @if (hours.isActive) {
+          <app-hours [isDisabled]="isDisabled" [(hours)]="programApplication.standbyHours[i]"></app-hours>
+          @if (!isDisabled) {
+            <div class="retain-height">
+              <a (click)="removeStandbyHours(i)" class="align-right btn btn-sm btn-outline-danger text-danger mt-1 mb-2">Remove</a>
+            </div>
+          }
+        }
+      </div>
+    }
     <div>
       <div class="row">
         <div class="col-md-12">
-          <button *ngIf="!isDisabled" class="btn btn-info mb-4 mt-2 align-right" (click)="addStandbyHours()">Add On-call/Stand-by Hours</button>
+          @if (!isDisabled) {
+            <button class="btn btn-info mb-4 mt-2 align-right" (click)="addStandbyHours()">Add On-call/Stand-by Hours</button>
+          }
         </div>
       </div>
     </div>
   </div>
+}
 </form>

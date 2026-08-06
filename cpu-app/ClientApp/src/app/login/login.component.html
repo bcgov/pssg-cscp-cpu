@@ -1,7 +1,10 @@
-<span *ngIf="loading">
-  <a href="javascript:void(0)">
-    Loading...
-  </a>
-
-  <p *ngIf="willLogOut">You will be automatically logged out in a few seconds...</p>
-</span>
+@if (loading) {
+  <span>
+    <a href="javascript:void(0)">
+      Loading...
+    </a>
+    @if (willLogOut) {
+      <p>You will be automatically logged out in a few seconds...</p>
+    }
+  </span>
+}

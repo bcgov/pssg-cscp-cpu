@@ -1,167 +1,174 @@
 <ul class="nav nav-pills mb-2">
-  <li *ngFor="let tab of tabs; let i = index">
-    <a class="nav-link nav-tab" [class.active]="i===currentTab" (click)="setCurrentTab(i)">{{tab}}</a>
-  </li>
+  @for (tab of tabs; track tab; let i = $index) {
+    <li>
+      <a class="nav-link nav-tab" [class.active]="i===currentTab" (click)="setCurrentTab(i)">{{tab}}</a>
+    </li>
+  }
 </ul>
-<div *ngIf="currentTab===0">
-  <h2 class="blue-header">Agency Contact Information</h2>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th colspan="2" scope="col" class="review-section-header">Organization Details</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">Email Address</th>
-        <td>{{trans?.contactInformation?.emailAddress}}</td>
-      </tr>
-      <tr>
-        <th scope="row">Phone Number</th>
-        <td>{{trans?.contactInformation?.phoneNumber | phone}}</td>
-      </tr>
-      <tr>
-        <th scope="row">Fax Number</th>
-        <td>{{trans?.contactInformation?.faxNumber | phone}}</td>
-      </tr>
-    </tbody>
-  </table>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th colspan="2" scope="col" class="review-section-header">Location Address</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">Address Line 1</th>
-        <td>{{trans?.contactInformation?.mainAddress?.line1}}</td>
-      </tr>
-      <tr>
-        <th scope="row">Address Line 2</th>
-        <td>{{trans?.contactInformation?.mainAddress?.line2}}</td>
-      </tr>
-      <tr>
-        <th scope="row">City</th>
-        <td>{{trans?.contactInformation?.mainAddress?.city}}</td>
-      </tr>
-      <tr>
-        <th scope="row">Province</th>
-        <td>{{trans?.contactInformation?.mainAddress?.province}}</td>
-      </tr>
-      <tr>
-        <th scope="row">Postal Code</th>
-        <td>{{trans?.contactInformation?.mainAddress?.postalCode}}</td>
-      </tr>
-    </tbody>
-  </table>
-  <table *ngIf="trans.contactInformation.mailingAddress" class="table table-striped">
-    <thead>
-      <tr>
-        <th colspan="2" scope="col" class="review-section-header">Mailing Address</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">Address Line 1</th>
-        <td>{{trans?.contactInformation?.mailingAddress?.line1}}</td>
-      </tr>
-      <tr>
-        <th scope="row">Address Line 2</th>
-        <td>{{trans?.contactInformation?.mailingAddress?.line2}}</td>
-      </tr>
-      <tr>
-        <th scope="row">City</th>
-        <td>{{trans?.contactInformation?.mailingAddress?.city}}</td>
-      </tr>
-      <tr>
-        <th scope="row">Province</th>
-        <td>{{trans?.contactInformation?.mailingAddress?.province}}</td>
-      </tr>
-      <tr>
-        <th scope="row">Postal Code</th>
-        <td>{{trans?.contactInformation?.mailingAddress?.postalCode}}</td>
-      </tr>
-    </tbody>
-  </table>
+@if (currentTab===0) {
+  <div>
+    <h2 class="blue-header">Agency Contact Information</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th colspan="2" scope="col" class="review-section-header">Organization Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Email Address</th>
+          <td>{{trans?.contactInformation?.emailAddress}}</td>
+        </tr>
+        <tr>
+          <th scope="row">Phone Number</th>
+          <td>{{trans?.contactInformation?.phoneNumber | phone}}</td>
+        </tr>
+        <tr>
+          <th scope="row">Fax Number</th>
+          <td>{{trans?.contactInformation?.faxNumber | phone}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th colspan="2" scope="col" class="review-section-header">Location Address</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Address Line 1</th>
+          <td>{{trans?.contactInformation?.mainAddress?.line1}}</td>
+        </tr>
+        <tr>
+          <th scope="row">Address Line 2</th>
+          <td>{{trans?.contactInformation?.mainAddress?.line2}}</td>
+        </tr>
+        <tr>
+          <th scope="row">City</th>
+          <td>{{trans?.contactInformation?.mainAddress?.city}}</td>
+        </tr>
+        <tr>
+          <th scope="row">Province</th>
+          <td>{{trans?.contactInformation?.mainAddress?.province}}</td>
+        </tr>
+        <tr>
+          <th scope="row">Postal Code</th>
+          <td>{{trans?.contactInformation?.mainAddress?.postalCode}}</td>
+        </tr>
+      </tbody>
+    </table>
+    @if (trans.contactInformation.mailingAddress) {
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th colspan="2" scope="col" class="review-section-header">Mailing Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Address Line 1</th>
+            <td>{{trans?.contactInformation?.mailingAddress?.line1}}</td>
+          </tr>
+          <tr>
+            <th scope="row">Address Line 2</th>
+            <td>{{trans?.contactInformation?.mailingAddress?.line2}}</td>
+          </tr>
+          <tr>
+            <th scope="row">City</th>
+            <td>{{trans?.contactInformation?.mailingAddress?.city}}</td>
+          </tr>
+          <tr>
+            <th scope="row">Province</th>
+            <td>{{trans?.contactInformation?.mailingAddress?.province}}</td>
+          </tr>
+          <tr>
+            <th scope="row">Postal Code</th>
+            <td>{{trans?.contactInformation?.mailingAddress?.postalCode}}</td>
+          </tr>
+        </tbody>
+      </table>
+    }
+    <app-person-table [title]="'Executive Contact'" [person]="trans.contactInformation.executiveContact"></app-person-table>
+    <app-person-table [title]="'Board Contact'" [person]="trans.contactInformation.boardContact"></app-person-table>
+    <h2 class="blue-header">Applicant Administrative Information</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th colspan="2" scope="col" class="review-section-header">Compliance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Compliant with Employment Standards Act of BC</th>
+          <td>{{trans?.administrativeInformation?.compliantEmploymentStandardsAct?'Yes':'No'}}</td>
+        </tr>
+        <tr>
+          <th scope="row">Compliant with BC's Human Rights Code</th>
+          <td>{{trans?.administrativeInformation?.compliantHumanRights ?'Yes':'No'}}</td>
+        </tr>
+        <tr>
+          <th scope="row">Compliant with Workers Compensation Act (WorkSafe BC)</th>
+          <td>{{trans?.administrativeInformation?.compliantWorkersCompensation ?'Yes':'No'}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th colspan="2" scope="col" class="review-section-header">Union Associations</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Staff are union affiliated</th>
+          <td>{{trans?.administrativeInformation?.staffUnionized?'Yes':'No'}}</td>
+        </tr>
+        @if (trans?.administrativeInformation?.staffUnionized) {
+          <tr>
+            <th scope="row">Union</th>
+            <td>{{trans?.administrativeInformation?.staffUnion}}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th colspan="2" scope="col" class="review-section-header">CCSEA Membership</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Member Type</th>
+          <td>{{trans?.administrativeInformation?.ccseaMemberType}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2 class="blue-header">Commercial General Liability Insurance</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th colspan="2" scope="col" class="review-section-header">CGL Insurance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Selected</th>
+          <td>{{trans.cglInsurance}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+}
 
-  <app-person-table [title]="'Executive Contact'" [person]="trans.contactInformation.executiveContact"></app-person-table>
-  <app-person-table [title]="'Board Contact'" [person]="trans.contactInformation.boardContact"></app-person-table>
-
-  <h2 class="blue-header">Applicant Administrative Information</h2>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th colspan="2" scope="col" class="review-section-header">Compliance</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">Compliant with Employment Standards Act of BC</th>
-        <td>{{trans?.administrativeInformation?.compliantEmploymentStandardsAct?'Yes':'No'}}</td>
-      </tr>
-      <tr>
-        <th scope="row">Compliant with BC's Human Rights Code</th>
-        <td>{{trans?.administrativeInformation?.compliantHumanRights ?'Yes':'No'}}</td>
-      </tr>
-      <tr>
-        <th scope="row">Compliant with Workers Compensation Act (WorkSafe BC)</th>
-        <td>{{trans?.administrativeInformation?.compliantWorkersCompensation ?'Yes':'No'}}</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th colspan="2" scope="col" class="review-section-header">Union Associations</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">Staff are union affiliated</th>
-        <td>{{trans?.administrativeInformation?.staffUnionized?'Yes':'No'}}</td>
-      </tr>
-      <tr *ngIf="trans?.administrativeInformation?.staffUnionized">
-        <th scope="row">Union</th>
-        <td>{{trans?.administrativeInformation?.staffUnion}}</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th colspan="2" scope="col" class="review-section-header">CCSEA Membership</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">Member Type</th>
-        <td>{{trans?.administrativeInformation?.ccseaMemberType}}</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h2 class="blue-header">Commercial General Liability Insurance</h2>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th colspan="2" scope="col" class="review-section-header">CGL Insurance</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">Selected</th>
-        <td>{{trans.cglInsurance}}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<div *ngFor="let programApplication of trans?.programApplications; let i=index">
-  <span *ngIf="currentTab===(i+1)">
-    <h2 class="blue-header">Program: {{programApplication.name}}</h2>
-    <app-program-summary-table [pa]="programApplication"></app-program-summary-table>
-  </span>
-</div>
+@for (programApplication of trans?.programApplications; track programApplication; let i = $index) {
+  <div>
+    @if (currentTab===(i+1)) {
+      <span>
+        <h2 class="blue-header">Program: {{programApplication.name}}</h2>
+        <app-program-summary-table [pa]="programApplication"></app-program-summary-table>
+      </span>
+    }
+  </div>
+}

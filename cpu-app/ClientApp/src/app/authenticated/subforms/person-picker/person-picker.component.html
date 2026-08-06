@@ -2,9 +2,15 @@
   <label for="personPicker{{idNum}}" class="form-label fw-normal">{{title}}</label>
   <select [disabled]="isDisabled" [(ngModel)]="personId" (change)="onChange()" class="form-control" name="personPicker{{idNum}}" id="personPicker{{idNum}}">
     <option [value]="null">--</option>
-    <option *ngFor="let p of trans.persons" [ngValue]="p.personId">{{nameAssemble(p.firstName,p.middleName,p.lastName)}}<span *ngIf="p.title"> - {{p.title}}</span></option>
+    @for (p of trans.persons; track p) {
+      <option [ngValue]="p.personId">{{nameAssemble(p.firstName,p.middleName,p.lastName)}}@if (p.title) {
+        <span> - {{p.title}}</span>
+      }</option>
+    }
   </select>
 </div>
-<div *ngIf="showCard===true && person">
-  <app-person-card [person]="person"></app-person-card>
-</div>
+@if (showCard===true && person) {
+  <div>
+    <app-person-card [person]="person"></app-person-card>
+  </div>
+}

@@ -8,10 +8,12 @@
     Different mailing address from main address.
   </label>
 </div>
-<span *ngIf="contactInformation.hasMailingAddress">
-  <h2 class="blue-header mt-4">Mailing Address</h2>
-  <app-address2 [(address)]="contactInformation.mailingAddress"></app-address2>
-</span>
+@if (contactInformation.hasMailingAddress) {
+  <span>
+    <h2 class="blue-header mt-4">Mailing Address</h2>
+    <app-address2 [(address)]="contactInformation.mailingAddress"></app-address2>
+  </span>
+}
 
 <h2 class="blue-header mt-4">Organization Contact(s)</h2>
 <p>If the executive or board contact information has inaccuracy please update personnel contact information for your organization before submitting this program application.</p>
