@@ -1,7 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute, Router } from "@angular/router";
-import * as _ from "lodash";
 import { Subscription } from "rxjs";
 import { CapapplicationService } from "../../core/api/services/capapplication/capapplication.service";
 import { FormHelper } from "../../core/form-helper";
@@ -113,7 +112,7 @@ export class CAPApplicationComponent implements OnInit {
     );
     this.stepperService.currentStepperElement.subscribe((e) => {
       if (this.currentStepperElement) {
-        let originalStepper = _.cloneDeep(this.currentStepperElement);
+        let originalStepper = structuredClone(this.currentStepperElement);
         let formState = this.formHelper.getFormState();
 
         if (
@@ -231,7 +230,7 @@ export class CAPApplicationComponent implements OnInit {
       try {
         this.saving = true;
         // console.log("saving...");
-        // console.log(_.cloneDeep(this.trans));
+        // console.log(structuredClone(this.trans));
         this.capService
           .postApiCAPApplication(convertCAPProgramToDynamics(this.trans))
           .subscribe(
@@ -320,7 +319,7 @@ export class CAPApplicationComponent implements OnInit {
       this.saving = true;
       let isSubmit = true;
       // console.log("submitting...");
-      // console.log(_.cloneDeep(this.trans));
+      // console.log(structuredClone(this.trans));
       this.capService
         .postApiCAPApplication(
           convertCAPProgramToDynamics(this.trans, isSubmit),
@@ -370,7 +369,7 @@ export class CAPApplicationComponent implements OnInit {
   }
 
   setNextStepper() {
-    let originalStepper = _.cloneDeep(this.currentStepperElement);
+    let originalStepper = structuredClone(this.currentStepperElement);
     let currentTabHasInvalidClass =
       originalStepper.formState === "invalid" ? 1 : 0;
 

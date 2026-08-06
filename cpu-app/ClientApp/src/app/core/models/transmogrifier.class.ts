@@ -1,4 +1,3 @@
-import * as _ from "lodash";
 import moment from "moment";
 import { CpuOrgContractsDto, TaskDto } from "../api/models";
 import { contractStatus } from "../constants/contract-code";
@@ -328,10 +327,7 @@ export class Transmogrifier {
       };
       // ci.hasMailingAddress = false;
     }
-    ci.mailingAddressSameAsMainAddress = _.isEqual(
-      ci.mainAddress,
-      ci.mailingAddress,
-    );
+    ci.mailingAddressSameAsMainAddress = JSON.stringify(ci.mainAddress) === JSON.stringify(ci.mailingAddress);
     if (ci.mailingAddressSameAsMainAddress) ci.mailingAddress = ci.mainAddress;
 
     if (b.organization.executiveContactIdValue)
@@ -411,7 +407,7 @@ export class Transmogrifier {
         // if the state code is zero or null the user is active
         deactivated: !p.stateCode || p.stateCode === 0 ? false : true || null,
       };
-      if (_.isEqual(person.address, this.contactInformation.mainAddress)) {
+      if (JSON.stringify(person.address) === JSON.stringify(this.contactInformation.mainAddress)) {
         person.addressSameAsAgency = true;
       }
       personList.push(person);
