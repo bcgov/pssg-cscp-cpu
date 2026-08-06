@@ -10,7 +10,9 @@
     "builduat": "ng build --base-href /uat/coastcontracts/ --configuration=production",
     "buildprod": "ng build --configuration=production",
     "watch": "ng build --watch --configuration=production",
-    "test": "ng test",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "generate:api": "orval --config ./orval.config.ts"
@@ -48,25 +50,20 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
+    "@analogjs/vite-plugin-angular": "^2.6.4",
+    "@analogjs/vitest-angular": "^2.6.4",
     "@angular/build": "^21.2.20",
     "@angular/cli": "^21.2.20",
     "@angular/compiler-cli": "^21.2.19",
     "@angular/language-service": "^21.2.19",
-    "@types/jasmine": "^5.1.7",
-    "@types/jasminewd2": "^2.0.13",
     "@types/node": "^22.14.1",
+    "@vitest/coverage-v8": "^4.1.10",
     "codelyzer": "^6.0.2",
-    "jasmine-core": "^5.6.0",
-    "jasmine-spec-reporter": "^7.0.0",
-    "karma": "^6.4.4",
-    "karma-chrome-launcher": "^3.2.0",
-    "karma-coverage-istanbul-reporter": "^3.0.3",
-    "karma-jasmine": "^5.1.0",
-    "karma-jasmine-html-reporter": "^2.1.0",
+    "jsdom": "^30.0.1",
     "orval": "^7.3.0",
-    "protractor": "^7.0.0",
     "ts-node": "^10.9.2",
     "typescript": "~5.9.3",
+    "vitest": "^4.1.10",
     "webpack": "^5.99.5"
   }
 }
