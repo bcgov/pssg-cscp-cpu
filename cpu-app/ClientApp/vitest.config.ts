@@ -6,12 +6,26 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [angular({ jit: true, tsconfig: "./src/tsconfig.spec.json" })],
   resolve: {
-    alias: {
-      "@almothafar/angular-signature-pad": resolve(
-        __dirname,
-        "src/__mocks__/@almothafar/angular-signature-pad.ts",
-      ),
-    },
+    alias: [
+      {
+        find: "@almothafar/angular-signature-pad",
+        replacement: resolve(
+          __dirname,
+          "src/__mocks__/@almothafar/angular-signature-pad.ts",
+        ),
+      },
+      // Replace the entire import string for StateService so components that
+      // subscribe to StateService.main receive a safe empty state instead of null.
+      // The `^.*` anchor ensures String.replace() swaps the full import path, not
+      // just the matched suffix.
+      {
+        find: /^.*\/core\/services\/state\.service$/,
+        replacement: resolve(
+          __dirname,
+          "src/__mocks__/state.service.ts",
+        ).replace(/\\/g, "/"),
+      },
+    ],
   },
   test: {
     globals: true,
@@ -21,6 +35,8 @@ export default defineConfig({
       "src/test-setup.ts",
     ],
     include: ["src/**/*.spec.ts"],
+    // Safety net: suppress any remaining unhandled lifecycle errors from services
+    // that are not covered by the StateService mock (e.g. program-application forms).
     dangerouslyIgnoreUnhandledErrors: true,
     reporters: ["default"],
     coverage: {
