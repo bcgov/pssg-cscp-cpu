@@ -1,16 +1,19 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { provideRouter } from "@angular/router";
 
-import { ExpenseReportComponent } from './expense-report.component';
+import { ExpenseReportComponent } from "./expense-report.component";
 
-describe('ExpenseReportComponent', () => {
+describe("ExpenseReportComponent", () => {
   let component: ExpenseReportComponent;
   let fixture: ComponentFixture<ExpenseReportComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ExpenseReportComponent ]
-    })
-    .compileComponents();
+      declarations: [ExpenseReportComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [provideRouter([])],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +22,7 @@ describe('ExpenseReportComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

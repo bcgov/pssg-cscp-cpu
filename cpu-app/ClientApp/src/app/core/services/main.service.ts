@@ -9,6 +9,7 @@
 //   providedIn: "root",
 // })
 // export class MainService {
+export {};
 //   baseUrl = environment.apiRootUrl;
 //   apiPath = this.baseUrl.concat("api/cpuorgcontracts");
 

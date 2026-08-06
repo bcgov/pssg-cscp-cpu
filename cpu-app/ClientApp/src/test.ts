@@ -1,30 +1,23 @@
-// TODO: Karma is deprecated and should be replaced. See deprecation note: https://www.npmjs.com/package/karma.
-
-import "zone.js/testing";
+// Test entry point for @angular/build:karma (esbuild-based runner).
+// Replaces the old webpack/__karma__ bootstrap.
+import { NgModule, provideZoneChangeDetection } from "@angular/core";
 import { getTestBed } from "@angular/core/testing";
 import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from "@angular/platform-browser-dynamic/testing";
+  BrowserTestingModule,
+  platformBrowserTesting,
+} from "@angular/platform-browser/testing";
 
-// Unfortunately there's no typing for the `__karma__` variable. Just declare it as any.
-declare var __karma__: any;
-declare var require: any;
+// zone.js and zone.js/testing are loaded via the polyfills config in angular.json.
 
-// Prevent Karma from running prematurely.
-__karma__.loaded = function () {};
+@NgModule({ providers: [provideZoneChangeDetection()] })
+export class TestModule {}
 
-// First, initialize the Angular testing environment.
 getTestBed().initTestEnvironment(
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting(),
+  [BrowserTestingModule, TestModule],
+  platformBrowserTesting(),
   {
     teardown: { destroyAfterEach: false },
-  }
+    errorOnUnknownElements: false,
+    errorOnUnknownProperties: false,
+  },
 );
-// Then we find all the tests.
-const context = require.context('./', true, /\.spec\.ts$/);
-// And load the modules.
-context.keys().map(context);
-// Finally, start Karma to run the tests.
-__karma__.start();

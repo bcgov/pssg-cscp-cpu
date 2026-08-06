@@ -1,16 +1,19 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { provideRouter } from "@angular/router";
 
-import { UploadDocumentComponent } from './upload-document.component';
+import { UploadDocumentComponent } from "./upload-document.component";
 
-describe('DownloadDocumentComponent', () => {
+describe("DownloadDocumentComponent", () => {
   let component: UploadDocumentComponent;
   let fixture: ComponentFixture<UploadDocumentComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ UploadDocumentComponent ]
-    })
-    .compileComponents();
+      declarations: [UploadDocumentComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [provideRouter([])],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +22,7 @@ describe('DownloadDocumentComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

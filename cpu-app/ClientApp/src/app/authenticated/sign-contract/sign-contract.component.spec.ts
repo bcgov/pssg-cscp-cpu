@@ -1,16 +1,18 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { SignContractComponent } from './sign-contract.component';
+import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { provideRouter } from "@angular/router";
+import { SignContractComponent } from "./sign-contract.component";
 
-
-describe('SignContractComponent', () => {
+describe("SignContractComponent", () => {
   let component: SignContractComponent;
   let fixture: ComponentFixture<SignContractComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SignContractComponent ]
-    })
-    .compileComponents();
+      declarations: [SignContractComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [provideRouter([])],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +21,7 @@ describe('SignContractComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

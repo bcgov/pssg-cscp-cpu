@@ -1,16 +1,19 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { provideRouter } from "@angular/router";
 
-import { ProgramAuthorizerComponent } from './program-authorizer.component';
+import { ProgramAuthorizerComponent } from "./program-authorizer.component";
 
-describe('ProgramAuthorizerComponent', () => {
+describe("ProgramAuthorizerComponent", () => {
   let component: ProgramAuthorizerComponent;
   let fixture: ComponentFixture<ProgramAuthorizerComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProgramAuthorizerComponent ]
-    })
-    .compileComponents();
+      declarations: [ProgramAuthorizerComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [provideRouter([])],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +22,7 @@ describe('ProgramAuthorizerComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });
