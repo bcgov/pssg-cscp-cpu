@@ -108,7 +108,8 @@ export class TransmogrifierCAPApplication {
       ),
     };
 
-    c.mailingAddressSameAsMainAddress = JSON.stringify(c.mainAddress) === JSON.stringify(c.mailingAddress);
+    c.mailingAddressSameAsMainAddress =
+      JSON.stringify(c.mainAddress) === JSON.stringify(c.mailingAddress);
     if (c.mailingAddressSameAsMainAddress) c.mailingAddress = c.mainAddress;
 
     if (

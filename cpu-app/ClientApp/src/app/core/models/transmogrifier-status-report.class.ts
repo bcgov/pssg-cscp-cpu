@@ -52,10 +52,13 @@ export class TransmogrifierStatusReport {
       return a.vsd_categoryorder - b.vsd_categoryorder;
     });
 
-    let answersCollection = (g.answerCollection ?? []).reduce((acc: Record<string, any[]>, item: any) => {
-      (acc[item._vsd_categoryid_value] ??= []).push(item);
-      return acc;
-    }, {});
+    let answersCollection = (g.answerCollection ?? []).reduce(
+      (acc: Record<string, any[]>, item: any) => {
+        (acc[item._vsd_categoryid_value] ??= []).push(item);
+        return acc;
+      },
+      {},
+    );
     // for every category of questions collect the matching items
     for (let category of g.categoryCollection ?? []) {
       //var categoryAnswer

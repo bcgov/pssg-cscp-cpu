@@ -135,7 +135,8 @@ export class TransmogrifierProgramApplication {
       ),
     };
 
-    c.mailingAddressSameAsMainAddress = JSON.stringify(c.mainAddress) === JSON.stringify(c.mailingAddress);
+    c.mailingAddressSameAsMainAddress =
+      JSON.stringify(c.mainAddress) === JSON.stringify(c.mailingAddress);
     if (c.mailingAddressSameAsMainAddress) c.mailingAddress = c.mainAddress;
     // when the board contact and the executive contact are the same person then we simply don't fill in executive contact information and set the flag to false
     if (
@@ -281,16 +282,24 @@ export class TransmogrifierProgramApplication {
         currentTab: "Program Information", //make this more general - set to tabs[0] instead of hardcoded
       } as iProgramApplication;
 
-      if (JSON.stringify(temp.mailingAddress) === JSON.stringify(temp.mainAddress)) {
+      if (
+        JSON.stringify(temp.mailingAddress) === JSON.stringify(temp.mainAddress)
+      ) {
         temp.mailingAddressSameAsMainAddress = true;
         temp.mailingAddress = temp.mainAddress;
       }
 
-      if (JSON.stringify(temp.policeContact.address) === JSON.stringify(this.contactInformation.mainAddress)) {
+      if (
+        JSON.stringify(temp.policeContact.address) ===
+        JSON.stringify(this.contactInformation.mainAddress)
+      ) {
         temp.policeContact.addressSameAsAgency = true;
       }
 
-      if (JSON.stringify(temp.sharedCostContact.address) === JSON.stringify(this.contactInformation.mainAddress)) {
+      if (
+        JSON.stringify(temp.sharedCostContact.address) ===
+        JSON.stringify(this.contactInformation.mainAddress)
+      ) {
         temp.sharedCostContact.addressSameAsAgency = true;
       }
 

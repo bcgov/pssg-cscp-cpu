@@ -204,14 +204,19 @@ export function convertProgramApplicationToDynamics(
 
     trans.programApplications.forEach((p: iProgramApplication) => {
       let policeContact = convertPersonToDynamics(p.policeContact);
-      if (policeContact && Object.keys(policeContact).length > 0 && p.hasPoliceContact) {
+      if (
+        policeContact &&
+        Object.keys(policeContact).length > 0 &&
+        p.hasPoliceContact
+      ) {
         policeContact.vsd_portalfield = "vsd_contactlookup2=" + p.programId;
         contactCollection.push(policeContact);
       }
 
       let sharedCostContact = convertPersonToDynamics(p.sharedCostContact);
       if (
-        sharedCostContact && Object.keys(sharedCostContact).length > 0 &&
+        sharedCostContact &&
+        Object.keys(sharedCostContact).length > 0 &&
         p.hasPoliceContact &&
         p.hasSharedCostContact
       ) {

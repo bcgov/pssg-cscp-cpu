@@ -183,7 +183,9 @@ export class ProgramComponent implements OnInit, OnDestroy {
     });
   }
   setAddressSameAsAgency(person: iPerson) {
-    let addressCopy = structuredClone(this.trans.contactInformation.mainAddress);
+    let addressCopy = structuredClone(
+      this.trans.contactInformation.mainAddress,
+    );
     person.address = addressCopy;
   }
   clearAddress(person: iPerson) {

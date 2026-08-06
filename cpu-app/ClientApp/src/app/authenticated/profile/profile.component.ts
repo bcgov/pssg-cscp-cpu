@@ -42,7 +42,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.stateSubscription = this.stateService.main.subscribe(
       (m: Transmogrifier) => {
         this.trans = m;
-        this.originalContactInfo = structuredClone(this.trans.contactInformation);
+        this.originalContactInfo = structuredClone(
+          this.trans.contactInformation,
+        );
 
         // Initialize form with contact information
         this.contactForm =
@@ -152,7 +154,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.contactForm,
           this.trans.contactInformation,
         );
-      if (JSON.stringify(this.originalContactInfo) !== JSON.stringify(updatedContactInfo)) {
+      if (
+        JSON.stringify(this.originalContactInfo) !==
+        JSON.stringify(updatedContactInfo)
+      ) {
         this.trans.contactInformation = this.originalContactInfo;
       }
     }
