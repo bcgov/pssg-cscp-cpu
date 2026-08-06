@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import moment from 'moment';
 import { Component, OnInit, Input, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Person } from '../../../core/models/person.class';
 import { SignaturePadComponent } from '@almothafar/angular-signature-pad';

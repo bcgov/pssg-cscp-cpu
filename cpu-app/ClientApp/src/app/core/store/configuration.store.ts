@@ -7,7 +7,7 @@ import {
   withState,
 } from "@ngrx/signals";
 import { rxMethod } from "@ngrx/signals/rxjs-interop";
-import * as moment from "moment-timezone";
+import moment from "moment-timezone";
 import { catchError, of, pipe, switchMap, tap } from "rxjs";
 import { ConfigurationService } from "../api/services/configuration/configuration.service";
 import { Configuration } from "../models/configuration.interface";

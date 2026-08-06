@@ -1,7 +1,7 @@
 import { iHours } from "../hours.interface";
 import { iDynamicsSchedule } from "../dynamics-blob";
 import { encodeToWeekDayCodes } from "../../constants/encode-to-week-days";
-import * as moment from 'moment';
+import moment from 'moment';
 
 export function convertHoursToDynamics(hours: iHours, programId: string, standByHours = false): iDynamicsSchedule {
   return {

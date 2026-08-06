@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import * as moment from "moment";
+import moment from "moment";
 import { CpuOrgContractsDto, TaskDto } from "../api/models";
 import { contractStatus } from "../constants/contract-code";
 import { decodeTaskType } from "../constants/decode-task-type";
