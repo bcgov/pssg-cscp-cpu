@@ -1,17 +1,27 @@
-<ul *ngIf="persons" class="list-group mb-2">
-  <li *ngFor="let person of persons" class="list-group-item d-flex justify-content-between align-items-center">
-    {{nameAssemble(person.firstName,person.middleName,person.lastName)}}, {{person.title}}
-    <span *ngIf="!isDisabled" (click)="removePerson(person.personId)">
-      <i class="fas fa-times-circle text-danger"></i>
-    </span>
-  </li>
-</ul>
-<div *ngIf="personsList" class="mb-3">
-  <label for="personPickerList" class="form-label fw-normal">{{label}}</label>
-  <select [disabled]="isDisabled" class="form-control" name="personPickerList" id="personPickerList" (change)="addPerson(selectedPerson)" [(ngModel)]="selectedPerson">
-    <option [value]="null">--</option>
-    <option *ngFor="let person of personsList" [value]="person.personId">
-      {{nameAssemble(person.firstName,person.middleName,person.lastName)}}, {{person.title}}
-    </option>
-  </select>
-</div>
+@if (persons) {
+  <ul class="list-group mb-2">
+    @for (person of persons; track person) {
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        {{nameAssemble(person.firstName,person.middleName,person.lastName)}}, {{person.title}}
+        @if (!isDisabled) {
+          <span (click)="removePerson(person.personId)">
+            <i class="fas fa-times-circle text-danger"></i>
+          </span>
+        }
+      </li>
+    }
+  </ul>
+}
+@if (personsList) {
+  <div class="mb-3">
+    <label for="personPickerList" class="form-label fw-normal">{{label}}</label>
+    <select [disabled]="isDisabled" class="form-control" name="personPickerList" id="personPickerList" (change)="addPerson(selectedPerson)" [(ngModel)]="selectedPerson">
+      <option [value]="null">--</option>
+      @for (person of personsList; track person) {
+        <option [value]="person.personId">
+          {{nameAssemble(person.firstName,person.middleName,person.lastName)}}, {{person.title}}
+        </option>
+      }
+    </select>
+  </div>
+}

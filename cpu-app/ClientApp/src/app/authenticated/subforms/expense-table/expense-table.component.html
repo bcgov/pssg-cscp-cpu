@@ -8,48 +8,58 @@
     </th>
   </thead>
   <tbody>
-    <tr *ngFor="let line of defaultExpenseItemsForm">
-      <td>
-        {{line.itemName}}
-      </td>
-      <td>
-        <input [disabled]="isDisabled" class="form-control" (input)="formHelper.moneyMaskToNumber($event.target, line, 'cost'); calculateTotals()" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="line.costMask" min="0" id="{{type}}_total_cost_{{line.uuid}}">
-      </td>
-      <td>
-        <input [disabled]="isDisabled" class="form-control" (input)="formHelper.moneyMaskToNumber($event.target, line, 'fundedFromVscp', line.cost, true); calculateTotals()" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="line.fundedFromVscpMask" min="0" id="{{type}}_vscp_{{line.uuid}}">
-      </td>
-      <td>
-        <!-- For spacing only -->
-      </td>
-    </tr>
-    <tr *ngIf="otherDescription">
-      <th scope="col" colspan="4">
-        {{otherDescription}}
-      </th>
-    </tr>
-    <tr *ngFor="let line of expenseItemsForm; let i=index">
-      <ng-container *ngIf="line.isActive">
+    @for (line of defaultExpenseItemsForm; track line) {
+      <tr>
         <td>
-          <input [disabled]="isDisabled" class="form-control" type="text" [(ngModel)]="line.otherExpenseDescription" min="0" id="{{type}}_expense_name_{{line.uuid}}">
+          {{line.itemName}}
         </td>
         <td>
           <input [disabled]="isDisabled" class="form-control" (input)="formHelper.moneyMaskToNumber($event.target, line, 'cost'); calculateTotals()" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="line.costMask" min="0" id="{{type}}_total_cost_{{line.uuid}}">
         </td>
         <td>
-          <input [disabled]="isDisabled" class="form-control" (input)="formHelper.moneyMaskToNumber($event.target, line, 'fundedFromVscp', line.cost); calculateTotals()" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="line.fundedFromVscpMask" min="0" id="{{type}}_vscp_{{line.uuid}}">
+          <input [disabled]="isDisabled" class="form-control" (input)="formHelper.moneyMaskToNumber($event.target, line, 'fundedFromVscp', line.cost, true); calculateTotals()" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="line.fundedFromVscpMask" min="0" id="{{type}}_vscp_{{line.uuid}}">
         </td>
-        <td class="align-middle">
-          <div (click)="removeExpenseItem(i)" class="remove-row-button" *ngIf="!isDisabled">
-            <i class="fas fa-times-circle text-danger"></i>
-          </div>
+        <td>
+          <!-- For spacing only -->
         </td>
-      </ng-container>
-    </tr>
-    <tr *ngIf="!isDisabled">
-      <td colspan="4" class="add-row-td-text">
-        <button class="btn btn-info align-right" (click)="addExpenseItem()">Add</button>
-      </td>
-    </tr>
+      </tr>
+    }
+    @if (otherDescription) {
+      <tr>
+        <th scope="col" colspan="4">
+          {{otherDescription}}
+        </th>
+      </tr>
+    }
+    @for (line of expenseItemsForm; track line; let i = $index) {
+      <tr>
+        @if (line.isActive) {
+          <td>
+            <input [disabled]="isDisabled" class="form-control" type="text" [(ngModel)]="line.otherExpenseDescription" min="0" id="{{type}}_expense_name_{{line.uuid}}">
+          </td>
+          <td>
+            <input [disabled]="isDisabled" class="form-control" (input)="formHelper.moneyMaskToNumber($event.target, line, 'cost'); calculateTotals()" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="line.costMask" min="0" id="{{type}}_total_cost_{{line.uuid}}">
+          </td>
+          <td>
+            <input [disabled]="isDisabled" class="form-control" (input)="formHelper.moneyMaskToNumber($event.target, line, 'fundedFromVscp', line.cost); calculateTotals()" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="line.fundedFromVscpMask" min="0" id="{{type}}_vscp_{{line.uuid}}">
+          </td>
+          <td class="align-middle">
+            @if (!isDisabled) {
+              <div (click)="removeExpenseItem(i)" class="remove-row-button">
+                <i class="fas fa-times-circle text-danger"></i>
+              </div>
+            }
+          </td>
+        }
+      </tr>
+    }
+    @if (!isDisabled) {
+      <tr>
+        <td colspan="4" class="add-row-td-text">
+          <button class="btn btn-info align-right" (click)="addExpenseItem()">Add</button>
+        </td>
+      </tr>
+    }
     <tr>
       <th scope="col">Total</th>
       <td>{{totalTotalCost | currency}}</td>

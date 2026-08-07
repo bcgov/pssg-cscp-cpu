@@ -8,34 +8,44 @@
           width="181"
           height="45"
           alt="B.C. Government Logo"
-        />
-        <img
-          class="img-fluid d-md-none"
-          src="assets/bc-logo.svg"
-          width="64"
-          height="45"
-          alt="B.C. Government Logo"
-        />
-        <span class="navbar-text ms-4 my-auto">
-          {{ title }}
-        </span>
-      </a>
-      <span class="navbar-text" *ngIf="loggedIn">
-        <a href="javascript:void(0)" (click)="logout()">
-          <span *ngIf="currentUser"> {{ currentUser }}&nbsp;-&nbsp; </span>
-          Sign Out
-        </a>
-      </span>
-      <span class="navbar-text" *ngIf="!loggedIn && isHealthy()">
-        <span *ngIf="!loading">
-          <a href="javascript:void(0)" (click)="login()" class="nav-login"
-            >Log In</a
-          >
-        </span>
-        <span *ngIf="loading">
-          <a href="javascript:void(0)"> Loading... </a>
-        </span>
-      </span>
-    </div>
-  </nav>
-</header>
+          />
+          <img
+            class="img-fluid d-md-none"
+            src="assets/bc-logo.svg"
+            width="64"
+            height="45"
+            alt="B.C. Government Logo"
+            />
+            <span class="navbar-text ms-4 my-auto">
+              {{ title }}
+            </span>
+          </a>
+          @if (loggedIn) {
+            <span class="navbar-text">
+              <a href="javascript:void(0)" (click)="logout()">
+                @if (currentUser) {
+                  <span> {{ currentUser }}&nbsp;-&nbsp; </span>
+                }
+                Sign Out
+              </a>
+            </span>
+          }
+          @if (!loggedIn && isHealthy()) {
+            <span class="navbar-text">
+              @if (!loading) {
+                <span>
+                  <a href="javascript:void(0)" (click)="login()" class="nav-login"
+                    >Log In</a
+                    >
+                  </span>
+                }
+                @if (loading) {
+                  <span>
+                    <a href="javascript:void(0)"> Loading... </a>
+                  </span>
+                }
+              </span>
+            }
+          </div>
+        </nav>
+      </header>

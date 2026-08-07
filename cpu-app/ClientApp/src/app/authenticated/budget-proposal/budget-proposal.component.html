@@ -1,82 +1,108 @@
-<div *ngIf="trans" class="container">
-  <div class="row">
-    <div class="col-md-4">
-      <section class="application-nav sticky-top">
-        <div style="max-height: 90%;">
-          <div class="card organization-box" *ngIf="trans">
-            <div class="card-header">
-              {{ mainTrans.organizationName ||'Organization'}}
-            </div>
-            <div class="card-body">
-              <p class="card-text">
-                <strong>Contract No</strong><br>
-                {{contractNumber}}
-              </p>
-            </div>
+@if (trans) {
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <section class="application-nav sticky-top">
+          <div style="max-height: 90%;">
+            @if (trans) {
+              <div class="card organization-box">
+                <div class="card-header">
+                  {{ mainTrans.organizationName ||'Organization'}}
+                </div>
+                <div class="card-body">
+                  <p class="card-text">
+                    <strong>Contract No</strong><br>
+                    {{contractNumber}}
+                  </p>
+                </div>
+              </div>
+            }
           </div>
-        </div>
-
-        <div style="max-height: 90%;">
-          <app-icon-stepper></app-icon-stepper>
-        </div>
-        <span>
-          <button *ngIf="!isCompleted" class="btn btn-primary mt-2 me-2" [class.is-disabled]="saving || trans.signature.signatureDate" (click)="save(true)">Save and Exit</button>
-        </span>
-        <button *ngIf="!isCompleted" class="btn btn-primary mt-2" [class.is-disabled]="saving" (click)="save()">Save</button>
-        <button *ngIf="isCompleted" class="btn btn-primary mt-2" (click)="exit()">Exit</button>
-      </section>
+          <div style="max-height: 90%;">
+            <app-icon-stepper></app-icon-stepper>
+          </div>
+          <span>
+            @if (!isCompleted) {
+              <button class="btn btn-primary mt-2 me-2" [class.is-disabled]="saving || trans.signature.signatureDate" (click)="save(true)">Save and Exit</button>
+            }
+          </span>
+          @if (!isCompleted) {
+            <button class="btn btn-primary mt-2" [class.is-disabled]="saving" (click)="save()">Save</button>
+          }
+          @if (isCompleted) {
+            <button class="btn btn-primary mt-2" (click)="exit()">Exit</button>
+          }
+        </section>
+      </div>
+      <div class="col-md-8">
+        @if (currentStepperElement.discriminator==='program_overview') {
+          <div>
+            <h2>{{currentStepperElement.itemName}}</h2>
+            @for (program of trans.programBudgets; track program) {
+              <div>
+                <h2 class="blue-header">{{program.name || program.programId}}</h2>
+                <table class="table table-striped">
+                  <tbody>
+                    <tr>
+                      <th scope="row">Program Name</th>
+                      <td>{{program.name}}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Program Type</th>
+                      <td>{{program.type}}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Program Email</th>
+                      <td>{{program.email}}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Program Manager</th>
+                      <td>
+                        {{personDict[program.contactLookupId]?personDict[program.contactLookupId]:'The user previously listed as the primary contact is not active. Please be sure to update this contact.'}}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            }
+          </div>
+        }
+        @for (programBudget of trans.programBudgets; track programBudget; let i = $index) {
+          <div>
+            @if (programBudget.programId===currentStepperElement.discriminator) {
+              <span>
+                <h2>{{programBudget.name}}</h2>
+                <app-program-budget [(programBudget)]="trans.programBudgets[i]" [(currentStepperElement)]="currentStepperElement" [isDisabled]="isCompleted">
+                </app-program-budget>
+              </span>
+            }
+          </div>
+        }
+        @if (currentStepperElement.discriminator==='authorization') {
+          <div>
+            <h2>{{currentStepperElement.itemName}}</h2>
+            <app-program-authorizer [(signature)]="trans.signature" formType="Budget Proposal" [isDisabled]="isCompleted"></app-program-authorizer>
+          </div>
+        }
+      </div>
     </div>
-    <div class="col-md-8">
-      <div *ngIf="currentStepperElement.discriminator==='program_overview'">
-        <h2>{{currentStepperElement.itemName}}</h2>
-        <div *ngFor="let program of trans.programBudgets">
-          <h2 class="blue-header">{{program.name || program.programId}}</h2>
-          <table class="table table-striped">
-            <tbody>
-              <tr>
-                <th scope="row">Program Name</th>
-                <td>{{program.name}}</td>
-              </tr>
-              <tr>
-                <th scope="row">Program Type</th>
-                <td>{{program.type}}</td>
-              </tr>
-              <tr>
-                <th scope="row">Program Email</th>
-                <td>{{program.email}}</td>
-              </tr>
-              <tr>
-                <th scope="row">Program Manager</th>
-                <td>
-                  {{personDict[program.contactLookupId]?personDict[program.contactLookupId]:'The user previously listed as the primary contact is not active. Please be sure to update this contact.'}}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    <div class="row">
+      <div class="col-md-4">
       </div>
-      <div *ngFor="let programBudget of trans.programBudgets; let i = index">
-        <span *ngIf="programBudget.programId===currentStepperElement.discriminator">
-          <h2>{{programBudget.name}}</h2>
-          <app-program-budget [(programBudget)]="trans.programBudgets[i]" [(currentStepperElement)]="currentStepperElement" [isDisabled]="isCompleted">
-          </app-program-budget>
-        </span>
-      </div>
-      <div *ngIf="currentStepperElement.discriminator==='authorization'">
-        <h2>{{currentStepperElement.itemName}}</h2>
-        <app-program-authorizer [(signature)]="trans.signature" formType="Budget Proposal" [isDisabled]="isCompleted"></app-program-authorizer>
+      <div class="col-md-8">
+        <span>@if (stepperIndex > 0) {
+          <button class="btn btn-primary mt-2 previous-button" (click)="setPreviousStepper()">Previous</button>
+        }</span>
+        <span>@if (stepperIndex < stepperElements.length - 1 && !(current_program_budget && current_program_budget.currentTab == programBudgetTabs[0])) {
+          <button class="btn btn-primary mt-2 next-button" (click)="setNextStepper()">{{isCompleted?'':'Save and '}}Continue</button>
+        }</span>
+        <span>@if (current_program_budget && current_program_budget.currentTab == programBudgetTabs[0]) {
+          <button class="btn btn-primary mt-2 next-button" (click)="setNextStepper()">Continue</button>
+        }</span>
+        <span>@if (stepperIndex == stepperElements.length -1 && !isCompleted) {
+          <button class="btn btn-primary mt-2 submit-button" [class.is-disabled]="!trans.signature.signatureDate || saving" (click)="save(true, true)">Submit</button>
+        }</span>
       </div>
     </div>
   </div>
-
-  <div class="row">
-    <div class="col-md-4">
-    </div>
-    <div class="col-md-8">
-      <span><button *ngIf="stepperIndex > 0" class="btn btn-primary mt-2 previous-button" (click)="setPreviousStepper()">Previous</button></span>
-      <span><button *ngIf="stepperIndex < stepperElements.length - 1 && !(current_program_budget && current_program_budget.currentTab == programBudgetTabs[0])" class="btn btn-primary mt-2 next-button" (click)="setNextStepper()">{{isCompleted?'':'Save and '}}Continue</button></span>
-      <span><button *ngIf="current_program_budget && current_program_budget.currentTab == programBudgetTabs[0]" class="btn btn-primary mt-2 next-button" (click)="setNextStepper()">Continue</button></span>
-      <span><button *ngIf="stepperIndex == stepperElements.length -1 && !isCompleted" class="btn btn-primary mt-2 submit-button" [class.is-disabled]="!trans.signature.signatureDate || saving" (click)="save(true, true)">Submit</button></span>
-    </div>
-  </div>
-</div>
+}

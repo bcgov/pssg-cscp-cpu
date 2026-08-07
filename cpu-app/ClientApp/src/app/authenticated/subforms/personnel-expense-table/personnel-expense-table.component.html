@@ -9,35 +9,41 @@
     </th>
   </thead>
   <tbody>
-    <tr *ngFor="let line of salariesAndBenefits; let i=index">
-      <ng-container *ngIf="line.isActive">
-        <td>
-          <input [disabled]="isDisabled" class="form-control" type="text" [(ngModel)]="line.title" min="0" id="{{type}}_title_{{i}}">
+    @for (line of salariesAndBenefits; track line; let i = $index) {
+      <tr>
+        @if (line.isActive) {
+          <td>
+            <input [disabled]="isDisabled" class="form-control" type="text" [(ngModel)]="line.title" min="0" id="{{type}}_title_{{i}}">
+          </td>
+          <td>
+            <input [disabled]="isDisabled" class="form-control" (input)="formHelper.moneyMaskToNumber($event.target, line, 'salary'); calculateTotals()" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="line.salaryMask" min="0" id="{{type}}_salary_{{i}}">
+          </td>
+          <td>
+            <input [disabled]="isDisabled" class="form-control" (input)="formHelper.moneyMaskToNumber($event.target, line, 'benefits'); calculateTotals()" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="line.benefitsMask" min="0" id="{{type}}_benefits_{{i}}">
+          </td>
+          <td>
+            <input class="form-control" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="line.totalCostMask" min="0" id="{{type}}_total_cost_{{i}}" disabled>
+          </td>
+          <td>
+            <input [disabled]="isDisabled" class="form-control" (input)="formHelper.moneyMaskToNumber($event.target, line, 'fundedFromVscp', line.totalCost, true); calculateTotals()" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="line.fundedFromVscpMask" min="0" id="{{type}}_vscp_{{i}}">
+          </td>
+          <td class="align-middle">
+            @if (!isDisabled) {
+              <div (click)="removeExpenseItem(i)" class="remove-row-button">
+                <i class="fas fa-times-circle text-danger"></i>
+              </div>
+            }
+          </td>
+        }
+      </tr>
+    }
+    @if (!isDisabled) {
+      <tr>
+        <td colspan="6" class="add-row-td-text">
+          <button class="btn btn-info align-right" (click)="addExpenseItem()">Add</button>
         </td>
-        <td>
-          <input [disabled]="isDisabled" class="form-control" (input)="formHelper.moneyMaskToNumber($event.target, line, 'salary'); calculateTotals()" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="line.salaryMask" min="0" id="{{type}}_salary_{{i}}">
-        </td>
-        <td>
-          <input [disabled]="isDisabled" class="form-control" (input)="formHelper.moneyMaskToNumber($event.target, line, 'benefits'); calculateTotals()" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="line.benefitsMask" min="0" id="{{type}}_benefits_{{i}}">
-        </td>
-        <td>
-          <input class="form-control" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="line.totalCostMask" min="0" id="{{type}}_total_cost_{{i}}" disabled>
-        </td>
-        <td>
-          <input [disabled]="isDisabled" class="form-control" (input)="formHelper.moneyMaskToNumber($event.target, line, 'fundedFromVscp', line.totalCost, true); calculateTotals()" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" [(ngModel)]="line.fundedFromVscpMask" min="0" id="{{type}}_vscp_{{i}}">
-        </td>
-        <td class="align-middle">
-          <div (click)="removeExpenseItem(i)" class="remove-row-button" *ngIf="!isDisabled">
-            <i class="fas fa-times-circle text-danger"></i>
-          </div>
-        </td>
-      </ng-container>
-    </tr>
-    <tr *ngIf="!isDisabled">
-      <td colspan="6" class="add-row-td-text">
-        <button class="btn btn-info align-right" (click)="addExpenseItem()">Add</button>
-      </td>
-    </tr>
+      </tr>
+    }
     <tr>
       <th scope="col">Total</th>
       <td>{{totalSalaryCost | currency}}</td>

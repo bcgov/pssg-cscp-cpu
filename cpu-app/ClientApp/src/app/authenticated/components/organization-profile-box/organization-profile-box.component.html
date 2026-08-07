@@ -1,67 +1,81 @@
-<div class="card" *ngIf="trans">
-  <div class="card-header">
-    {{ trans.organizationName ||'Organization'}}
+@if (trans) {
+  <div class="card">
+    <div class="card-header">
+      {{ trans.organizationName ||'Organization'}}
+    </div>
+    <!-- card for dashboard -->
+    @if (type === 'dashboard') {
+      <div class="card-body">
+        <p class="card-text">
+          <strong>Phone</strong><br>
+          <a href="tel:{{trans.contactInformation.phoneNumber}}">{{trans.contactInformation.phoneNumber | phone}}</a>
+        </p>
+        <p class="card-text">
+          <strong>Email</strong><br>
+          <a href="mailto:{{trans.contactInformation.emailAddress}}">{{trans.contactInformation.emailAddress}}</a>
+        </p>
+      </div>
+    }
+    <!-- card for profile page -->
+    @if (type === 'profile') {
+      <div class="card-body">
+        <p class="card-text">
+          <strong>Phone</strong><br>
+          <a href="tel:{{trans.contactInformation.phoneNumber}}">{{trans.contactInformation.phoneNumber | phone}}</a>
+        </p>
+        <p class="card-text">
+          <strong>Email</strong><br>
+          <a href="mailto:{{trans.contactInformation.emailAddress}}">{{trans.contactInformation.emailAddress}}</a>
+        </p>
+        @if (trans.contactInformation.executiveContact) {
+          <p class="card-text">
+            <strong>Contractor Contact</strong><br>
+            {{nameAssemble(trans.contactInformation.executiveContact.firstName,trans.contactInformation.executiveContact.middleName,trans.contactInformation.executiveContact.lastName)}}
+          </p>
+        }
+        @if (trans.contactInformation.hasBoardContact && trans.contactInformation.boardContact) {
+          <p class="card-text">
+            <strong>Board Contact</strong><br>
+            {{nameAssemble(trans.contactInformation.boardContact.firstName,trans.contactInformation.boardContact.middleName,trans.contactInformation.boardContact.lastName)}}
+          </p>
+        }
+      </div>
+    }
+    <!-- card for program contact page -->
+    @if (type === 'program-contact') {
+      <div class="card-body">
+        <p class="card-text">
+          <strong>Contract No</strong><br>
+          {{contractNumber}}
+        </p>
+        <p class="card-text">
+          <strong>Phone</strong><br>
+          <a href="tel:{{trans.contactInformation.phoneNumber}}">{{trans.contactInformation.phoneNumber | phone}}</a>
+        </p>
+        <p class="card-text">
+          <strong>Email</strong><br>
+          <a href="mailto:{{trans.contactInformation.emailAddress}}">{{trans.contactInformation.emailAddress}}</a>
+        </p>
+        @if (programInfo.name) {
+          <p class="card-text">
+            <strong>Program</strong><br>
+            {{programInfo.name}}
+          </p>
+        }
+        @if (programInfo.programContact && (programInfo.programContact.firstName || programInfo.programContact.middleName || programInfo.programContact.lastName)) {
+          <p class="card-text">
+            <strong>Program Contact</strong><br>
+            {{nameAssemble(programInfo.programContact.firstName,programInfo.programContact.middleName,programInfo.programContact.lastName)}}
+          </p>
+        }
+      </div>
+    }
+    @if (type === 'dashboard') {
+      <div class="card-footer">
+        <a [routerLink]="'/authenticated/profile/'" class="btn btn-primary">Update Organization Profile</a>
+        <a [routerLink]="'/authenticated/personnel/'" class="btn btn-primary ms-2">Update Agency Staff</a>
+        <a [class.is-disabled]="userRole === Roles.ProgramStaff" [routerLink]="'/authenticated/upload_document/'" class="btn btn-primary ms-2">Upload General Documents</a>
+      </div>
+    }
   </div>
-
-  <!-- card for dashboard -->
-  <div class="card-body" *ngIf="type === 'dashboard'">
-    <p class="card-text">
-      <strong>Phone</strong><br>
-      <a href="tel:{{trans.contactInformation.phoneNumber}}">{{trans.contactInformation.phoneNumber | phone}}</a>
-    </p>
-    <p class="card-text">
-      <strong>Email</strong><br>
-      <a href="mailto:{{trans.contactInformation.emailAddress}}">{{trans.contactInformation.emailAddress}}</a>
-    </p>
-  </div>
-
-  <!-- card for profile page -->
-  <div class="card-body" *ngIf="type === 'profile'">
-    <p class="card-text">
-      <strong>Phone</strong><br>
-      <a href="tel:{{trans.contactInformation.phoneNumber}}">{{trans.contactInformation.phoneNumber | phone}}</a>
-    </p>
-    <p class="card-text">
-      <strong>Email</strong><br>
-      <a href="mailto:{{trans.contactInformation.emailAddress}}">{{trans.contactInformation.emailAddress}}</a>
-    </p>
-    <p class="card-text" *ngIf="trans.contactInformation.executiveContact">
-      <strong>Contractor Contact</strong><br>
-      {{nameAssemble(trans.contactInformation.executiveContact.firstName,trans.contactInformation.executiveContact.middleName,trans.contactInformation.executiveContact.lastName)}}
-    </p>
-    <p class="card-text" *ngIf="trans.contactInformation.hasBoardContact && trans.contactInformation.boardContact">
-      <strong>Board Contact</strong><br>
-      {{nameAssemble(trans.contactInformation.boardContact.firstName,trans.contactInformation.boardContact.middleName,trans.contactInformation.boardContact.lastName)}}
-    </p>
-  </div>
-
-  <!-- card for program contact page -->
-  <div class="card-body" *ngIf="type === 'program-contact'">
-    <p class="card-text">
-      <strong>Contract No</strong><br>
-      {{contractNumber}}
-    </p>
-    <p class="card-text">
-      <strong>Phone</strong><br>
-      <a href="tel:{{trans.contactInformation.phoneNumber}}">{{trans.contactInformation.phoneNumber | phone}}</a>
-    </p>
-    <p class="card-text">
-      <strong>Email</strong><br>
-      <a href="mailto:{{trans.contactInformation.emailAddress}}">{{trans.contactInformation.emailAddress}}</a>
-    </p>
-    <p class="card-text" *ngIf="programInfo.name">
-      <strong>Program</strong><br>
-      {{programInfo.name}}
-    </p>
-    <p class="card-text" *ngIf="programInfo.programContact && (programInfo.programContact.firstName || programInfo.programContact.middleName || programInfo.programContact.lastName)">
-      <strong>Program Contact</strong><br>
-      {{nameAssemble(programInfo.programContact.firstName,programInfo.programContact.middleName,programInfo.programContact.lastName)}}
-    </p>
-  </div>
-
-  <div class="card-footer" *ngIf="type === 'dashboard'">
-    <a [routerLink]="'/authenticated/profile/'" class="btn btn-primary">Update Organization Profile</a>
-    <a [routerLink]="'/authenticated/personnel/'" class="btn btn-primary ms-2">Update Agency Staff</a>
-    <a [class.is-disabled]="userRole === Roles.ProgramStaff" [routerLink]="'/authenticated/upload_document/'" class="btn btn-primary ms-2">Upload General Documents</a>
-  </div>
-</div>
+}

@@ -1,41 +1,43 @@
-<div *ngIf="contactInformation || formGroup">
-  <div class="row">
-    <div class="col-md">
-      <app-form-field
-        [control]="emailControl"
-        [label]="'Email'"
-        [id]="'emailAddress'"
-        type="email"
-        [required]="true"
-        errorMessage="Please enter a valid email address"
-      >
-      </app-form-field>
+@if (contactInformation || formGroup) {
+  <div>
+    <div class="row">
+      <div class="col-md">
+        <app-form-field
+          [control]="emailControl"
+          [label]="'Email'"
+          [id]="'emailAddress'"
+          type="email"
+          [required]="true"
+          errorMessage="Please enter a valid email address"
+          >
+        </app-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md">
+        <app-form-field
+          [control]="phoneControl"
+          [label]="'Phone Number'"
+          [id]="'phoneNumber'"
+          type="text"
+          [mask]="'(000) 000 0000'"
+          [required]="true"
+          errorMessage="Please enter a valid phone number"
+          >
+        </app-form-field>
+      </div>
+      <div class="col-md">
+        <app-form-field
+          [control]="faxControl"
+          [label]="'Fax Number (Optional)'"
+          [id]="'faxNumber'"
+          type="text"
+          [mask]="'(000) 000 0000'"
+          [required]="false"
+          errorMessage="Please enter a valid fax number"
+          >
+        </app-form-field>
+      </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md">
-      <app-form-field
-        [control]="phoneControl"
-        [label]="'Phone Number'"
-        [id]="'phoneNumber'"
-        type="text"
-        [mask]="'(000) 000 0000'"
-        [required]="true"
-        errorMessage="Please enter a valid phone number"
-      >
-      </app-form-field>
-    </div>
-    <div class="col-md">
-      <app-form-field
-        [control]="faxControl"
-        [label]="'Fax Number (Optional)'"
-        [id]="'faxNumber'"
-        type="text"
-        [mask]="'(000) 000 0000'"
-        [required]="false"
-        errorMessage="Please enter a valid fax number"
-      >
-      </app-form-field>
-    </div>
-  </div>
-</div>
+}

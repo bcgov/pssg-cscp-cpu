@@ -3,13 +3,15 @@
     <div class="col">
       <div class="bg-light p-5 rounded">
         <h1 class="display-4">Victim Services: Community Programs Unit</h1>
-        <ng-container *ngIf="!isNewUserRegistration && !contactExistsButNotApproved">
+        @if (!isNewUserRegistration && !contactExistsButNotApproved) {
           <button class="btn btn-primary btn-lg me-2 mb-2" (click)="login()">{{loggedIn ? 'Go to Dashboard' : 'Login'}}</button>
-          <button class="btn btn-primary btn-lg me-2 mb-2" *ngIf="loggedIn" (click)="logout()">Log Out</button>
-        </ng-container>
-        <ng-container *ngIf="isNewUserRegistration && !contactExistsButNotApproved">
+          @if (loggedIn) {
+            <button class="btn btn-primary btn-lg me-2 mb-2" (click)="logout()">Log Out</button>
+          }
+        }
+        @if (isNewUserRegistration && !contactExistsButNotApproved) {
           <button class="btn btn-primary btn-lg me-2 mb-2" [routerLink]="'/authenticated/new_user/'">Register New User</button>
-        </ng-container>
+        }
       </div>
     </div>
   </div>

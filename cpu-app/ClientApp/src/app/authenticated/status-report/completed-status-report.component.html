@@ -1,84 +1,108 @@
-<div *ngIf="trans" class="container">
+@if (trans) {
+  <div class="container">
     <div class="row">
-        <div class="col-md-4">
-            <section class="application-nav sticky-top">
-                <div style="max-height: 90%;">
-                    <div class="card organization-box" *ngIf="trans">
-                        <div class="card-header">
-                            {{ trans.organizationName ||'Organization'}}
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">
-                                <strong>Contract No</strong><br>
-                                {{trans.contractNumber}}
-                            </p>
-                            <p class="card-text">
-                                <strong>Program</strong><br>
-                                {{trans.programName}}{{trans.programType ? ' - ' + trans.programType: ''}}
-                            </p>
-                        </div>
-                    </div>
+      <div class="col-md-4">
+        <section class="application-nav sticky-top">
+          <div style="max-height: 90%;">
+            @if (trans) {
+              <div class="card organization-box">
+                <div class="card-header">
+                  {{ trans.organizationName ||'Organization'}}
                 </div>
-
-                <app-icon-stepper></app-icon-stepper>
-                <button class="btn btn-primary mt-2" (click)="exit()">Exit</button>
-            </section>
-        </div>
-
-        <div class="col-md-8">
-            <div *ngIf="stepperElements && currentStepperElement">
-                <div class="page-header">
-                    <h1>{{trans.title}}</h1>
+                <div class="card-body">
+                  <p class="card-text">
+                    <strong>Contract No</strong><br>
+                    {{trans.contractNumber}}
+                  </p>
+                  <p class="card-text">
+                    <strong>Program</strong><br>
+                    {{trans.programName}}{{trans.programType ? ' - ' + trans.programType: ''}}
+                  </p>
                 </div>
-                <span *ngFor="let group of trans.statusReportAnswers">
-                    <span *ngIf="this.currentStepperElement.itemName===group.name">
-                        <h2 class="blue-header">{{group.name}}</h2>
-                        <div *ngFor="let q of group.answers; let i=index" class="mb-3">
-                            <span *ngIf="q.type==='string'">
-                                <span *ngIf="q.multiChoiceAnswers==null">
-                                    <label [for]="q.uuid" class="form-label fw-normal">{{i+1}}. {{q.label}}</label>
-                                    <textarea [disabled]="true" [(ngModel)]="q.string" class="form-control" [id]="q.uuid" rows="3" placeholder="Type here&hellip;"></textarea>
-                                </span>
-                                <span *ngIf="q.multiChoiceAnswers!=null">
-                                    <label [for]="q.uuid" class="form-label fw-normal">{{i+1}}. {{q.label}}</label>
-                                    <select [disabled]="true" [(ngModel)]="q.string" class="form-control" [id]="q.uuid" placeholder="Oops here&hellip;">
-                                        <option *ngFor="let choices of q.multiChoiceAnswers" [value]="choices.label">{{choices.label}}</option>
-                                    </select>
-                                </span>
-                            </span>
-                            <span *ngIf="q.type==='boolean'">
-                                <p class="mb-0">{{i+1}}. {{q.label}}</p>
-                                <div class="form-check form-check-inline">
-                                    <input [disabled]="true" [(ngModel)]="q.boolean" class="form-check-input" type="radio" [name]="q.uuid" [id]="q.uuid" [value]="true">
-                                    <label class="form-check-label form-label fw-normal" [for]="q.uuid">
-                                        Yes
-                                    </label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input [disabled]="true" [(ngModel)]="q.boolean" class="form-check-input" type="radio" [name]="q.uuid" [id]="q.uuid" [value]="false">
-                                    <label class="form-check-label form-label fw-normal" [for]="q.uuid">
-                                        No
-                                    </label>
-                                </div>
-                            </span>
-                            <span *ngIf="q.type==='number'">
-                                <label [for]="q.uuid" class="form-label fw-normal">{{i+1}}. {{q.label}}</label>
-                                <input [disabled]="true" [(ngModel)]="q.numberMask" type="text" mask="separator.2" separatorLimit="1000" thousandSeparator="," class="form-control number-input" [id]="q.uuid" (input)="formHelper.maskToPositiveNumber($event.target, q, 'number')">
-                            </span>
-                        </div>
-                    </span>
-                </span>
+              </div>
+            }
+          </div>
+          <app-icon-stepper></app-icon-stepper>
+          <button class="btn btn-primary mt-2" (click)="exit()">Exit</button>
+        </section>
+      </div>
+      <div class="col-md-8">
+        @if (stepperElements && currentStepperElement) {
+          <div>
+            <div class="page-header">
+              <h1>{{trans.title}}</h1>
             </div>
-        </div>
+            @for (group of trans.statusReportAnswers; track group) {
+              <span>
+                @if (this.currentStepperElement.itemName===group.name) {
+                  <span>
+                    <h2 class="blue-header">{{group.name}}</h2>
+                    @for (q of group.answers; track q; let i = $index) {
+                      <div class="mb-3">
+                        @if (q.type==='string') {
+                          <span>
+                            @if (q.multiChoiceAnswers==null) {
+                              <span>
+                                <label [for]="q.uuid" class="form-label fw-normal">{{i+1}}. {{q.label}}</label>
+                                <textarea [disabled]="true" [(ngModel)]="q.string" class="form-control" [id]="q.uuid" rows="3" placeholder="Type here&hellip;"></textarea>
+                              </span>
+                            }
+                            @if (q.multiChoiceAnswers!=null) {
+                              <span>
+                                <label [for]="q.uuid" class="form-label fw-normal">{{i+1}}. {{q.label}}</label>
+                                <select [disabled]="true" [(ngModel)]="q.string" class="form-control" [id]="q.uuid" placeholder="Oops here&hellip;">
+                                  @for (choices of q.multiChoiceAnswers; track choices) {
+                                    <option [value]="choices.label">{{choices.label}}</option>
+                                  }
+                                </select>
+                              </span>
+                            }
+                          </span>
+                        }
+                        @if (q.type==='boolean') {
+                          <span>
+                            <p class="mb-0">{{i+1}}. {{q.label}}</p>
+                            <div class="form-check form-check-inline">
+                              <input [disabled]="true" [(ngModel)]="q.boolean" class="form-check-input" type="radio" [name]="q.uuid" [id]="q.uuid" [value]="true">
+                              <label class="form-check-label form-label fw-normal" [for]="q.uuid">
+                                Yes
+                              </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input [disabled]="true" [(ngModel)]="q.boolean" class="form-check-input" type="radio" [name]="q.uuid" [id]="q.uuid" [value]="false">
+                              <label class="form-check-label form-label fw-normal" [for]="q.uuid">
+                                No
+                              </label>
+                            </div>
+                          </span>
+                        }
+                        @if (q.type==='number') {
+                          <span>
+                            <label [for]="q.uuid" class="form-label fw-normal">{{i+1}}. {{q.label}}</label>
+                            <input [disabled]="true" [(ngModel)]="q.numberMask" type="text" mask="separator.2" separatorLimit="1000" thousandSeparator="," class="form-control number-input" [id]="q.uuid" (input)="formHelper.maskToPositiveNumber($event.target, q, 'number')">
+                          </span>
+                        }
+                      </div>
+                    }
+                  </span>
+                }
+              </span>
+            }
+          </div>
+        }
+      </div>
     </div>
-
-
     <div class="row">
-        <div class="col-md-4">
-        </div>
-        <div class="col-md-8">
-            <span><button *ngIf="stepperIndex > 0" class="btn btn-primary mt-2 previous-button" (click)="setPreviousStepper()">Previous</button></span>
-            <span><button *ngIf="stepperIndex < stepperElements.length - 1" class="btn btn-primary mt-2 next-button" (click)="setNextStepper()">Continue</button></span>
-        </div>
+      <div class="col-md-4">
+      </div>
+      <div class="col-md-8">
+        <span>@if (stepperIndex > 0) {
+          <button class="btn btn-primary mt-2 previous-button" (click)="setPreviousStepper()">Previous</button>
+        }</span>
+        <span>@if (stepperIndex < stepperElements.length - 1) {
+          <button class="btn btn-primary mt-2 next-button" (click)="setNextStepper()">Continue</button>
+        }</span>
+      </div>
     </div>
-</div>
+  </div>
+}

@@ -1,16 +1,19 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { provideRouter } from "@angular/router";
 
-import { CgLiabilityComponent } from './cg-liability.component';
+import { CgLiabilityComponent } from "./cg-liability.component";
 
-describe('CgLiabilityComponent', () => {
+describe("CgLiabilityComponent", () => {
   let component: CgLiabilityComponent;
   let fixture: ComponentFixture<CgLiabilityComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ CgLiabilityComponent ]
-    })
-    .compileComponents();
+      declarations: [CgLiabilityComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [provideRouter([])],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +22,7 @@ describe('CgLiabilityComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

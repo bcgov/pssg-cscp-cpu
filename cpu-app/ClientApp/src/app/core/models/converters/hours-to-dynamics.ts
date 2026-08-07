@@ -1,12 +1,22 @@
-import { iHours } from "../hours.interface";
-import { iDynamicsSchedule } from "../dynamics-blob";
+import moment from "moment";
 import { encodeToWeekDayCodes } from "../../constants/encode-to-week-days";
-import * as moment from 'moment';
+import { iDynamicsSchedule } from "../dynamics-blob";
+import { iHours } from "../hours.interface";
 
-export function convertHoursToDynamics(hours: iHours, programId: string, standByHours = false): iDynamicsSchedule {
+export function convertHoursToDynamics(
+  hours: iHours,
+  programId: string,
+  standByHours = false,
+): iDynamicsSchedule {
   return {
-    vsd_scheduledendtime: convertToDynamicsTimeString(hours.closed, hours.isAMClosed),
-    vsd_scheduledstarttime: convertToDynamicsTimeString(hours.open, hours.isAMOpen),
+    vsd_scheduledendtime: convertToDynamicsTimeString(
+      hours.closed,
+      hours.isAMClosed,
+    ),
+    vsd_scheduledstarttime: convertToDynamicsTimeString(
+      hours.open,
+      hours.isAMOpen,
+    ),
     vsd_days: encodeToWeekDayCodes(hours),
     vsd_scheduleid: hours.hoursId,
     vsd_ProgramIdfortunecookiebind: programId,
@@ -15,7 +25,7 @@ export function convertHoursToDynamics(hours: iHours, programId: string, standBy
   };
 }
 function convertToDynamicsTimeString(time: string, isAM: boolean): string {
-  return (time + (isAM ? 'am' : 'pm'));
+  return time + (isAM ? "am" : "pm");
   // let ret = time;
   // if (isAM) {
   //   ret += "am";
@@ -35,12 +45,8 @@ export function makeViewTimeString(dynamicsTime: string): string {
     let hour = parseInt(dynamicsTime.substring(0, 2));
     // if (dynamicsTime.includes('p')) hour += 12;
     const minute = parseInt(dynamicsTime.substring(3, 5));
-    return moment()
-      .hour(hour)
-      .minute(minute)
-      .format('HH:mm');
-  }
-  else {
-    return dynamicsTime
+    return moment().hour(hour).minute(minute).format("HH:mm");
+  } else {
+    return dynamicsTime;
   }
 }

@@ -1,4 +1,3 @@
-import * as _ from "lodash";
 import {
   StatusReportAnswerItemDto,
   StatusReportAnswersDto,
@@ -36,9 +35,12 @@ export class TransmogrifierCompleteStatusReport {
     this.buildStatusReport(g);
   }
   private buildStatusReport(g: StatusReportAnswersDto): void {
-    let categoryGroups: any = _.groupBy(
-      g.answerCollection ?? [],
-      "vsd_questioncategory",
+    let categoryGroups: any = (g.answerCollection ?? []).reduce(
+      (acc: Record<string, any[]>, item: any) => {
+        (acc[item.vsd_questioncategory] ??= []).push(item);
+        return acc;
+      },
+      {},
     );
 
     for (let category in categoryGroups) {

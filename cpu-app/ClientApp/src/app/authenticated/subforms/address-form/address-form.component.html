@@ -1,62 +1,63 @@
-<div *ngIf="formGroup">
-  <div class="row">
-    <div class="col-md">
-      <app-form-field
-        [control]="line1Control"
-        label="Address Line 1"
-        id="line1"
-        type="text"
-        errorMessage="Please enter an address"
-      >
-      </app-form-field>
+@if (formGroup) {
+  <div>
+    <div class="row">
+      <div class="col-md">
+        <app-form-field
+          [control]="line1Control"
+          label="Address Line 1"
+          id="line1"
+          type="text"
+          errorMessage="Please enter an address"
+          >
+        </app-form-field>
+      </div>
+      <div class="col-md">
+        <app-form-field
+          [control]="line2Control"
+          label="Address Line 2 (Optional)"
+          id="line2"
+          type="text"
+          errorMessage="Please enter an address"
+          >
+        </app-form-field>
+      </div>
     </div>
-    <div class="col-md">
-      <app-form-field
-        [control]="line2Control"
-        label="Address Line 2 (Optional)"
-        id="line2"
-        type="text"
-        errorMessage="Please enter an address"
-      >
-      </app-form-field>
+    <div class="row">
+      <div class="col-md">
+        <app-form-field
+          [control]="cityControl"
+          label="City"
+          id="city"
+          type="text"
+          errorMessage="Please enter a city"
+          >
+        </app-form-field>
+      </div>
+      <div class="col-md">
+        <app-form-field
+          [control]="provinceControl"
+          label="Province"
+          id="province"
+          controlType="select"
+          [options]="provinceOptions"
+          placeholder="Select Province"
+          errorMessage="Please select a province"
+          >
+        </app-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md">
+        <app-form-field
+          [control]="postalCodeControl"
+          label="Postal Code"
+          id="postalCode"
+          type="text"
+          placeholder="X1X 2Y2 or X1X2Y2"
+          errorMessage="Please enter a valid postal code"
+          >
+        </app-form-field>
+      </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md">
-      <app-form-field
-        [control]="cityControl"
-        label="City"
-        id="city"
-        type="text"
-        errorMessage="Please enter a city"
-      >
-      </app-form-field>
-    </div>
-    <div class="col-md">
-      <app-form-field
-        [control]="provinceControl"
-        label="Province"
-        id="province"
-        controlType="select"
-        [options]="provinceOptions"
-        placeholder="Select Province"
-        errorMessage="Please select a province"
-      >
-      </app-form-field>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md">
-      <app-form-field
-        [control]="postalCodeControl"
-        label="Postal Code"
-        id="postalCode"
-        type="text"
-        placeholder="X1X 2Y2 or X1X2Y2"
-        errorMessage="Please enter a valid postal code"
-      >
-      </app-form-field>
-    </div>
-  </div>
-</div>
+}

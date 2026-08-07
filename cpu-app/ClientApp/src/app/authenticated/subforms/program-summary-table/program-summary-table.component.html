@@ -72,35 +72,37 @@
     </tr>
   </tbody>
 </table>
-<table *ngIf="pa?.mailingAddress" class="table table-striped">
-  <thead>
-    <tr>
-      <th colspan="2" scope="col" class="review-section-header">Mailing Address</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">Address Line 1</th>
-      <td>{{pa?.mailingAddress?.line1}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Address Line 2</th>
-      <td>{{pa?.mailingAddress?.line2}}</td>
-    </tr>
-    <tr>
-      <th scope="row">City</th>
-      <td>{{pa?.mailingAddress?.city}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Province</th>
-      <td>{{pa?.mailingAddress?.province}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Postal Code</th>
-      <td>{{pa?.mailingAddress?.postalCode}}</td>
-    </tr>
-  </tbody>
-</table>
+@if (pa?.mailingAddress) {
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th colspan="2" scope="col" class="review-section-header">Mailing Address</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Address Line 1</th>
+        <td>{{pa?.mailingAddress?.line1}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Address Line 2</th>
+        <td>{{pa?.mailingAddress?.line2}}</td>
+      </tr>
+      <tr>
+        <th scope="row">City</th>
+        <td>{{pa?.mailingAddress?.city}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Province</th>
+        <td>{{pa?.mailingAddress?.province}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Postal Code</th>
+        <td>{{pa?.mailingAddress?.postalCode}}</td>
+      </tr>
+    </tbody>
+  </table>
+}
 
 <app-person-table [title]="'Program Contact'" [person]="pa?.programContact"></app-person-table>
 
@@ -111,14 +113,18 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngIf="!pa.additionalStaff.length">
-      <th scope="row">Staff</th>
-      <td>No staff declared on {{pa.name}}</td>
-    </tr>
-    <tr *ngFor="let person of pa.additionalStaff;let i=index">
-      <th scope="row">Person {{i+1}}</th>
-      <td>{{person.firstName}} {{person.middleName}} {{person.lastName}}{{person.title?' - '+person.title:''}}</td>
-    </tr>
+    @if (!pa.additionalStaff.length) {
+      <tr>
+        <th scope="row">Staff</th>
+        <td>No staff declared on {{pa.name}}</td>
+      </tr>
+    }
+    @for (person of pa.additionalStaff; track person; let i = $index) {
+      <tr>
+        <th scope="row">Person {{i+1}}</th>
+        <td>{{person.firstName}} {{person.middleName}} {{person.lastName}}{{person.title?' - '+person.title:''}}</td>
+      </tr>
+    }
   </tbody>
 </table>
 
@@ -129,13 +135,17 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngIf="!pa.subContractedStaff.length">
-      <th scope="row">Subcontracted Staff</th>
-      <td>No subcontracted staff declared on {{pa.name}}</td>
-    </tr>
-    <tr *ngFor="let person of pa.subContractedStaff;let i=index">
-      <th scope="row">Person {{i+1}}</th>
-      <td>{{person.firstName}} {{person.middleName}} {{person.lastName}}{{person.title?' - '+person.title:''}}</td>
-    </tr>
+    @if (!pa.subContractedStaff.length) {
+      <tr>
+        <th scope="row">Subcontracted Staff</th>
+        <td>No subcontracted staff declared on {{pa.name}}</td>
+      </tr>
+    }
+    @for (person of pa.subContractedStaff; track person; let i = $index) {
+      <tr>
+        <th scope="row">Person {{i+1}}</th>
+        <td>{{person.firstName}} {{person.middleName}} {{person.lastName}}{{person.title?' - '+person.title:''}}</td>
+      </tr>
+    }
   </tbody>
 </table>

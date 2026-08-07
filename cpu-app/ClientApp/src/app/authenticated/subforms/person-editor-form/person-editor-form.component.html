@@ -1,176 +1,178 @@
-<div *ngIf="personForm">
-  <form [formGroup]="personForm">
-    <div class="row">
-      <div class="col-md">
-        <span *ngIf="!me">
-          <app-form-field
-            id="firstName"
-            label="First Name"
-            [control]="firstName"
-            type="text"
-            errorMessage="First name is required and must contain only letters and spaces"
-          ></app-form-field>
-        </span>
-        <span *ngIf="me">
-          <div class="mb-3">
-            <label for="firstName" class="form-label fw-normal"
-              >First Name</label
-            >
-            <input
-              [disabled]="true"
-              type="text"
-              class="form-control"
-              id="firstName"
-              name="firstName"
-              [value]="person.firstName"
-            />
+@if (personForm) {
+  <div>
+    <form [formGroup]="personForm">
+      <div class="row">
+        <div class="col-md">
+          @if (!me) {
+            <span>
+              <app-form-field
+                id="firstName"
+                label="First Name"
+                [control]="firstName"
+                type="text"
+                errorMessage="First name is required and must contain only letters and spaces"
+              ></app-form-field>
+            </span>
+          }
+          @if (me) {
+            <span>
+              <div class="mb-3">
+                <label for="firstName" class="form-label fw-normal"
+                  >First Name</label
+                  >
+                  <input
+                    [disabled]="true"
+                    type="text"
+                    class="form-control"
+                    id="firstName"
+                    name="firstName"
+                    [value]="person.firstName"
+                    />
+                  </div>
+                </span>
+              }
+            </div>
+            <div class="col-md">
+              <app-form-field
+                id="middleName"
+                label="Middle Name (Optional)"
+                [control]="middleName"
+                type="text"
+                errorMessage="Middle name must contain only letters and spaces"
+              ></app-form-field>
+            </div>
+            <div class="col-md">
+              @if (!me) {
+                <span>
+                  <app-form-field
+                    id="lastName"
+                    label="Last Name"
+                    [control]="lastName"
+                    type="text"
+                    errorMessage="Last name is required and must contain only letters and spaces"
+                  ></app-form-field>
+                </span>
+              }
+              @if (me) {
+                <span>
+                  <div class="mb-3">
+                    <label for="lastName" class="form-label fw-normal">Last Name</label>
+                    <input
+                      [disabled]="true"
+                      type="text"
+                      class="form-control"
+                      id="lastName"
+                      name="lastName"
+                      [value]="person.lastName"
+                      />
+                    </div>
+                  </span>
+                }
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md">
+                <app-form-field
+                  id="title"
+                  label="Title"
+                  [control]="title"
+                  type="text"
+                  errorMessage="Please enter a title"
+                ></app-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md">
+                <app-form-field
+                  id="email"
+                  label="Email"
+                  [control]="email"
+                  type="email"
+                  errorMessage="Please enter a valid email address"
+                ></app-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md">
+                <app-form-field
+                  id="phone2"
+                  label="Work Phone"
+                  [control]="phone2"
+                  type="tel"
+                  mask="(000) 000 0000"
+                  errorMessage="Please enter a valid phone number"
+                ></app-form-field>
+              </div>
+              <div class="col-md">
+                <app-form-field
+                  id="phone2Extension"
+                  label="Ext. (Optional)"
+                  [control]="phone2Extension"
+                  type="text"
+                  mask="0000"
+                ></app-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md">
+                <app-form-field
+                  id="phone"
+                  label="Mobile Number (Optional)"
+                  [control]="phone"
+                  type="tel"
+                  mask="(000) 000 0000"
+                  errorMessage="Please enter a valid phone number"
+                ></app-form-field>
+              </div>
+              <div class="col-md">
+                <app-form-field
+                  id="phoneExtension"
+                  label="Ext. (Optional)"
+                  [control]="phoneExtension"
+                  type="text"
+                  mask="0000"
+                ></app-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md">
+                <app-form-field
+                  id="fax"
+                  label="Fax Number (Optional)"
+                  [control]="fax"
+                  type="tel"
+                  mask="(000) 000 0000"
+                  errorMessage="Please enter a valid fax number"
+                ></app-form-field>
+              </div>
+            </div>
+            <div class="form-check">
+              <input
+                [formControl]="addressSameAsAgency"
+                class="form-check-input"
+                type="checkbox"
+                id="sameAsPrimaryAgencyAddress"
+                name="sameAsPrimaryAgencyAddress"
+                />
+                <label
+                  class="form-check-label form-label fw-normal"
+                  for="sameAsPrimaryAgencyAddress"
+                  >
+                  Same as primary address of Agency.
+                </label>
+              </div>
+              <app-address-form [formGroup]="addressForm"> </app-address-form>
+              @if (!isPoliceContact) {
+                <app-form-field
+                  id="employmentStatus"
+                  label="Employment Status"
+                  [control]="employmentStatus"
+                  controlType="select"
+                  [options]="employmentStatusOptions"
+                  [required]="true"
+                  errorMessage="Employment status is required"
+                ></app-form-field>
+              }
+            </form>
           </div>
-        </span>
-      </div>
-      <div class="col-md">
-        <app-form-field
-          id="middleName"
-          label="Middle Name (Optional)"
-          [control]="middleName"
-          type="text"
-          errorMessage="Middle name must contain only letters and spaces"
-        ></app-form-field>
-      </div>
-      <div class="col-md">
-        <span *ngIf="!me">
-          <app-form-field
-            id="lastName"
-            label="Last Name"
-            [control]="lastName"
-            type="text"
-            errorMessage="Last name is required and must contain only letters and spaces"
-          ></app-form-field>
-        </span>
-        <span *ngIf="me">
-          <div class="mb-3">
-            <label for="lastName" class="form-label fw-normal">Last Name</label>
-            <input
-              [disabled]="true"
-              type="text"
-              class="form-control"
-              id="lastName"
-              name="lastName"
-              [value]="person.lastName"
-            />
-          </div>
-        </span>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md">
-        <app-form-field
-          id="title"
-          label="Title"
-          [control]="title"
-          type="text"
-          errorMessage="Please enter a title"
-        ></app-form-field>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md">
-        <app-form-field
-          id="email"
-          label="Email"
-          [control]="email"
-          type="email"
-          errorMessage="Please enter a valid email address"
-        ></app-form-field>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md">
-        <app-form-field
-          id="phone2"
-          label="Work Phone"
-          [control]="phone2"
-          type="tel"
-          mask="(000) 000 0000"
-          errorMessage="Please enter a valid phone number"
-        ></app-form-field>
-      </div>
-      <div class="col-md">
-        <app-form-field
-          id="phone2Extension"
-          label="Ext. (Optional)"
-          [control]="phone2Extension"
-          type="text"
-          mask="0000"
-        ></app-form-field>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md">
-        <app-form-field
-          id="phone"
-          label="Mobile Number (Optional)"
-          [control]="phone"
-          type="tel"
-          mask="(000) 000 0000"
-          errorMessage="Please enter a valid phone number"
-        ></app-form-field>
-      </div>
-      <div class="col-md">
-        <app-form-field
-          id="phoneExtension"
-          label="Ext. (Optional)"
-          [control]="phoneExtension"
-          type="text"
-          mask="0000"
-        ></app-form-field>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md">
-        <app-form-field
-          id="fax"
-          label="Fax Number (Optional)"
-          [control]="fax"
-          type="tel"
-          mask="(000) 000 0000"
-          errorMessage="Please enter a valid fax number"
-        ></app-form-field>
-      </div>
-    </div>
-
-    <div class="form-check">
-      <input
-        [formControl]="addressSameAsAgency"
-        class="form-check-input"
-        type="checkbox"
-        id="sameAsPrimaryAgencyAddress"
-        name="sameAsPrimaryAgencyAddress"
-      />
-      <label
-        class="form-check-label form-label fw-normal"
-        for="sameAsPrimaryAgencyAddress"
-      >
-        Same as primary address of Agency.
-      </label>
-    </div>
-
-    <app-address-form [formGroup]="addressForm"> </app-address-form>
-
-    <ng-container *ngIf="!isPoliceContact">
-      <app-form-field
-        id="employmentStatus"
-        label="Employment Status"
-        [control]="employmentStatus"
-        controlType="select"
-        [options]="employmentStatusOptions"
-        [required]="true"
-        errorMessage="Employment status is required"
-      ></app-form-field>
-    </ng-container>
-  </form>
-</div>
+        }

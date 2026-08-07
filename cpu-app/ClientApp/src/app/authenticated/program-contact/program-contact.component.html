@@ -1,106 +1,101 @@
 <form name="form" (input)="onInput()" novalidate>
-  <div class="container" *ngIf="programApplication">
-    <div class="row">
-      <div class="col-md-4">
-        <section class="application-nav sticky-top">
-          <div style="max-height: 90%;">
-            <app-organization-profile-box [type]="'program-contact'" [programInfo]="programApplication">
-            </app-organization-profile-box>
+  @if (programApplication) {
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <section class="application-nav sticky-top">
+            <div style="max-height: 90%;">
+              <app-organization-profile-box [type]="'program-contact'" [programInfo]="programApplication">
+              </app-organization-profile-box>
+            </div>
+          </section>
+        </div>
+        <div class="col">
+          <div class="page-header">
+            <h1>Program Contact Information</h1>
           </div>
-        </section>
-      </div>
-
-      <div class="col">
-        <div class="page-header">
-          <h1>Program Contact Information</h1>
-        </div>
-        <h2 class="blue-header">Main Program Information</h2>
-        <div class="mb-3">
-          <label for="serviceArea" class="form-label fw-normal">Assignment Area</label>
-          <input class="form-control" type="text" [ngModel]="programApplication.assignmentArea" id="serviceArea" name="serviceArea" disabled>
-        </div>
-        <div class="mb-3">
-          <label for="programLocation" class="form-label fw-normal">Program Location</label>
-          <input class="form-control" type="text" [ngModel]="programApplication.programLocation" id="programLocation" name="programLocation" disabled>
-        </div>
-
-
-        <div class="row">
-          <div class="col-md">
-            <div class="mb-3">
-              <label for="emailAddress" class="form-label fw-normal">Email</label>
-              <input type="text" class="form-control" id="emailAddress" name="emailAddress" [(ngModel)]="programApplication.emailAddress" #emailAddress="ngModel" (input)="formHelper.trimInput($event.target)" [pattern]="emailRegex">
-              <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(emailAddress)">
-                Ok
-              </div>
-              <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedback(programApplication.emailAddress, emailRegex, emailAddress)">
-                Try Again
+          <h2 class="blue-header">Main Program Information</h2>
+          <div class="mb-3">
+            <label for="serviceArea" class="form-label fw-normal">Assignment Area</label>
+            <input class="form-control" type="text" [ngModel]="programApplication.assignmentArea" id="serviceArea" name="serviceArea" disabled>
+          </div>
+          <div class="mb-3">
+            <label for="programLocation" class="form-label fw-normal">Program Location</label>
+            <input class="form-control" type="text" [ngModel]="programApplication.programLocation" id="programLocation" name="programLocation" disabled>
+          </div>
+          <div class="row">
+            <div class="col-md">
+              <div class="mb-3">
+                <label for="emailAddress" class="form-label fw-normal">Email</label>
+                <input type="text" class="form-control" id="emailAddress" name="emailAddress" [(ngModel)]="programApplication.emailAddress" #emailAddress="ngModel" (input)="formHelper.trimInput($event.target)" [pattern]="emailRegex">
+                <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(emailAddress)">
+                  Ok
+                </div>
+                <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedback(programApplication.emailAddress, emailRegex, emailAddress)">
+                  Try Again
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-md">
-            <div class="mb-3">
-              <label for="phoneNumber" class="form-label fw-normal">Phone Number</label>
-              <input type="text" mask='(000) 000 0000' class="form-control" id="phoneNumber" name="phoneNumber" [(ngModel)]="programApplication.phoneNumber" #phoneNumber="ngModel" [pattern]="phoneRegex">
-              <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(phoneNumber)">
-                Ok
+          <div class="row">
+            <div class="col-md">
+              <div class="mb-3">
+                <label for="phoneNumber" class="form-label fw-normal">Phone Number</label>
+                <input type="text" mask='(000) 000 0000' class="form-control" id="phoneNumber" name="phoneNumber" [(ngModel)]="programApplication.phoneNumber" #phoneNumber="ngModel" [pattern]="phoneRegex">
+                <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(phoneNumber)">
+                  Ok
+                </div>
+                <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedback(programApplication.phoneNumber, phoneRegex, phoneNumber)">
+                  Try Again
+                </div>
               </div>
-              <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedback(programApplication.phoneNumber, phoneRegex, phoneNumber)">
-                Try Again
+            </div>
+            <div class="col-md">
+              <div class="mb-3">
+                <label for="faxNumber" class="form-label fw-normal">Fax Number (Optional)</label>
+                <input type="text" mask='(000) 000 0000' class="form-control" id="faxNumber" name="faxNumber" [(ngModel)]="programApplication.faxNumber" #faxNumber="ngModel" [pattern]="phoneRegex">
+                <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(faxNumber)">
+                  Ok
+                </div>
+                <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedback(programApplication.faxNumber, phoneRegex, faxNumber)">
+                  Try Again
+                </div>
               </div>
             </div>
           </div>
-          <div class="col-md">
-            <div class="mb-3">
-              <label for="faxNumber" class="form-label fw-normal">Fax Number (Optional)</label>
-              <input type="text" mask='(000) 000 0000' class="form-control" id="faxNumber" name="faxNumber" [(ngModel)]="programApplication.faxNumber" #faxNumber="ngModel" [pattern]="phoneRegex">
-              <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(faxNumber)">
-                Ok
-              </div>
-              <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedback(programApplication.faxNumber, phoneRegex, faxNumber)">
-                Try Again
-              </div>
+          <div>
+            <div class="form-check">
+              <input [(ngModel)]="programApplication.isTransitionHouse" class="form-check-input" type="checkbox" id="isTransitionHouse" name="isTransitionHouse">
+              <label class="form-check-label form-label fw-normal" for="isTransitionHouse">
+                Is this Program location a transition house or safe home?
+              </label>
             </div>
           </div>
-        </div>
-
-        <div>
+          <app-address2 [(address)]="programApplication.mainAddress"></app-address2>
+          <h2 class="blue-header mt-4">Mailing Address</h2>
           <div class="form-check">
-            <input [(ngModel)]="programApplication.isTransitionHouse" class="form-check-input" type="checkbox" id="isTransitionHouse" name="isTransitionHouse">
-            <label class="form-check-label form-label fw-normal" for="isTransitionHouse">
-              Is this Program location a transition house or safe home?
+            <input [(ngModel)]="programApplication.mailingAddressSameAsMainAddress" class="form-check-input" type="checkbox" id="mailingAddressSameAsMainAddress" name="mailingAddressSameAsMainAddress" (change)="setMailingAddressSameAsMainAddress()">
+            <label class="form-check-label form-label fw-normal" for="mailingAddressSameAsMainAddress">
+              Please select this check box if mailing address is the same as Primary Program Contact Address
             </label>
           </div>
+          <app-address2 [isDisabled]="programApplication.mailingAddressSameAsMainAddress" [(address)]="programApplication.mailingAddress"></app-address2>
+          <div class="mb-3">
+          </div>
+          <span class="mb-4">
+            <h2 class="blue-header">Program Contact</h2>
+            <app-person-picker [title]="'Please select a program contact.'" [(person)]="programApplication.programContact">
+            </app-person-picker>
+          </span>
         </div>
-        <app-address2 [(address)]="programApplication.mainAddress"></app-address2>
-
-        <h2 class="blue-header mt-4">Mailing Address</h2>
-        <div class="form-check">
-          <input [(ngModel)]="programApplication.mailingAddressSameAsMainAddress" class="form-check-input" type="checkbox" id="mailingAddressSameAsMainAddress" name="mailingAddressSameAsMainAddress" (change)="setMailingAddressSameAsMainAddress()">
-          <label class="form-check-label form-label fw-normal" for="mailingAddressSameAsMainAddress">
-            Please select this check box if mailing address is the same as Primary Program Contact Address
-          </label>
-        </div>
-        <app-address2 [isDisabled]="programApplication.mailingAddressSameAsMainAddress" [(address)]="programApplication.mailingAddress"></app-address2>
-
-        <div class="mb-3">
-        </div>
-        <span class="mb-4">
-          <h2 class="blue-header">Program Contact</h2>
-          <app-person-picker [title]="'Please select a program contact.'" [(person)]="programApplication.programContact">
-          </app-person-picker>
-        </span>
       </div>
-
-    </div>
-    <div class="row mt-4">
-      <div class="col-md-4"></div>
-      <div class="col">
-        <button (click)="save(true)" [class.is-disabled]="saving" class="btn btn-primary">Save and Exit</button>
-        <button class="btn btn-primary ms-2" [class.is-disabled]="saving" (click)="save()">Save</button>
+      <div class="row mt-4">
+        <div class="col-md-4"></div>
+        <div class="col">
+          <button (click)="save(true)" [class.is-disabled]="saving" class="btn btn-primary">Save and Exit</button>
+          <button class="btn btn-primary ms-2" [class.is-disabled]="saving" (click)="save()">Save</button>
+        </div>
       </div>
     </div>
-  </div>
+  }
 </form>

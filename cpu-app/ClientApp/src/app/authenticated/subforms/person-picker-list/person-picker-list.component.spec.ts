@@ -1,16 +1,19 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { provideRouter } from "@angular/router";
 
-import { PersonPickerListComponent } from './person-picker-list.component';
+import { PersonPickerListComponent } from "./person-picker-list.component";
 
-describe('PersonPickerListComponent', () => {
+describe("PersonPickerListComponent", () => {
   let component: PersonPickerListComponent;
   let fixture: ComponentFixture<PersonPickerListComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ PersonPickerListComponent ]
-    })
-    .compileComponents();
+      declarations: [PersonPickerListComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [provideRouter([])],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +22,7 @@ describe('PersonPickerListComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

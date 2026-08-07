@@ -42,7 +42,9 @@
       <div class="mb-3">
         <label for="province" [class.required]="required" class="form-label fw-normal">Province</label>
         <select class="form-control" [class.required]="required" name="province" id="province" formControlName="province" [required]="formHelper.isRequired(province, required)">
-          <option *ngFor="let area of country.areas" [value]="area">{{area}}</option>
+          @for (area of country.areas; track area) {
+            <option [value]="area">{{area}}</option>
+          }
         </select>
         <div class="valid-feedback" [hidden]="formHelper.showValidFeedback(province)" style="display: inherit">
           Ok

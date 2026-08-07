@@ -12,7 +12,6 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule } from "@angular/router";
-import { TooltipModule } from "ngx-bootstrap/tooltip";
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from "ngx-mask";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -166,7 +165,6 @@ import { TestComponent } from "./test/test.component";
     RouterModule,
     SharedModule,
     SignaturePadModule,
-    TooltipModule.forRoot(),
     NgxMaskDirective,
     NgxMaskPipe,
   ],
@@ -181,7 +179,7 @@ import { TestComponent } from "./test/test.component";
       multi: true,
     },
   ],
-  exports: [MatToolbarModule, MatTooltipModule, TooltipModule],
+  exports: [MatToolbarModule, MatTooltipModule],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

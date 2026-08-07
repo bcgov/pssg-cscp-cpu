@@ -9,14 +9,14 @@
       "projectType": "application",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular/build:application",
           "options": {
             "outputPath": "dist",
             "index": "src/index.html",
-            "main": "src/main.ts",
+            "browser": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
             "progress": true,
-            "polyfills": "src/polyfills.ts",
+            "polyfills": ["src/polyfills.ts"],
             "assets": [
               "src/favicon.ico",
               "src/assets",
@@ -29,32 +29,22 @@
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/@bcgov/bc-sans/css/BCSans.css",
               "node_modules/@bcgov/bootstrap-v5-theme/css/bootstrap-theme.min.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.css",
               "src/styles.scss"
             ],
             "scripts": [],
-            "aot": false,
-            "vendorChunk": true,
             "extractLicenses": false,
-            "buildOptimizer": false,
             "sourceMap": true,
-            "optimization": false,
-            "namedChunks": true
+            "optimization": false
           },
           "configurations": {
             "production": {
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "baseHref": "/coastcontracts/",
-              "deployUrl": "/coastcontracts/",
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -65,16 +55,13 @@
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true,
-              "namedChunks": true,
-              "aot": false,
-              "buildOptimizer": false
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "development"
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular/build:dev-server",
           "options": {
             "buildTarget": "cpu-public-app:build"
           },
@@ -90,44 +77,10 @@
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "builder": "@angular/build:extract-i18n",
           "options": {
             "buildTarget": "cpu-public-app:build"
           }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "src/test.ts",
-            "karmaConfig": "./karma.conf.js",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.spec.json",
-            "scripts": [],
-            "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/@bcgov/bc-sans/css/BCSans.css",
-              "node_modules/@bcgov/bootstrap-v5-theme/css/bootstrap-theme.min.css",
-              "node_modules/@fortawesome/fontawesome-free/css/all.css",
-              "src/styles.scss"
-            ],
-            "assets": ["src/assets"]
-          }
-        }
-      }
-    },
-    "cpu-public-app-e2e": {
-      "root": "e2e",
-      "sourceRoot": "e2e",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "cpu-public-app:serve"
-          },
-          "configurations": {}
         }
       }
     }
@@ -135,10 +88,30 @@
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
-      "styleext": "css"
+      "styleext": "css",
+      "type": "component"
     },
     "@schematics/angular:directive": {
-      "prefix": "app"
+      "prefix": "app",
+      "type": "directive"
+    },
+    "@schematics/angular:service": {
+      "type": "service"
+    },
+    "@schematics/angular:guard": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:interceptor": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:module": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:pipe": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:resolver": {
+      "typeSeparator": "."
     }
   },
   "cli": {

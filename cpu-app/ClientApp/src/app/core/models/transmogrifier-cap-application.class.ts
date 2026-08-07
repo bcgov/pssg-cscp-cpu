@@ -1,4 +1,3 @@
-import * as _ from "lodash";
 import { iSignature } from "../../authenticated/subforms/program-authorizer/program-authorizer.component";
 import { CAPApplicationDto, ContactDto } from "../api/models";
 import { employmentStatusTypeDict } from "../constants/employment-status-types";
@@ -109,10 +108,8 @@ export class TransmogrifierCAPApplication {
       ),
     };
 
-    c.mailingAddressSameAsMainAddress = _.isEqual(
-      c.mainAddress,
-      c.mailingAddress,
-    );
+    c.mailingAddressSameAsMainAddress =
+      JSON.stringify(c.mainAddress) === JSON.stringify(c.mailingAddress);
     if (c.mailingAddressSameAsMainAddress) c.mailingAddress = c.mainAddress;
 
     if (

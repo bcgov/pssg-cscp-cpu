@@ -1,7 +1,9 @@
 <div class="task-list-container">
-  <div class="loading-indicator" *ngIf="downloadingDocument">
-    <mat-spinner mode="indeterminate"></mat-spinner>
-  </div>
+  @if (downloadingDocument) {
+    <div class="loading-indicator">
+      <mat-spinner mode="indeterminate"></mat-spinner>
+    </div>
+  }
 
   <div class="card mb-2" [class.dark-overlay]="downloadingDocument">
     <div class="card-header">
@@ -12,11 +14,13 @@
             Export Data
           </button>
           <div class="dropdown-menu" [class.show]="isDropdownOpen" aria-labelledby="exportDropdownButton">
-            <span *ngFor="let data of contract.programs">
-              <a (click)="exportMonthlyStats(data.programId, contract.contractId, data.programName, contract.contractNumber)" class="dropdown-item">
-                {{data.programName}}
-              </a>
-            </span>
+            @for (data of contract.programs; track data) {
+              <span>
+                <a (click)="exportMonthlyStats(data.programId, contract.contractId, data.programName, contract.contractNumber)" class="dropdown-item">
+                  {{data.programName}}
+                </a>
+              </span>
+            }
           </div>
         </div>
       </div>
@@ -42,132 +46,163 @@
         <!-- <li>
         <a class="nav-link nav-tab-table" (click)="setCurrentTab(tabs[3])" [class.is-disabled]="downloadingDocument" [class.active]="currentTab===tabs[3]">Messages</a>
       </li> -->
-      </ul>
+    </ul>
     <div class="card-body">
-      <span *ngIf="currentTab===tabs.tasksDue">
-        <div class="alert alert-light" *ngIf="!contract.tasks.length">
-          There are no current tasks due.
-        </div>
-        <div *ngIf="contract.tasks.length">
-          <table class="table table-sm table-striped">
-            <thead class="thead">
-              <th style="width:20%" scope="col">Action</th>
-              <th style="width:20%" scope="col">Title</th>
-              <th style="width:30%" scope="col">Description</th>
-              <th style="width:15%" scope="col">Deadline</th>
-            </thead>
-            <tbody>
-              <tr *ngFor="let task of contract.tasks">
-                <td>
-                  <!-- task.formType != 'surplus_plan' &&  -->
-                  <ng-container *ngIf="task.formType != 'Unknown form' && (userRole > Roles.ProgramStaff || (userRole === Roles.ProgramStaff && task.formType == 'status_report')); else disabledCurrentContractTaskBlock">
-                    <a routerLink="/authenticated/{{task.formType}}/{{task.taskId}}">
-                      {{task.taskName}} <span *ngIf="!task.taskId">(missing task id)</span>
-                    </a>
-                  </ng-container>
-                  <ng-template #disabledCurrentContractTaskBlock>{{task.taskName}}</ng-template>
-                </td>
-                <td>{{task.taskTitle}}</td>
-                <td>{{task.taskDescription}}</td>
-                <td [class.text-danger]="task.isOverDue">{{task.deadline|date:'yyyy-MM-dd'}}</td>
-              </tr>
+      @if (currentTab===tabs.tasksDue) {
+        <span>
+          @if (!contract.tasks.length) {
+            <div class="alert alert-light">
+              There are no current tasks due.
+            </div>
+          }
+          @if (contract.tasks.length) {
+            <div>
+              <table class="table table-sm table-striped">
+                <thead class="thead">
+                  <th style="width:20%" scope="col">Action</th>
+                  <th style="width:20%" scope="col">Title</th>
+                  <th style="width:30%" scope="col">Description</th>
+                  <th style="width:15%" scope="col">Deadline</th>
+                </thead>
+                <tbody>
+                  @for (task of contract.tasks; track task) {
+                    <tr>
+                      <td>
+                        <!-- task.formType != 'surplus_plan' &&  -->
+                        @if (task.formType != 'Unknown form' && (userRole > Roles.ProgramStaff || (userRole === Roles.ProgramStaff && task.formType == 'status_report'))) {
+                          <a routerLink="/authenticated/{{task.formType}}/{{task.taskId}}">
+                            {{task.taskName}} @if (!task.taskId) {
+                            <span>(missing task id)</span>
+                          }
+                        </a>
+                      } @else {
+                        {{task.taskName}}
+                      }
+                    </td>
+                    <td>{{task.taskTitle}}</td>
+                    <td>{{task.taskDescription}}</td>
+                    <td [class.text-danger]="task.isOverDue">{{task.deadline|date:'yyyy-MM-dd'}}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </span>
+    }
+    @if (currentTab===tabs.tasksCompleted) {
+      <span>
+        @if (!contract.completedTasks.length) {
+          <div class="alert alert-light">
+            There are no completed tasks to show.
+          </div>
+        }
+        @if (contract.completedTasks.length) {
+          <div>
+            <table class="table table-sm table-striped">
+              <thead class="thead">
+                <th style="width:16%" scope="col">Task</th>
+                <th style="width:16%" scope="col">Title</th>
+                <th style="width:16%" scope="col">Status</th>
+                <th style="width:22%" scope="col">Description</th>
+                <th style="width:15%" scope="col">Deadline</th>
+                <th style="width:15%" scope="col">Submitted Date</th>
+              </thead>
+              <tbody>
+                @for (task of contract.completedTasks; track task) {
+                  <tr>
+                    <td>
+                      @if (task.status === 'Completed' && userRole > Roles.ProgramStaff && (task.formType == 'program_application' || task.formType == 'expense_report'  || task.formType == 'budget_proposal'  || task.formType == 'program_surplus'  || task.formType == 'surplus_report')) {
+                        <a routerLink="/authenticated/{{task.formType}}/{{task.taskId}}" [queryParams]="{completed: 'true'}">
+                          {{task.taskName}} @if (!task.taskId) {
+                          <span>(missing task id)</span>
+                        }
+                      </a>
+                    }
+                    @if (userRole === Roles.ProgramStaff || (task.formType != 'program_application' && task.formType != 'expense_report'  && task.formType != 'budget_proposal' && task.formType != 'program_surplus'  && task.formType != 'surplus_report')) {
+                      {{task.taskName}}
+                    }
+                  </td>
+                  <td>{{task.taskTitle}}</td>
+                  <td>{{task.status}}</td>
+                  <td>{{task.taskDescription}}</td>
+                  <td>{{task.deadline|date:'yyyy-MM-dd'}}</td>
+                  <td>{{task.submittedDate|date:'yyyy-MM-dd'}}</td>
+                </tr>
+              }
             </tbody>
           </table>
         </div>
-      </span>
-      <span *ngIf="currentTab===tabs.tasksCompleted">
-        <div class="alert alert-light" *ngIf="!contract.completedTasks.length">
-          There are no completed tasks to show.
-        </div>
-        <div *ngIf="contract.completedTasks.length">
-          <table class="table table-sm table-striped">
-            <thead class="thead">
-              <th style="width:16%" scope="col">Task</th>
-              <th style="width:16%" scope="col">Title</th>
-              <th style="width:16%" scope="col">Status</th>
-              <th style="width:22%" scope="col">Description</th>
-              <th style="width:15%" scope="col">Deadline</th>
-              <th style="width:15%" scope="col">Submitted Date</th>
-            </thead>
-            <tbody>
-              <tr *ngFor="let task of contract.completedTasks">
-                <td>
-                  <ng-container *ngIf="task.status === 'Completed' && userRole > Roles.ProgramStaff && (task.formType == 'program_application' || task.formType == 'expense_report'  || task.formType == 'budget_proposal'  || task.formType == 'program_surplus'  || task.formType == 'surplus_report')">
-                    <a routerLink="/authenticated/{{task.formType}}/{{task.taskId}}" [queryParams]="{completed: 'true'}">
-                      {{task.taskName}} <span *ngIf="!task.taskId">(missing task id)</span>
-                    </a>
-                  </ng-container>
-                  <ng-container *ngIf="userRole === Roles.ProgramStaff || (task.formType != 'program_application' && task.formType != 'expense_report'  && task.formType != 'budget_proposal' && task.formType != 'program_surplus'  && task.formType != 'surplus_report')">{{task.taskName}}</ng-container>
-                </td>
-                <td>{{task.taskTitle}}</td>
-                <td>{{task.status}}</td>
-                <td>{{task.taskDescription}}</td>
-                <td>{{task.deadline|date:'yyyy-MM-dd'}}</td>
-                <td>{{task.submittedDate|date:'yyyy-MM-dd'}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </span>
+      }
+    </span>
+  }
 
-      <span *ngIf="currentTab===tabs.completedStats">
-        <table class="table table-sm table-striped">
-          <thead class="thead">
+  @if (currentTab===tabs.completedStats) {
+    <span>
+      <table class="table table-sm table-striped">
+        <thead class="thead">
+          <tr>
+            <th scope="col">Program Name</th>
+            <th scope="col">Reporting Period</th>
+            <th scope="col">View Your Report</th>
+            <th scope="col">Submission Date</th>
+            <th scope="col">Report Status</th>
+            <th scope="col">Submitted By</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (loadingStats) {
             <tr>
-              <th scope="col">Program Name</th>
-              <th scope="col">Reporting Period</th>
-              <th scope="col">View Your Report</th>
-              <th scope="col">Submission Date</th>
-              <th scope="col">Report Status</th>
-              <th scope="col">Submitted By</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngIf="loadingStats">
               <td colspan="5">Loading...</td>
               <td><i class="text-secondary spinner-border spinner-border-sm"></i></td>
             </tr>
-            <tr *ngFor="let data of dataCollection; let i=index;">
+          }
+          @for (data of dataCollection; track data; let i = $index) {
+            <tr>
               <td>{{data.program_name}}</td>
               <td>{{data.reportingPeriod}}</td>
               <td>
-                <ng-container *ngIf="data.statuscode == StatusReasons.Approved">
+                @if (data.statuscode == StatusReasons.Approved) {
                   <a routerLink="/authenticated/completed_status_report/{{data.vsd_datacollectionid}}">
                     Statistics report ({{data.program_name}})
                   </a>
-                </ng-container>
-                <ng-container *ngIf="data.statuscode != StatusReasons.Approved">
+                }
+                @if (data.statuscode != StatusReasons.Approved) {
                   Statistics report ({{data.program_name}})
-                </ng-container>
+                }
               </td>
               <td>{{data.vsd_submissiondate | date}}</td>
               <td>{{StatusReasons[data.statuscode]}}</td>
               <td>{{completedStats.UserCollection[0].fullname}}</td>
             </tr>
-          </tbody>
-        </table>
-      </span>
+          }
+        </tbody>
+      </table>
+    </span>
+  }
 
-      <span *ngIf="currentTab===tabs.editProgramInformation">
-        <table class="table table-sm table-striped">
-          <thead class="thead">
+  @if (currentTab===tabs.editProgramInformation) {
+    <span>
+      <table class="table table-sm table-striped">
+        <thead class="thead">
+          <tr>
+            <th scope="col" colspan="3" class="no-bottom-border border-right"></th>
+            <th scope="col" colspan="5" class="no-bottom-border centered-header">Payments Statuses</th>
+          </tr>
+          <tr>
+            <th scope="col" class="no-top-border">Programs</th>
+            <th scope="col" class="no-top-border">Program Contact</th>
+            <th scope="col" class="no-top-border border-right">Update Program/Contact Information</th>
+            <th scope="col" class="no-top-border">Q1</th>
+            <th scope="col" class="no-top-border">Q2</th>
+            <th scope="col" class="no-top-border">Q3</th>
+            <th scope="col" class="no-top-border">Q4</th>
+            <th scope="col" class="no-top-border">One-Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (program of contract.programs; track program; let i = $index) {
             <tr>
-              <th scope="col" colspan="3" class="no-bottom-border border-right"></th>
-              <th scope="col" colspan="5" class="no-bottom-border centered-header">Payments Statuses</th>
-            </tr>
-            <tr>
-              <th scope="col" class="no-top-border">Programs</th>
-              <th scope="col" class="no-top-border">Program Contact</th>
-              <th scope="col" class="no-top-border border-right">Update Program/Contact Information</th>
-              <th scope="col" class="no-top-border">Q1</th>
-              <th scope="col" class="no-top-border">Q2</th>
-              <th scope="col" class="no-top-border">Q3</th>
-              <th scope="col" class="no-top-border">Q4</th>
-              <th scope="col" class="no-top-border">One-Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let program of contract.programs; let i=index;">
               <td>{{program.programName}}
               </td>
               <td>
@@ -183,50 +218,59 @@
               <td>{{program.paymentsStatus.Q4}}</td>
               <td>{{program.paymentsStatus.oneTime}}</td>
             </tr>
-          </tbody>
-        </table>
-      </span>
-      <span *ngIf="currentTab===tabs.yourDocuments">
-        <div class="upload-documents-container">
-          <a routerLink="/authenticated/upload_document/{{contract.contractId}}" [class.is-disabled]="downloadingDocument" class="btn btn-primary">Upload Contract Documents</a>
-        </div>
-        <table class="table table-sm table-striped">
-          <thead class="thead">
+          }
+        </tbody>
+      </table>
+    </span>
+  }
+  @if (currentTab===tabs.yourDocuments) {
+    <span>
+      <div class="upload-documents-container">
+        <a routerLink="/authenticated/upload_document/{{contract.contractId}}" [class.is-disabled]="downloadingDocument" class="btn btn-primary">Upload Contract Documents</a>
+      </div>
+      <table class="table table-sm table-striped">
+        <thead class="thead">
+          <tr>
+            <th scope="col">Your Document</th>
+            <th scope="col">Available Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (loadingDocuments) {
             <tr>
-              <th scope="col">Your Document</th>
-              <th scope="col">Available Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngIf="loadingDocuments">
               <td>Loading...</td>
               <td><i class="text-secondary spinner-border spinner-border-sm"></i></td>
             </tr>
-            <tr *ngFor="let doc of documentCollection; let i=index;">
+          }
+          @for (doc of documentCollection; track doc; let i = $index) {
+            <tr>
               <td><span class="download-link" (click)="download(doc)">{{doc.filename}}</span></td>
               <td>
                 {{doc.overwritetime | date:'yyyy-MM-dd'}}
               </td>
             </tr>
-          </tbody>
-        </table>
-      </span>
+          }
+        </tbody>
+      </table>
+    </span>
+  }
 
-      <span *ngIf="currentTab===tabs.messages">
-        <table class="table table-sm table-striped">
-          <thead class="thead">
-            <tr>
-              <th scope="col">Timestamp</th>
-              <th scope="col">Messages</th>
-              <th scope="col">Program</th>
-              <th scope="col">Location</th>
-            </tr>
-          </thead>
-          <tbody>
-
-          </tbody>
-        </table>
-      </span>
-    </div>
-  </div>
+  @if (currentTab===tabs.messages) {
+    <span>
+      <table class="table table-sm table-striped">
+        <thead class="thead">
+          <tr>
+            <th scope="col">Timestamp</th>
+            <th scope="col">Messages</th>
+            <th scope="col">Program</th>
+            <th scope="col">Location</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </span>
+  }
+</div>
+</div>
 </div>

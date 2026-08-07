@@ -1,23 +1,29 @@
 <div id="notificationBanner">
-  <span *ngFor="let notification of currentNotifications" [@fadeAnimation]="'in'">
-    <div *ngIf="notification.type===levels[0]" class="alert alert-danger alert-dismissible mb-1" role="alert">
-      <i class="fas fa-exclamation-circle me-2"></i><strong>{{notification.message}}</strong>
-      <button (click)="close(notification)" type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
-      </button>
-    </div>
-
-    <div *ngIf="notification.type===levels[1]" class="alert alert-warning alert-dismissible mb-1" role="alert">
-      <i class="fas fa-exclamation-triangle me-2"></i>
-      <strong>{{notification.message}}</strong>
-      <button (click)="close(notification)" type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
-      </button>
-    </div>
-
-    <div *ngIf="notification.type===levels[2]" class="alert alert-success alert-dismissible mb-1" role="alert">
-      <i class="fas fa-check-circle me-2"></i>
-      <strong>{{notification.message}}</strong>
-      <button (click)="close(notification)" type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
-      </button>
-    </div>
-  </span>
+  @for (notification of currentNotifications; track notification) {
+    <span [@fadeAnimation]="'in'">
+      @if (notification.type===levels[0]) {
+        <div class="alert alert-danger alert-dismissible mb-1" role="alert">
+          <i class="fas fa-exclamation-circle me-2"></i><strong>{{notification.message}}</strong>
+          <button (click)="close(notification)" type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+          </button>
+        </div>
+      }
+      @if (notification.type===levels[1]) {
+        <div class="alert alert-warning alert-dismissible mb-1" role="alert">
+          <i class="fas fa-exclamation-triangle me-2"></i>
+          <strong>{{notification.message}}</strong>
+          <button (click)="close(notification)" type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+          </button>
+        </div>
+      }
+      @if (notification.type===levels[2]) {
+        <div class="alert alert-success alert-dismissible mb-1" role="alert">
+          <i class="fas fa-check-circle me-2"></i>
+          <strong>{{notification.message}}</strong>
+          <button (click)="close(notification)" type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+          </button>
+        </div>
+      }
+    </span>
+  }
 </div>

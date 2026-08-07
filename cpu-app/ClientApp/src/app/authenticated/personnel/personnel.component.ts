@@ -6,7 +6,6 @@ import {
   Validators,
 } from "@angular/forms";
 import { Router } from "@angular/router";
-import * as _ from "lodash";
 import { Subscription } from "rxjs";
 import { OrgService } from "../../core/api/services/org/org.service";
 import { nameAssemble } from "../../core/constants/name-assemble";
@@ -70,7 +69,7 @@ export class PersonnelComponent implements OnInit, OnDestroy {
     this.stateSubscription = this.stateService.main.subscribe(
       (m: Transmogrifier) => {
         this.trans = m;
-        this.originalPersons = _.cloneDeep(this.trans.persons);
+        this.originalPersons = structuredClone(this.trans.persons);
 
         this.createPersonForms();
         this.constructStepsPerPerson(m.persons);
@@ -80,7 +79,7 @@ export class PersonnelComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (!_.isEqual(this.originalPersons, this.trans.persons)) {
+    if (JSON.stringify(this.originalPersons) !== JSON.stringify(this.trans.persons)) {
       // console.log("setting persons back to original values")
       this.trans.persons = this.originalPersons;
     }
@@ -341,7 +340,7 @@ export class PersonnelComponent implements OnInit, OnDestroy {
   }
 
   cancel(person: iPerson) {
-    let reset = _.cloneDeep(this.originalPersons);
+    let reset = structuredClone(this.originalPersons);
     if (this.currentStepperElement.itemName === "New Person") {
       let temp = new Person();
       reset.push(temp);

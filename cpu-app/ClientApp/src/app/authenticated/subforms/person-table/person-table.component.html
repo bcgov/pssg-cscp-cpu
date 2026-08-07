@@ -1,49 +1,51 @@
-<table *ngIf="person" class="table table-striped">
-  <thead>
-    <tr>
-      <th colspan="2" scope="col" class="review-section-header">{{title}}</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">Name</th>
-      <td>{{person.firstName}} {{person.middleName}} {{person.lastName}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Title</th>
-      <td>{{person.title}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Email</th>
-      <td>{{person.email}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Phone</th>
-      <td>{{person.phone | phone}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Fax</th>
-      <td>{{person.fax | phone}}</td>
-    </tr>
-    <tr>
-      <th scope="row">City</th>
-      <td>{{person.address?.city}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Address Line 1</th>
-      <td>{{person.address?.line1}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Address Line2</th>
-      <td>{{person.address?.line2}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Postal Code</th>
-      <td>{{person.address?.postalCode}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Province</th>
-      <td>{{person.address?.province}}</td>
-    </tr>
-  </tbody>
-</table>
+@if (person) {
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th colspan="2" scope="col" class="review-section-header">{{title}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Name</th>
+        <td>{{person.firstName}} {{person.middleName}} {{person.lastName}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Title</th>
+        <td>{{person.title}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Email</th>
+        <td>{{person.email}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Phone</th>
+        <td>{{person.phone | phone}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Fax</th>
+        <td>{{person.fax | phone}}</td>
+      </tr>
+      <tr>
+        <th scope="row">City</th>
+        <td>{{person.address?.city}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Address Line 1</th>
+        <td>{{person.address?.line1}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Address Line2</th>
+        <td>{{person.address?.line2}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Postal Code</th>
+        <td>{{person.address?.postalCode}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Province</th>
+        <td>{{person.address?.province}}</td>
+      </tr>
+    </tbody>
+  </table>
+}

@@ -1,306 +1,331 @@
-<div *ngIf="trans" class="container">
-  <div class="row">
-    <div class="col-md-4">
-      <section class="application-nav sticky-top">
-        <div style="max-height: 90%;">
-          <div class="card organization-box" *ngIf="trans">
-            <div class="card-header">
-              {{ mainTrans.organizationName ||'Organization'}}
-            </div>
-            <div class="card-body">
-              <p class="card-text">
-                <strong>Contract No</strong><br>
-                {{contractNumber}}
-              </p>
-              <p class="card-text">
-                <strong>Program</strong><br>
-                {{data.program.vsd_name}} 
-              </p>
-              <p class="card-text">
-                <strong>Reporting Period</strong><br>
-                {{trans.expenseReport.reportingPeriod.display}} 
-              </p>
-            </div>
+@if (trans) {
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <section class="application-nav sticky-top">
+          <div style="max-height: 90%;">
+            @if (trans) {
+              <div class="card organization-box">
+                <div class="card-header">
+                  {{ mainTrans.organizationName ||'Organization'}}
+                </div>
+                <div class="card-body">
+                  <p class="card-text">
+                    <strong>Contract No</strong><br>
+                    {{contractNumber}}
+                  </p>
+                  <p class="card-text">
+                    <strong>Program</strong><br>
+                    {{data.program.vsd_name}}
+                  </p>
+                  <p class="card-text">
+                    <strong>Reporting Period</strong><br>
+                    {{trans.expenseReport.reportingPeriod.display}}
+                  </p>
+                </div>
+              </div>
+            }
           </div>
-
-        </div>
-        <div style="max-height: 90%;">
-          <app-icon-stepper></app-icon-stepper>
-        </div>
-        <button *ngIf="!isCompleted" [class.is-disabled]="saving" class="btn btn-primary mt-2 me-2" [class.is-disabled]="trans.expenseReport.executiveReview" (click)="save(true)">Save and Exit</button>
-        <button *ngIf="!isCompleted" class="btn btn-primary mt-2" [class.is-disabled]="saving" (click)="save()">Save</button>
-        <button *ngIf="isCompleted" class="btn btn-primary mt-2" (click)="exit()">Exit</button>
-      </section>
-    </div>
-
-    <div class="col-md-8">
-      <div *ngIf="currentStepperElement">
-        <div class="page-header">
-          <h1>Program Expense Report</h1>
-        </div>
-        <h2 class="blue-header">{{currentStepperElement.itemName}}</h2>
-        <div *ngFor="let item of stepperElements">
-          <span *ngIf="item.id===currentStepperElement.id">
-            <div *ngIf="item.discriminator === discriminators[0]">
-              <table class="table table-sm table-striped">
-                <thead class="thead">
-                  <tr>
-                    <th scope="col" class="expense-category centered-header"></th>
-                    <th scope="col" class="amount-category centered centered-header">Amount</th>
-                    <th scope="col" colspan="3" class="quarterly-category centered-header">Quarterly</th>
-                    <th scope="col" colspan="4" class="ytd-category centered-header">Year-to-Date</th>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="expense-category">Expense Category</th>
-                    <th scope="col" class="amount-category centered-header">Budgeted Amount</th>
-                    <th scope="col" class="quarterly-category centered-header">Budgeted Amount</th>
-                    <th scope="col" class="quarterly-category centered-header">Actual Expenditures</th>
-                    <th scope="col" class="quarterly-category centered-header">Variance</th>
-                    <th scope="col" class="ytd-category centered-header">Paid Amount</th>
-                    <th scope="col" class="ytd-category centered-header">Actual Expenditures</th>
-                    <th scope="col" class="ytd-category centered-header">Variance</th>
-                    <th scope="col" class="ytd-category centered-header">Remaining</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row" class="expense-category">Salaries and Benefits</th>
-                    <td class="amount-category">{{(trans.expenseReport.salariesBenefitsAnnualBudget|currency)||0}}</td>
-                    <td class="quarterly-category">{{(trans.expenseReport.salariesBenefitsQuarterlyBudget|currency)||0}}</td>
-                    <td class="quarterly-category">
-                      <input [disabled]="isCompleted" [(ngModel)]="trans.expenseReport.salariesBenefitsMask" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" class="form-control" id="salariesBenefitsValue" name="salariesBenefitsValue" (input)="formHelper.moneyMaskToNumber($event.target, trans.expenseReport, 'salariesBenefitsValue')">
-                    </td>
-                    <td class="quarterly-category">{{(trans.expenseReport.salariesBenefitsQuarterlyBudget - trans.expenseReport.salariesBenefitsValue)|currency}}</td>
-                    <td class="ytd-category">{{(trans.expenseReport.salariesBenefitsAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier)|currency }}</td>
-                    <td class="ytd-category">{{(trans.expenseReport.salariesBenefitsYearToDate + trans.expenseReport.salariesBenefitsValue)|currency}}</td>
-                    <td class="ytd-category">{{(trans.expenseReport.salariesBenefitsAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier) - (trans.expenseReport.salariesBenefitsYearToDate + trans.expenseReport.salariesBenefitsValue)|currency}}</td>
-                    <td class="ytd-category">{{(trans.expenseReport.salariesBenefitsAnnualBudget - (trans.expenseReport.salariesBenefitsYearToDate + trans.expenseReport.salariesBenefitsValue))|currency}}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row" class="expense-category">Program Delivery</th>
-                    <td class="amount-category">{{(trans.expenseReport.programDeliveryAnnualBudget|currency)||0}}</td>
-                    <td class="quarterly-category">{{(trans.expenseReport.programDeliveryQuarterlyBudget|currency)||0}}</td>
-                    <td class="quarterly-category">
-                      <input [disabled]="isCompleted" [(ngModel)]="trans.expenseReport.programDeliveryMask" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" class="form-control" id="programDeliveryValue" name="programDeliveryValue" (input)="formHelper.moneyMaskToNumber($event.target, trans.expenseReport, 'programDeliveryValue')">
-                    </td>
-                    <td class="quarterly-category">{{(trans.expenseReport.programDeliveryQuarterlyBudget - trans.expenseReport.programDeliveryValue)|currency}}</td>
-                    <td class="ytd-category">{{(trans.expenseReport.programDeliveryAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier)|currency }}</td>
-                    <td class="ytd-category">{{(trans.expenseReport.programDeliveryYearToDate + trans.expenseReport.programDeliveryValue)|currency}}</td>
-                    <td class="ytd-category">{{(trans.expenseReport.programDeliveryAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier) - (trans.expenseReport.programDeliveryYearToDate + trans.expenseReport.programDeliveryValue)|currency}}</td>
-                    <td class="ytd-category">{{(trans.expenseReport.programDeliveryAnnualBudget - (trans.expenseReport.programDeliveryYearToDate + trans.expenseReport.programDeliveryValue))|currency}}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row" class="expense-category">Program Administration</th>
-                    <td class="amount-category">{{(trans.expenseReport.administrationAnnualBudget|currency)||0}}</td>
-                    <td class="quarterly-category">{{(trans.expenseReport.administrationQuarterlyBudget|currency)||0}}</td>
-                    <td class="quarterly-category">
-                      <input [disabled]="isCompleted" [(ngModel)]="trans.expenseReport.administrationMask" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" class="form-control" id="administrationValue" name="administrationValue" (input)="formHelper.moneyMaskToNumber($event.target, trans.expenseReport, 'administrationValue')">
-                    </td>
-                    <td class="quarterly-category">{{(trans.expenseReport.administrationQuarterlyBudget - trans.expenseReport.administrationValue)|currency}}</td>
-                    <td class="ytd-category">{{(trans.expenseReport.administrationAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier)|currency }}</td>
-                    <td class="ytd-category">{{(trans.expenseReport.administrationYearToDate + trans.expenseReport.administrationValue)|currency}}</td>
-                    <td class="ytd-category">{{(trans.expenseReport.administrationAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier) - (trans.expenseReport.administrationYearToDate + trans.expenseReport.administrationValue)|currency}}</td>
-                    <td class="ytd-category">{{(trans.expenseReport.administrationAnnualBudget - (trans.expenseReport.administrationYearToDate + trans.expenseReport.administrationValue))|currency}}</td>
-                  </tr>
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <th scope="row" class="expense-category">Total</th>
-                    <td class="amount-category">
-                      <strong>
-                        {{(trans.expenseReport.salariesBenefitsAnnualBudget + trans.expenseReport.programDeliveryAnnualBudget + trans.expenseReport.administrationAnnualBudget)||0 |currency}}
-                      </strong>
-                    </td>
-                    <td class="quarterly-category">
-                      <strong>
-                        {{(trans.expenseReport.salariesBenefitsQuarterlyBudget + trans.expenseReport.programDeliveryQuarterlyBudget + trans.expenseReport.administrationQuarterlyBudget)||0|currency}}
-                      </strong>
-                    </td>
-                    <td class="quarterly-category">
-                      <strong>
-                        {{(trans.expenseReport.salariesBenefitsValue + trans.expenseReport.programDeliveryValue + trans.expenseReport.administrationValue)|currency}}
-                      </strong>
-                    </td>
-                    <td class="quarterly-category">
-                      <strong>
-                        {{(trans.expenseReport.salariesBenefitsQuarterlyBudget - trans.expenseReport.salariesBenefitsValue
-                          + trans.expenseReport.programDeliveryQuarterlyBudget - trans.expenseReport.programDeliveryValue
-                          + trans.expenseReport.administrationQuarterlyBudget - trans.expenseReport.administrationValue)|currency}}
-                      </strong>
-                    </td>
-                    <td class="ytd-category">
-                      <strong>{{(
-                      (trans.expenseReport.salariesBenefitsAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier) +
-                      (trans.expenseReport.programDeliveryAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier) +
-                      (trans.expenseReport.administrationAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier)
-                    )|currency}}
-                      </strong></td>
-                    <td class="ytd-category">
-                      <strong>
-                        {{(trans.expenseReport.salariesBenefitsYearToDate + trans.expenseReport.salariesBenefitsValue 
-                          + trans.expenseReport.programDeliveryYearToDate + trans.expenseReport.programDeliveryValue 
-                          + trans.expenseReport.administrationYearToDate + trans.expenseReport.administrationValue)|currency}}
-                      </strong>
-                    </td>
-                    <td class="ytd-category">
-                      <strong>{{
-                      ((trans.expenseReport.salariesBenefitsAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier) - (trans.expenseReport.salariesBenefitsYearToDate + trans.expenseReport.salariesBenefitsValue)) +
-                      ((trans.expenseReport.programDeliveryAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier) - (trans.expenseReport.programDeliveryYearToDate + trans.expenseReport.programDeliveryValue )) +
-                      ((trans.expenseReport.administrationAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier) - (trans.expenseReport.administrationYearToDate + trans.expenseReport.administrationValue))
-                    |currency}}
-                      </strong>
-                    </td>
-                    <td class="ytd-category">
-                      <strong>
-                        {{(trans.expenseReport.salariesBenefitsAnnualBudget - (trans.expenseReport.salariesBenefitsYearToDate + trans.expenseReport.salariesBenefitsValue)
-                           + trans.expenseReport.programDeliveryAnnualBudget - (trans.expenseReport.programDeliveryYearToDate + trans.expenseReport.programDeliveryValue)
-                            + trans.expenseReport.administrationAnnualBudget - (trans.expenseReport.administrationYearToDate + trans.expenseReport.administrationValue)
-                            )|currency}}
-                      </strong>
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
-              <h2 class="blue-header">
-                Explanation for Variances
-              </h2>
-              <p>(Please explain any variance in the comment section below.) Program Managers must be contacted if program is unstaffed for 30 days or more.</p>
-              <div class="mb-3">
-                <label for="salariesBenefitsDescription" class="form-label fw-normal">Salaries and Benefits</label>
-                <textarea [disabled]="isCompleted" [(ngModel)]="trans.expenseReport.salariesBenefitsDescription" name="salariesBenefitsDescription" id="salariesBenefitsDescription" cols="30" rows="5" class="form-control" placeholder="Comments here..."></textarea>
-              </div>
-              <div class="mb-3">
-                <label for="programDeliveryDescription" class="form-label fw-normal">Program Delivery Costs</label>
-                <textarea [disabled]="isCompleted" [(ngModel)]="trans.expenseReport.programDeliveryDescription" name="programDeliveryDescription" id="programDeliveryDescription" cols="30" rows="5" class="form-control" placeholder="Comments here..."></textarea>
-              </div>
-              <div class="mb-3">
-                <label for="administrationDescription" class="form-label fw-normal">Administration Costs</label>
-                <textarea [disabled]="isCompleted" [(ngModel)]="trans.expenseReport.administrationDescription" name="administrationDescription" id="administrationDescription" cols="30" rows="5" class="form-control" placeholder="Comments here..."></textarea>
-              </div>
+          <div style="max-height: 90%;">
+            <app-icon-stepper></app-icon-stepper>
+          </div>
+          @if (!isCompleted) {
+            <button [class.is-disabled]="saving" class="btn btn-primary mt-2 me-2" [class.is-disabled]="trans.expenseReport.executiveReview" (click)="save(true)">Save and Exit</button>
+          }
+          @if (!isCompleted) {
+            <button class="btn btn-primary mt-2" [class.is-disabled]="saving" (click)="save()">Save</button>
+          }
+          @if (isCompleted) {
+            <button class="btn btn-primary mt-2" (click)="exit()">Exit</button>
+          }
+        </section>
+      </div>
+      <div class="col-md-8">
+        @if (currentStepperElement) {
+          <div>
+            <div class="page-header">
+              <h1>Program Expense Report</h1>
             </div>
-
-            <div *ngIf="item.discriminator === discriminators[1]">
-              <p>Please complete your budgeted and actual expenditures for the following specific line items.</p>
-              <table class="table table-sm table-striped">
-                <thead class="thead">
-                  <tr>
-                    <th scope="col" class="expense-category centered-header"></th>
-                    <th scope="col" class="amount-category centered centered-header">Amount</th>
-                    <th scope="col" colspan="3" class="quarterly-category centered-header">Quarterly</th>
-                    <th scope="col" colspan="4" class="ytd-category centered-header">Year-to-Date</th>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="expense-category">Expense Category</th>
-                    <th scope="col" class="amount-category centered-header">Budgeted Amount</th>
-                    <th scope="col" class="quarterly-category centered-header">Budgeted Amount</th>
-                    <th scope="col" class="quarterly-category centered-header">Actual Expenditures</th>
-                    <th scope="col" class="quarterly-category centered-header">Variance</th>
-                    <th scope="col" class="ytd-category centered-header">Paid Amount</th>
-                    <th scope="col" class="ytd-category centered-header">Actual Expenditures</th>
-                    <th scope="col" class="ytd-category centered-header">Variance</th>
-                    <th scope="col" class="ytd-category centered-header">Remaining</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let item of trans.expenseReport.programExpenseLineItems">
-                    <th scope="row" class="expense-category">{{item.label}}</th>
-                    <td class="amount-category">{{item.annualBudget||0 | currency}}</td>
-                    <td class="quarterly-category">{{item.quarterlyBudget||0 | currency}}</td>
-                    <td class="quarterly-category">
-                      <input [disabled]="isCompleted" [(ngModel)]="item.mask" (input)="formHelper.moneyMaskToNumber($event.target, item, 'actual'); updateLineItemSums()" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" class="form-control" [id]="item.itemId" [name]="item.itemId">
-                    </td>
-                    <td class="quarterly-category">
-                      {{(item.quarterlyBudget - item.actual)|currency}}
-                    </td>
-                    <td class="ytd-category">{{(item.annualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier)|currency}}</td>
-                    <td class="ytd-category">
-                      {{(item.actualYearToDate + item.actual)|currency}}
-                    </td>
-                    <td class="ytd-category">{{(item.annualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier) - (item.actualYearToDate + item.actual)|currency}}</td>
-                    <td class="ytd-category">
-                      {{(item.annualBudget - (item.actualYearToDate + item.actual))|currency}}
-                    </td>
-                  </tr>
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <th class="expense-category" scope="row">Total</th>
-                    <td class="amount-category">
-                      <strong>
-                        {{lineItemSums.annualBudgetSum||0|currency}}
-                      </strong>
-                    </td>
-                    <td class="quarterly-category">
-                      <strong>
-                        {{lineItemSums.quarterlyBudgetSum||0|currency}}
-                      </strong>
-                    </td>
-                    <td class="quarterly-category">
-                      <strong>
-                        {{lineItemSums.actualSum||0|currency}}
-                      </strong>
-                    </td>
-                    <td class="quarterly-category">
-                      <strong>
-                        {{lineItemSums.quarterlyVarianceSum||0|currency}}
-                      </strong>
-                    </td>
-                    <td class="ytd-category">
-                      <strong>
-                        {{lineItemSums.paidYearToDateSum||0|currency}}
-                      </strong>
-                    </td>
-                    <td class="ytd-category">
-                      <strong>
-                        {{lineItemSums.actualYearToDateSum||0|currency}}
-                      </strong>
-                    </td>
-                    <td class="ytd-category">
-                      <strong>
-                        {{lineItemSums.annualVarianceSum||0|currency}}
-                      </strong>
-                    </td>
-                    <td class="ytd-category">
-                      <strong>
-                        {{lineItemSums.annualRemainingSum||0|currency}}
-                      </strong>
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
-
-
-              <h2 class="blue-header">
-                Explanation for Variances
-              </h2>
-              <p>(Please explain any variance in the comment section below.) Program Managers must be contacted if program is unstaffed for 30 days or more.</p>
-              <div class="mb-3" *ngFor="let item of trans.expenseReport.programExpenseLineItems">
-                <label class="form-label fw-normal">{{item.label}}</label>
-                <textarea [disabled]="isCompleted" [(ngModel)]="item.description" id="{{item.label}}_description" cols="30" rows="5" class="form-control" placeholder="Comments here..."></textarea>
-              </div>
+            <h2 class="blue-header">{{currentStepperElement.itemName}}</h2>
+            @for (item of stepperElements; track item) {
+              <div>
+                @if (item.id===currentStepperElement.id) {
+                  <span>
+                    @if (item.discriminator === discriminators[0]) {
+                      <div>
+                        <table class="table table-sm table-striped">
+                          <thead class="thead">
+                            <tr>
+                              <th scope="col" class="expense-category centered-header"></th>
+                              <th scope="col" class="amount-category centered centered-header">Amount</th>
+                              <th scope="col" colspan="3" class="quarterly-category centered-header">Quarterly</th>
+                              <th scope="col" colspan="4" class="ytd-category centered-header">Year-to-Date</th>
+                            </tr>
+                            <tr>
+                              <th scope="col" class="expense-category">Expense Category</th>
+                              <th scope="col" class="amount-category centered-header">Budgeted Amount</th>
+                              <th scope="col" class="quarterly-category centered-header">Budgeted Amount</th>
+                              <th scope="col" class="quarterly-category centered-header">Actual Expenditures</th>
+                              <th scope="col" class="quarterly-category centered-header">Variance</th>
+                              <th scope="col" class="ytd-category centered-header">Paid Amount</th>
+                              <th scope="col" class="ytd-category centered-header">Actual Expenditures</th>
+                              <th scope="col" class="ytd-category centered-header">Variance</th>
+                              <th scope="col" class="ytd-category centered-header">Remaining</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <th scope="row" class="expense-category">Salaries and Benefits</th>
+                              <td class="amount-category">{{(trans.expenseReport.salariesBenefitsAnnualBudget|currency)||0}}</td>
+                              <td class="quarterly-category">{{(trans.expenseReport.salariesBenefitsQuarterlyBudget|currency)||0}}</td>
+                              <td class="quarterly-category">
+                                <input [disabled]="isCompleted" [(ngModel)]="trans.expenseReport.salariesBenefitsMask" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" class="form-control" id="salariesBenefitsValue" name="salariesBenefitsValue" (input)="formHelper.moneyMaskToNumber($event.target, trans.expenseReport, 'salariesBenefitsValue')">
+                              </td>
+                              <td class="quarterly-category">{{(trans.expenseReport.salariesBenefitsQuarterlyBudget - trans.expenseReport.salariesBenefitsValue)|currency}}</td>
+                              <td class="ytd-category">{{(trans.expenseReport.salariesBenefitsAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier)|currency }}</td>
+                              <td class="ytd-category">{{(trans.expenseReport.salariesBenefitsYearToDate + trans.expenseReport.salariesBenefitsValue)|currency}}</td>
+                              <td class="ytd-category">{{(trans.expenseReport.salariesBenefitsAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier) - (trans.expenseReport.salariesBenefitsYearToDate + trans.expenseReport.salariesBenefitsValue)|currency}}</td>
+                              <td class="ytd-category">{{(trans.expenseReport.salariesBenefitsAnnualBudget - (trans.expenseReport.salariesBenefitsYearToDate + trans.expenseReport.salariesBenefitsValue))|currency}}</td>
+                            </tr>
+                            <tr>
+                              <th scope="row" class="expense-category">Program Delivery</th>
+                              <td class="amount-category">{{(trans.expenseReport.programDeliveryAnnualBudget|currency)||0}}</td>
+                              <td class="quarterly-category">{{(trans.expenseReport.programDeliveryQuarterlyBudget|currency)||0}}</td>
+                              <td class="quarterly-category">
+                                <input [disabled]="isCompleted" [(ngModel)]="trans.expenseReport.programDeliveryMask" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" class="form-control" id="programDeliveryValue" name="programDeliveryValue" (input)="formHelper.moneyMaskToNumber($event.target, trans.expenseReport, 'programDeliveryValue')">
+                              </td>
+                              <td class="quarterly-category">{{(trans.expenseReport.programDeliveryQuarterlyBudget - trans.expenseReport.programDeliveryValue)|currency}}</td>
+                              <td class="ytd-category">{{(trans.expenseReport.programDeliveryAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier)|currency }}</td>
+                              <td class="ytd-category">{{(trans.expenseReport.programDeliveryYearToDate + trans.expenseReport.programDeliveryValue)|currency}}</td>
+                              <td class="ytd-category">{{(trans.expenseReport.programDeliveryAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier) - (trans.expenseReport.programDeliveryYearToDate + trans.expenseReport.programDeliveryValue)|currency}}</td>
+                              <td class="ytd-category">{{(trans.expenseReport.programDeliveryAnnualBudget - (trans.expenseReport.programDeliveryYearToDate + trans.expenseReport.programDeliveryValue))|currency}}</td>
+                            </tr>
+                            <tr>
+                              <th scope="row" class="expense-category">Program Administration</th>
+                              <td class="amount-category">{{(trans.expenseReport.administrationAnnualBudget|currency)||0}}</td>
+                              <td class="quarterly-category">{{(trans.expenseReport.administrationQuarterlyBudget|currency)||0}}</td>
+                              <td class="quarterly-category">
+                                <input [disabled]="isCompleted" [(ngModel)]="trans.expenseReport.administrationMask" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" class="form-control" id="administrationValue" name="administrationValue" (input)="formHelper.moneyMaskToNumber($event.target, trans.expenseReport, 'administrationValue')">
+                              </td>
+                              <td class="quarterly-category">{{(trans.expenseReport.administrationQuarterlyBudget - trans.expenseReport.administrationValue)|currency}}</td>
+                              <td class="ytd-category">{{(trans.expenseReport.administrationAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier)|currency }}</td>
+                              <td class="ytd-category">{{(trans.expenseReport.administrationYearToDate + trans.expenseReport.administrationValue)|currency}}</td>
+                              <td class="ytd-category">{{(trans.expenseReport.administrationAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier) - (trans.expenseReport.administrationYearToDate + trans.expenseReport.administrationValue)|currency}}</td>
+                              <td class="ytd-category">{{(trans.expenseReport.administrationAnnualBudget - (trans.expenseReport.administrationYearToDate + trans.expenseReport.administrationValue))|currency}}</td>
+                            </tr>
+                          </tbody>
+                          <tfoot>
+                            <tr>
+                              <th scope="row" class="expense-category">Total</th>
+                              <td class="amount-category">
+                                <strong>
+                                  {{(trans.expenseReport.salariesBenefitsAnnualBudget + trans.expenseReport.programDeliveryAnnualBudget + trans.expenseReport.administrationAnnualBudget)||0 |currency}}
+                                </strong>
+                              </td>
+                              <td class="quarterly-category">
+                                <strong>
+                                  {{(trans.expenseReport.salariesBenefitsQuarterlyBudget + trans.expenseReport.programDeliveryQuarterlyBudget + trans.expenseReport.administrationQuarterlyBudget)||0|currency}}
+                                </strong>
+                              </td>
+                              <td class="quarterly-category">
+                                <strong>
+                                  {{(trans.expenseReport.salariesBenefitsValue + trans.expenseReport.programDeliveryValue + trans.expenseReport.administrationValue)|currency}}
+                                </strong>
+                              </td>
+                              <td class="quarterly-category">
+                                <strong>
+                                  {{(trans.expenseReport.salariesBenefitsQuarterlyBudget - trans.expenseReport.salariesBenefitsValue
+                                  + trans.expenseReport.programDeliveryQuarterlyBudget - trans.expenseReport.programDeliveryValue
+                                  + trans.expenseReport.administrationQuarterlyBudget - trans.expenseReport.administrationValue)|currency}}
+                                </strong>
+                              </td>
+                              <td class="ytd-category">
+                                <strong>{{(
+                                  (trans.expenseReport.salariesBenefitsAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier) +
+                                  (trans.expenseReport.programDeliveryAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier) +
+                                  (trans.expenseReport.administrationAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier)
+                                  )|currency}}
+                                </strong></td>
+                                <td class="ytd-category">
+                                  <strong>
+                                    {{(trans.expenseReport.salariesBenefitsYearToDate + trans.expenseReport.salariesBenefitsValue
+                                    + trans.expenseReport.programDeliveryYearToDate + trans.expenseReport.programDeliveryValue
+                                    + trans.expenseReport.administrationYearToDate + trans.expenseReport.administrationValue)|currency}}
+                                  </strong>
+                                </td>
+                                <td class="ytd-category">
+                                  <strong>{{
+                                    ((trans.expenseReport.salariesBenefitsAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier) - (trans.expenseReport.salariesBenefitsYearToDate + trans.expenseReport.salariesBenefitsValue)) +
+                                    ((trans.expenseReport.programDeliveryAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier) - (trans.expenseReport.programDeliveryYearToDate + trans.expenseReport.programDeliveryValue )) +
+                                    ((trans.expenseReport.administrationAnnualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier) - (trans.expenseReport.administrationYearToDate + trans.expenseReport.administrationValue))
+                                    |currency}}
+                                  </strong>
+                                </td>
+                                <td class="ytd-category">
+                                  <strong>
+                                    {{(trans.expenseReport.salariesBenefitsAnnualBudget - (trans.expenseReport.salariesBenefitsYearToDate + trans.expenseReport.salariesBenefitsValue)
+                                    + trans.expenseReport.programDeliveryAnnualBudget - (trans.expenseReport.programDeliveryYearToDate + trans.expenseReport.programDeliveryValue)
+                                    + trans.expenseReport.administrationAnnualBudget - (trans.expenseReport.administrationYearToDate + trans.expenseReport.administrationValue)
+                                    )|currency}}
+                                  </strong>
+                                </td>
+                              </tr>
+                            </tfoot>
+                          </table>
+                          <h2 class="blue-header">
+                            Explanation for Variances
+                          </h2>
+                          <p>(Please explain any variance in the comment section below.) Program Managers must be contacted if program is unstaffed for 30 days or more.</p>
+                          <div class="mb-3">
+                            <label for="salariesBenefitsDescription" class="form-label fw-normal">Salaries and Benefits</label>
+                            <textarea [disabled]="isCompleted" [(ngModel)]="trans.expenseReport.salariesBenefitsDescription" name="salariesBenefitsDescription" id="salariesBenefitsDescription" cols="30" rows="5" class="form-control" placeholder="Comments here..."></textarea>
+                          </div>
+                          <div class="mb-3">
+                            <label for="programDeliveryDescription" class="form-label fw-normal">Program Delivery Costs</label>
+                            <textarea [disabled]="isCompleted" [(ngModel)]="trans.expenseReport.programDeliveryDescription" name="programDeliveryDescription" id="programDeliveryDescription" cols="30" rows="5" class="form-control" placeholder="Comments here..."></textarea>
+                          </div>
+                          <div class="mb-3">
+                            <label for="administrationDescription" class="form-label fw-normal">Administration Costs</label>
+                            <textarea [disabled]="isCompleted" [(ngModel)]="trans.expenseReport.administrationDescription" name="administrationDescription" id="administrationDescription" cols="30" rows="5" class="form-control" placeholder="Comments here..."></textarea>
+                          </div>
+                        </div>
+                      }
+                      @if (item.discriminator === discriminators[1]) {
+                        <div>
+                          <p>Please complete your budgeted and actual expenditures for the following specific line items.</p>
+                          <table class="table table-sm table-striped">
+                            <thead class="thead">
+                              <tr>
+                                <th scope="col" class="expense-category centered-header"></th>
+                                <th scope="col" class="amount-category centered centered-header">Amount</th>
+                                <th scope="col" colspan="3" class="quarterly-category centered-header">Quarterly</th>
+                                <th scope="col" colspan="4" class="ytd-category centered-header">Year-to-Date</th>
+                              </tr>
+                              <tr>
+                                <th scope="col" class="expense-category">Expense Category</th>
+                                <th scope="col" class="amount-category centered-header">Budgeted Amount</th>
+                                <th scope="col" class="quarterly-category centered-header">Budgeted Amount</th>
+                                <th scope="col" class="quarterly-category centered-header">Actual Expenditures</th>
+                                <th scope="col" class="quarterly-category centered-header">Variance</th>
+                                <th scope="col" class="ytd-category centered-header">Paid Amount</th>
+                                <th scope="col" class="ytd-category centered-header">Actual Expenditures</th>
+                                <th scope="col" class="ytd-category centered-header">Variance</th>
+                                <th scope="col" class="ytd-category centered-header">Remaining</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              @for (item of trans.expenseReport.programExpenseLineItems; track item) {
+                                <tr>
+                                  <th scope="row" class="expense-category">{{item.label}}</th>
+                                  <td class="amount-category">{{item.annualBudget||0 | currency}}</td>
+                                  <td class="quarterly-category">{{item.quarterlyBudget||0 | currency}}</td>
+                                  <td class="quarterly-category">
+                                    <input [disabled]="isCompleted" [(ngModel)]="item.mask" (input)="formHelper.moneyMaskToNumber($event.target, item, 'actual'); updateLineItemSums()" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" class="form-control" [id]="item.itemId" [name]="item.itemId">
+                                  </td>
+                                  <td class="quarterly-category">
+                                    {{(item.quarterlyBudget - item.actual)|currency}}
+                                  </td>
+                                  <td class="ytd-category">{{(item.annualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier)|currency}}</td>
+                                  <td class="ytd-category">
+                                    {{(item.actualYearToDate + item.actual)|currency}}
+                                  </td>
+                                  <td class="ytd-category">{{(item.annualBudget / 4 * trans.expenseReport.reportingPeriod.multiplier) - (item.actualYearToDate + item.actual)|currency}}</td>
+                                  <td class="ytd-category">
+                                    {{(item.annualBudget - (item.actualYearToDate + item.actual))|currency}}
+                                  </td>
+                                </tr>
+                              }
+                            </tbody>
+                            <tfoot>
+                              <tr>
+                                <th class="expense-category" scope="row">Total</th>
+                                <td class="amount-category">
+                                  <strong>
+                                    {{lineItemSums.annualBudgetSum||0|currency}}
+                                  </strong>
+                                </td>
+                                <td class="quarterly-category">
+                                  <strong>
+                                    {{lineItemSums.quarterlyBudgetSum||0|currency}}
+                                  </strong>
+                                </td>
+                                <td class="quarterly-category">
+                                  <strong>
+                                    {{lineItemSums.actualSum||0|currency}}
+                                  </strong>
+                                </td>
+                                <td class="quarterly-category">
+                                  <strong>
+                                    {{lineItemSums.quarterlyVarianceSum||0|currency}}
+                                  </strong>
+                                </td>
+                                <td class="ytd-category">
+                                  <strong>
+                                    {{lineItemSums.paidYearToDateSum||0|currency}}
+                                  </strong>
+                                </td>
+                                <td class="ytd-category">
+                                  <strong>
+                                    {{lineItemSums.actualYearToDateSum||0|currency}}
+                                  </strong>
+                                </td>
+                                <td class="ytd-category">
+                                  <strong>
+                                    {{lineItemSums.annualVarianceSum||0|currency}}
+                                  </strong>
+                                </td>
+                                <td class="ytd-category">
+                                  <strong>
+                                    {{lineItemSums.annualRemainingSum||0|currency}}
+                                  </strong>
+                                </td>
+                              </tr>
+                            </tfoot>
+                          </table>
+                          <h2 class="blue-header">
+                            Explanation for Variances
+                          </h2>
+                          <p>(Please explain any variance in the comment section below.) Program Managers must be contacted if program is unstaffed for 30 days or more.</p>
+                          @for (item of trans.expenseReport.programExpenseLineItems; track item) {
+                            <div class="mb-3">
+                              <label class="form-label fw-normal">{{item.label}}</label>
+                              <textarea [disabled]="isCompleted" [(ngModel)]="item.description" id="{{item.label}}_description" cols="30" rows="5" class="form-control" placeholder="Comments here..."></textarea>
+                            </div>
+                          }
+                        </div>
+                      }
+                      @if (item.discriminator === discriminators[2]) {
+                        <div>
+                          <div class="form-check">
+                            <input [disabled]="isCompleted" [(ngModel)]="trans.expenseReport.executiveReview" type="checkbox" class="form-check-input" id="executiveCheck">
+                            <label for="executiveCheck" class="form-check-label form-label fw-normal">This report has been reviewed by executive-level management</label>
+                          </div>
+                          <h2 class="blue-header mt-4">Contact for program expense report</h2>
+                          <app-person-card [person]="currentUser"></app-person-card>
+                        </div>
+                      }
+                    </span>
+                  }
+                </div>
+              }
             </div>
-
-            <div *ngIf="item.discriminator === discriminators[2]">
-              <div class="form-check">
-                <input [disabled]="isCompleted" [(ngModel)]="trans.expenseReport.executiveReview" type="checkbox" class="form-check-input" id="executiveCheck">
-                <label for="executiveCheck" class="form-check-label form-label fw-normal">This report has been reviewed by executive-level management</label>
-              </div>
-              <h2 class="blue-header mt-4">Contact for program expense report</h2>
-              <app-person-card [person]="currentUser"></app-person-card>
-            </div>
-          </span>
+          }
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-8">
+          <span>@if (stepperIndex > 0) {
+            <button class="btn btn-primary mt-2 previous-button" (click)="setPreviousStepper()">Previous</button>
+          }</span>
+          <span>@if (stepperIndex < stepperElements.length - 1) {
+            <button class="btn btn-primary mt-2 next-button" (click)="setNextStepper()">Next</button>
+          }</span>
+          <span>@if (stepperIndex == stepperElements.length - 1 && !isCompleted) {
+            <button class="btn btn-primary mt-2 submit-button" [class.is-disabled]="!trans.expenseReport.executiveReview || saving" (click)="save(true, true)">Submit</button>
+          }</span>
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-4">
-    </div>
-    <div class="col-md-8">
-      <span><button *ngIf="stepperIndex > 0" class="btn btn-primary mt-2 previous-button" (click)="setPreviousStepper()">Previous</button></span>
-      <span><button *ngIf="stepperIndex < stepperElements.length - 1" class="btn btn-primary mt-2 next-button" (click)="setNextStepper()">Next</button></span>
-      <span><button *ngIf="stepperIndex == stepperElements.length - 1 && !isCompleted" class="btn btn-primary mt-2 submit-button" [class.is-disabled]="!trans.expenseReport.executiveReview || saving" (click)="save(true, true)">Submit</button></span>
-    </div>
-  </div>
-</div>
+  }

@@ -1,19 +1,27 @@
-<div *ngIf="person" class="card">
-  <div class="card-body">
-    <h5 class="card-title">{{nameAssemble(person.firstName,person.middleName,person.lastName)}}</h5>
-    <h6 class="card-subtitle mb-2 text-muted">{{person.title}}</h6>
-    <p class="card-text">
-      {{person.email}}<br>
-      {{person.phone | phone}}
-      <span *ngIf="person.address">
-        <br>
-        {{person.address.line1}}<br>
-        <span *ngIf="person.address.line2"> {{person.address.line2}}<br> </span>
-        {{person.address.city ? person.address.city + ',' : ''}} {{person.address.province}} {{person.address.postalCode}}
-      </span>
-      <span class="invalid-feedback" *ngIf="!person.address">
-        This contact is missing an address. Please update the contact before submitting this application.
-      </span>
-    </p>
-  </div>
-</div>
+@if (person) {
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">{{nameAssemble(person.firstName,person.middleName,person.lastName)}}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">{{person.title}}</h6>
+      <p class="card-text">
+        {{person.email}}<br>
+        {{person.phone | phone}}
+        @if (person.address) {
+          <span>
+            <br>
+              {{person.address.line1}}<br>
+              @if (person.address.line2) {
+                <span> {{person.address.line2}}<br> </span>
+              }
+              {{person.address.city ? person.address.city + ',' : ''}} {{person.address.province}} {{person.address.postalCode}}
+            </span>
+          }
+          @if (!person.address) {
+            <span class="invalid-feedback">
+              This contact is missing an address. Please update the contact before submitting this application.
+            </span>
+          }
+        </p>
+      </div>
+    </div>
+  }

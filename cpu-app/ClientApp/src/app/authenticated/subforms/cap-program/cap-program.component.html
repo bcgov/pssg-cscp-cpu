@@ -1,72 +1,80 @@
 <div>
-    <h2 class="blue-header">Program Information</h2>
-    <div class="mb-3">
-        <label for="programLocation" class="form-label fw-normal">Program Location</label>
-        <input [disabled]="isCompleted" class="form-control" type="text" [ngModel]="program.programLocation" id="programLocation" name="programLocation" disabled>
-    </div>
-    <div class="mb-3">
-        <label for="serviceArea" class="form-label fw-normal">Program Type</label>
-        <input [disabled]="isCompleted" class="form-control" type="text" [ngModel]="program.programTypeName" id="programTypeName" name="programTypeName" disabled>
-    </div>
-    <div class="mb-3">
-        <label for="maxAmount" class="form-label fw-normal">Maximum Amount that you could apply for</label>
-        <input [disabled]="isCompleted" class="form-control" type="text" prefix="$" mask="separator.2" thousandSeparator="," [(ngModel)]="program.maxAmountMask" id="maxAmount" name="maxAmount" disabled [validation]="false">
-    </div>
-    <div class="mb-3">
-        <label for="applicationAmount" class="form-label fw-normal">Please indicate the amount that you will be applying for</label>
-        <input [disabled]="isCompleted" class="form-control" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" (input)="formHelper.moneyMaskToNumber($event.target, program, 'applicationAmount', program.maxAmount)" [(ngModel)]="program.applicationAmountMask" id="applicationAmount" name="applicationAmount">
-    </div>
+  <h2 class="blue-header">Program Information</h2>
+  <div class="mb-3">
+    <label for="programLocation" class="form-label fw-normal">Program Location</label>
+    <input [disabled]="isCompleted" class="form-control" type="text" [ngModel]="program.programLocation" id="programLocation" name="programLocation" disabled>
+  </div>
+  <div class="mb-3">
+    <label for="serviceArea" class="form-label fw-normal">Program Type</label>
+    <input [disabled]="isCompleted" class="form-control" type="text" [ngModel]="program.programTypeName" id="programTypeName" name="programTypeName" disabled>
+  </div>
+  <div class="mb-3">
+    <label for="maxAmount" class="form-label fw-normal">Maximum Amount that you could apply for</label>
+    <input [disabled]="isCompleted" class="form-control" type="text" prefix="$" mask="separator.2" thousandSeparator="," [(ngModel)]="program.maxAmountMask" id="maxAmount" name="maxAmount" disabled [validation]="false">
+  </div>
+  <div class="mb-3">
+    <label for="applicationAmount" class="form-label fw-normal">Please indicate the amount that you will be applying for</label>
+    <input [disabled]="isCompleted" class="form-control" type="text" prefix="$" mask="separator.2" thousandSeparator="," separatorLimit="10000000" (input)="formHelper.moneyMaskToNumber($event.target, program, 'applicationAmount', program.maxAmount)" [(ngModel)]="program.applicationAmountMask" id="applicationAmount" name="applicationAmount">
+  </div>
 
-    <div>
-        <label class="form-label fw-normal"><strong>Which types of models does your program use?</strong> (check all that apply)</label>
-        <div class="mb-3 flex-container">
-            <div *ngFor="let model of MODEL_LIST; let i=index" class="col-md-6 form-check">
-                <input type="checkbox" class="form-check-input" [(ngModel)]="model.isChecked" [name]="'model'+i" [id]="'model'+i" [checked]="(model.isChecked ? 'checked' : '')" (change)="selectedModelChange()" />
-                <label for="model{{i}}" class="form-check-label" class="form-label fw-normal">{{model.label}}</label>
-            </div>
-            <div *ngIf="MODEL_LIST[6].isChecked">
-                <label for="otherModel" class="form-label fw-normal">{{OTHER_MODEL.label}}</label>
-                <input [disabled]="isCompleted" class="form-control" type="text" [(ngModel)]="program.otherModel" id="otherModel" name="otherModel">
-            </div>
+  <div>
+    <label class="form-label fw-normal"><strong>Which types of models does your program use?</strong> (check all that apply)</label>
+    <div class="mb-3 flex-container">
+      @for (model of MODEL_LIST; track model; let i = $index) {
+        <div class="col-md-6 form-check">
+          <input type="checkbox" class="form-check-input" [(ngModel)]="model.isChecked" [name]="'model'+i" [id]="'model'+i" [checked]="(model.isChecked ? 'checked' : '')" (change)="selectedModelChange()" />
+          <label for="model{{i}}" class="form-check-label" class="form-label fw-normal">{{model.label}}</label>
         </div>
-    </div>
-
-    <span class="mb-4">
-        <h2 class="blue-header">Program Contact</h2>
-        <app-person-picker [isDisabled]="isCompleted" [title]="'Please select a program contact.'" [(person)]="program.programContact" [idNum]="0">
-        </app-person-picker>
-    </span>
-    <h2 class="blue-header mt-2">Advisory Committee</h2>
-    <app-person-picker-list [isDisabled]="isCompleted" [label]="'Who is on your Advisory Committee / Board and what is their affiliation? (e.g. school board, community member, victim service worker, parent of participant, local advocate, etc.)'" [(personsObj)]="personsObj" (personsChange)="onProgramStaffChange($event)"></app-person-picker-list>
-    <button *ngIf="!isCompleted" class="btn btn-primary mt-2 btn-add-program-staff" (click)="showAddProgramStaffDialog()">Add Missing Program Staff</button>
-
-
-
-    <h2 class="blue-header mt-2">Program Evaluation</h2>
-    <div>
-        <label class="form-label fw-normal">
-            Has your program undertaken any evaluation efforts recently?
-        </label>
-        <div class="mb-3">
-            <div class="form-check form-check-inline">
-                <input [disabled]="isCompleted" [(ngModel)]="program.evaluation" class="form-check-input" type="radio" name="evaluation" id="evaluation1" [value]="true">
-                <label class="form-check-label form-label fw-normal" for="evaluation1">Yes</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input [disabled]="isCompleted" [(ngModel)]="program.evaluation" class="form-check-input" type="radio" name="evaluation" id="evaluation2" [value]="false">
-                <label class="form-check-label form-label fw-normal" for="evaluation2">No</label>
-            </div>
+      }
+      @if (MODEL_LIST[6].isChecked) {
+        <div>
+          <label for="otherModel" class="form-label fw-normal">{{OTHER_MODEL.label}}</label>
+          <input [disabled]="isCompleted" class="form-control" type="text" [(ngModel)]="program.otherModel" id="otherModel" name="otherModel">
         </div>
-        <div *ngIf="program.evaluation === true" class="mb-3">
-            <label for="evaluationDescription" class="form-label fw-normal">Please describe</label>
-            <input [disabled]="isCompleted" #evaluationDescription="ngModel" [(ngModel)]="program.evaluationDescription" type="text" class="form-control" id="evaluationDescription" name="evaluationDescription">
-            <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedbackOld(evaluationDescription)" style="display: inherit">
-                Enter description
-            </div>
-        </div>
-        <label for="additionalComments" class="form-label fw-normal">Additional Comment Regarding Program Operations</label>
-        <input [disabled]="isCompleted" #additionalComments="ngModel" [(ngModel)]="program.additionalComments" type="text" class="form-control" id="additionalComments" name="additionalComments">
+      }
     </div>
+  </div>
+
+  <span class="mb-4">
+    <h2 class="blue-header">Program Contact</h2>
+    <app-person-picker [isDisabled]="isCompleted" [title]="'Please select a program contact.'" [(person)]="program.programContact" [idNum]="0">
+    </app-person-picker>
+  </span>
+  <h2 class="blue-header mt-2">Advisory Committee</h2>
+  <app-person-picker-list [isDisabled]="isCompleted" [label]="'Who is on your Advisory Committee / Board and what is their affiliation? (e.g. school board, community member, victim service worker, parent of participant, local advocate, etc.)'" [(personsObj)]="personsObj" (personsChange)="onProgramStaffChange($event)"></app-person-picker-list>
+  @if (!isCompleted) {
+    <button class="btn btn-primary mt-2 btn-add-program-staff" (click)="showAddProgramStaffDialog()">Add Missing Program Staff</button>
+  }
+
+
+
+  <h2 class="blue-header mt-2">Program Evaluation</h2>
+  <div>
+    <label class="form-label fw-normal">
+      Has your program undertaken any evaluation efforts recently?
+    </label>
+    <div class="mb-3">
+      <div class="form-check form-check-inline">
+        <input [disabled]="isCompleted" [(ngModel)]="program.evaluation" class="form-check-input" type="radio" name="evaluation" id="evaluation1" [value]="true">
+        <label class="form-check-label form-label fw-normal" for="evaluation1">Yes</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input [disabled]="isCompleted" [(ngModel)]="program.evaluation" class="form-check-input" type="radio" name="evaluation" id="evaluation2" [value]="false">
+        <label class="form-check-label form-label fw-normal" for="evaluation2">No</label>
+      </div>
+    </div>
+    @if (program.evaluation === true) {
+      <div class="mb-3">
+        <label for="evaluationDescription" class="form-label fw-normal">Please describe</label>
+        <input [disabled]="isCompleted" #evaluationDescription="ngModel" [(ngModel)]="program.evaluationDescription" type="text" class="form-control" id="evaluationDescription" name="evaluationDescription">
+        <div class="invalid-feedback" [hidden]="formHelper.showInvalidFeedbackOld(evaluationDescription)" style="display: inherit">
+          Enter description
+        </div>
+      </div>
+    }
+    <label for="additionalComments" class="form-label fw-normal">Additional Comment Regarding Program Operations</label>
+    <input [disabled]="isCompleted" #additionalComments="ngModel" [(ngModel)]="program.additionalComments" type="text" class="form-control" id="additionalComments" name="additionalComments">
+  </div>
 
 
 

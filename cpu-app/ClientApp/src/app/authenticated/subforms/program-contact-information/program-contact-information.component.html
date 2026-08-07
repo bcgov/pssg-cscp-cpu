@@ -9,6 +9,8 @@
     Please select this check box if your organization has a Board of Directors.
   </label>
 </div>
-<span *ngIf="this.hasBoardOfDirectors">
-  <app-person-picker [title]="'Board Contact (For societies only)'" [(person)]="contactInformation.boardContact"></app-person-picker>
-</span>
+@if (this.hasBoardOfDirectors) {
+  <span>
+    <app-person-picker [title]="'Board Contact (For societies only)'" [(person)]="contactInformation.boardContact"></app-person-picker>
+  </span>
+}

@@ -1,16 +1,19 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { provideRouter } from "@angular/router";
 
-import { RevenueSourceTableComponent } from './revenue-source-table.component';
+import { RevenueSourceTableComponent } from "./revenue-source-table.component";
 
-describe('RevenueSourceTableComponent', () => {
+describe("RevenueSourceTableComponent", () => {
   let component: RevenueSourceTableComponent;
   let fixture: ComponentFixture<RevenueSourceTableComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ RevenueSourceTableComponent ]
-    })
-    .compileComponents();
+      declarations: [RevenueSourceTableComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [provideRouter([])],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +22,7 @@ describe('RevenueSourceTableComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

@@ -1,35 +1,47 @@
 <h2 class="blue-header">Authorization &amp; Signature</h2>
 <p>As an authorized signing officer for the organization, I hereby certify that: (please check below as confirmation)</p>
-<div *ngFor="let term of terms; let i=index" class="mb-3">
-  <div class="form-check">
-    <input [disabled]="isDisabled" class="form-check-input" type="checkbox" (input)="onInput()" name="term_{{i}}" id="term_{{i}}" [(ngModel)]="term[1]">
-    <label class="form-check-label form-label fw-normal" for="term_{{i}}">
-      {{term[0]}}
-    </label>
-  </div>
-</div>
-<div *ngIf="state">
-  <app-person-picker (input)="onInput()" [title]="'Authorized Signing Officer'" [(person)]="signature.signer"></app-person-picker>
-  <div class="card mt-2">
-    <div class="card-body">
-      <h5 class="card-title">Please add your signature here with you finger or other pointing device.</h5>
+@for (term of terms; track term; let i = $index) {
+  <div class="mb-3">
+    <div class="form-check">
+      <input [disabled]="isDisabled" class="form-check-input" type="checkbox" (input)="onInput()" name="term_{{i}}" id="term_{{i}}" [(ngModel)]="term[1]">
+      <label class="form-check-label form-label fw-normal" for="term_{{i}}">
+        {{term[0]}}
+      </label>
     </div>
-    <div class="mx-auto bg-light mb-2">
+  </div>
+}
+@if (state) {
+  <div>
+    <app-person-picker (input)="onInput()" [title]="'Authorized Signing Officer'" [(person)]="signature.signer"></app-person-picker>
+    <div class="card mt-2">
+      <div class="card-body">
+        <h5 class="card-title">Please add your signature here with you finger or other pointing device.</h5>
+      </div>
+      <div class="mx-auto bg-light mb-2">
         <signature-pad [options]="signaturePadOptions" (drawStart)="drawStart()"></signature-pad>
-    </div>
-    <div class="card-footer">
-      <button *ngIf="!isDisabled" class="btn btn-secondary" (click)="clearSignature()">Clear</button>
-      <span *ngIf="!signature.signatureDate">
-        <button class="btn btn-primary float-right" (click)="acceptSignature()" [disabled]="!signature.signer || !signature.signer.personId || !wasSigned">Sign</button>
-      </span>
-      <span *ngIf="signature.signatureDate">
-        <button class="btn btn-outline-success me-2 float-right" disabled>
-          Signed on {{signature.signatureDate|date}}
-        </button>
-      </span>
+      </div>
+      <div class="card-footer">
+        @if (!isDisabled) {
+          <button class="btn btn-secondary" (click)="clearSignature()">Clear</button>
+        }
+        @if (!signature.signatureDate) {
+          <span>
+            <button class="btn btn-primary float-right" (click)="acceptSignature()" [disabled]="!signature.signer || !signature.signer.personId || !wasSigned">Sign</button>
+          </span>
+        }
+        @if (signature.signatureDate) {
+          <span>
+            <button class="btn btn-outline-success me-2 float-right" disabled>
+              Signed on {{signature.signatureDate|date}}
+            </button>
+          </span>
+        }
+      </div>
     </div>
   </div>
-</div>
-<div *ngIf="!state" class="alert alert-info" role="alert">
-  Please confirm the terms above to enable signing and submitting.
-</div>
+}
+@if (!state) {
+  <div class="alert alert-info" role="alert">
+    Please confirm the terms above to enable signing and submitting.
+  </div>
+}

@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
-import * as moment from "moment";
+import moment from "moment";
 import { Subscription } from "rxjs";
 import {
   DocumentItemDto,
@@ -225,32 +225,37 @@ export class TaskListComponent implements OnInit, OnDestroy {
         encodedProgramName,
         requestOptions,
       )
-      .subscribe((response: Blob) => {
-        if (response == null || response.size === 0) {
+      .subscribe(
+        (response: Blob) => {
+          if (response == null || response.size === 0) {
+            this.notificationQueueService.addNotification(
+              "There are no submitted reports for " +
+                programName +
+                " to export.",
+              "danger",
+            );
+          } else {
+            const url = window.URL.createObjectURL(response);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download =
+              programName + "(" + contractNumber + ") Monthly Statistics.csv";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            this.notificationQueueService.addNotification(
+              "Exporting monthly statisics file for " + programName + ".",
+              "success",
+            );
+          }
+        },
+        () => {
           this.notificationQueueService.addNotification(
-            "There are no submitted reports for " + programName + " to export.",
+            "Unable to download monthly statistics right now. Please try again later.",
             "danger",
           );
-        } else {
-          const url = window.URL.createObjectURL(response);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download =
-            programName + "(" + contractNumber + ") Monthly Statistics.csv";
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(url);
-          this.notificationQueueService.addNotification(
-            "Exporting monthly statisics file for " + programName + ".",
-            "success",
-          );
-        }
-      }, () => {
-        this.notificationQueueService.addNotification(
-          "Unable to download monthly statistics right now. Please try again later.",
-          "danger",
-        );
-      });
+        },
+      );
   }
 }

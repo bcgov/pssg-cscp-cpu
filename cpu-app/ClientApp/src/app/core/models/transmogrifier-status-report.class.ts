@@ -1,4 +1,3 @@
-import * as _ from "lodash";
 import {
   StatusReportAnswerItemDto,
   StatusReportChildQuestionDto,
@@ -53,9 +52,12 @@ export class TransmogrifierStatusReport {
       return a.vsd_categoryorder - b.vsd_categoryorder;
     });
 
-    let answersCollection = _.groupBy(
-      g.answerCollection ?? [],
-      "_vsd_categoryid_value",
+    let answersCollection = (g.answerCollection ?? []).reduce(
+      (acc: Record<string, any[]>, item: any) => {
+        (acc[item._vsd_categoryid_value] ??= []).push(item);
+        return acc;
+      },
+      {},
     );
     // for every category of questions collect the matching items
     for (let category of g.categoryCollection ?? []) {
