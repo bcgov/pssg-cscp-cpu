@@ -3,7 +3,6 @@ import { Person } from '../../../core/models/person.class';
 import { SignaturePadComponent } from '@almothafar/angular-signature-pad';
 import { StateService } from '../../../core/services/state.service';
 import { iPerson } from '../../../core/models/person.interface';
-import * as _ from 'lodash';
 import { iSignature } from '../program-authorizer/program-authorizer.component';
 
 
