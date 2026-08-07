@@ -34,7 +34,7 @@
 #                                                                                                 #
 #   TECHNOLOGIES                                                                                  #
 #   --------------------------------------------------------------------------------------------  #
-#   - Backend: ASP.NET Core (.NET 8)                                                              #
+#   - Backend: ASP.NET Core (.NET 10)                                                             #
 #   - Frontend: Angular (in cpu-app/ClientApp)                                                    #
 #   - Build: Docker builds both, .NET app serves Angular SPA                                     #
 #                                                                                                 #
@@ -70,7 +70,7 @@ RUN npm run build
 # ======================
 # .NET Build Stage
 # ======================
-FROM mcr.microsoft.com/dotnet/sdk:8.0@sha256:89ce6291bde9acdf59594e79fb8277c6d84c46e4b1f5bf126a4f18766e4bd597 AS dotnet-build
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS dotnet-build
 
 ARG BUILD_IMAGE_NAME
 ARG BUILD_VERSION
@@ -89,17 +89,16 @@ RUN dotnet publish cpu-app/cpu-app.csproj -c Release -o /app/publish --no-restor
 # ======================
 # Runtime Image
 # ======================
-FROM mcr.microsoft.com/dotnet/aspnet:8.0@sha256:9822a6201c64c9f38b8a190832a7ae21cd30150d509b3ea170fd83b4f4e6166a AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS runtime
 
 ARG BUILD_IMAGE_NAME
 ARG BUILD_VERSION
 
 # Update all system packages for latest security patches FIRST.
 # This ensures OS-level vulnerabilities are fixed.
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN apk update && \
+    apk upgrade && \
+    rm -rf /var/cache/apk/*
 
 WORKDIR /app
 
@@ -108,7 +107,7 @@ RUN echo "BUILD_IMAGE_NAME='$BUILD_IMAGE_NAME'" && if [ -z "$BUILD_IMAGE_NAME" ]
 RUN echo "BUILD_VERSION='$BUILD_VERSION'" && if [ -z "$BUILD_VERSION" ]; then echo "BUILD_VERSION is empty!"; exit 1; fi
 
 # 1. Create non-root user and group
-RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
+RUN addgroup -S appgroup && adduser -S -G appgroup appuser
 
 # 2. Copy published app from build stage as root
 COPY --from=dotnet-build /app/publish ./
