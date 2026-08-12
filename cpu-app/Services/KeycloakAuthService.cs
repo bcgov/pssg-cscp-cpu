@@ -24,13 +24,13 @@ namespace Gov.Cscp.Victims.Public.Services
             _client = httpClient;
             _client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
             _configuration = configuration;
-            _accessTokenExpiration = DateTime.Now;
+            _accessTokenExpiration = DateTime.UtcNow;
             _token = "";
         }
 
         public async Task<string> GetToken()
         {
-            if (DateTime.Now.CompareTo(_accessTokenExpiration) > 0)
+            if (DateTime.UtcNow.CompareTo(_accessTokenExpiration) > 0)
             {
                 try
                 {
@@ -74,7 +74,7 @@ namespace Gov.Cscp.Victims.Public.Services
                         }
 
                         // set global access token expiry time to the value returned subtract 60 seconds for minute long authentication communication delays
-                        this._accessTokenExpiration = DateTime.Now.AddSeconds(expirationSeconds - 60);
+                        this._accessTokenExpiration = DateTime.UtcNow.AddSeconds(expirationSeconds - 60);
                         this._token = token;
                         return token;
                     }

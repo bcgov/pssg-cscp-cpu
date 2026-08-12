@@ -118,11 +118,11 @@ namespace Gov.Cscp.Victims.Public.Controllers
 
         private DateTime GetInvoiceDate(int quarter)
         {
-            var firstQuarterDate = new DateTime(DateTime.Today.Year, 1, 15, DateTime.Today.Hour, DateTime.Today.Minute, DateTime.Today.Second, DateTimeKind.Local); //15th January
-            var secondQuarterDate = new DateTime(DateTime.Today.Year, 4, 15, DateTime.Today.Hour, DateTime.Today.Minute, DateTime.Today.Second, DateTimeKind.Local); //15th April
-            var thirdQuarterDate = new DateTime(DateTime.Today.Year, 7, 15, DateTime.Today.Hour, DateTime.Today.Minute, DateTime.Today.Second, DateTimeKind.Local); //15th July
-            var fourthQuarterDate = new DateTime(DateTime.Today.Year, 10, 15, DateTime.Today.Hour, DateTime.Today.Minute, DateTime.Today.Second, DateTimeKind.Local); //15th October
-            var fifthQuarterDate = new DateTime(DateTime.Today.Year + 1, 1, 15, DateTime.Today.Hour, DateTime.Today.Minute, DateTime.Today.Second, DateTimeKind.Local); //15th January next year
+            var firstQuarterDate = new DateTime(DateTime.UtcNow.Year, 1, 15, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second, DateTimeKind.Utc); //15th January
+            var secondQuarterDate = new DateTime(DateTime.UtcNow.Year, 4, 15, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second, DateTimeKind.Utc); //15th April
+            var thirdQuarterDate = new DateTime(DateTime.UtcNow.Year, 7, 15, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second, DateTimeKind.Utc); //15th July
+            var fourthQuarterDate = new DateTime(DateTime.UtcNow.Year, 10, 15, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second, DateTimeKind.Utc); //15th October
+            var fifthQuarterDate = new DateTime(DateTime.UtcNow.Year + 1, 1, 15, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second, DateTimeKind.Utc); //15th January next year
 
             if (quarter == 1)
                 return secondQuarterDate.AddDays(-3); //15-April-current year

@@ -447,7 +447,7 @@ namespace Gov.Cscp.Victims.Public.Controllers
                 content.BeginLayer(layer);
 
                 string[] months = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
-                DateTime today = DateTime.Now;
+                DateTime today = DateTime.UtcNow;
                 string daySuffix = (today.Day % 10 == 1 && today.Day != 11) ? "st"
                     : (today.Day % 10 == 2 && today.Day != 12) ? "nd"
                     : (today.Day % 10 == 3 && today.Day != 13) ? "rd"
