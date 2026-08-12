@@ -8,16 +8,16 @@
 
 ## Scan Coverage
 
-| Area | Scanned |
-|---|---|
-| Angular frontend (TypeScript) | ✅ |
-| ASP.NET Core backend (C#) | ✅ |
-| Container configuration (Dockerfile, docker-compose) | ✅ |
-| OpenShift legacy Dockerfiles (UBI8 .NET 3 / .NET 8) | ✅ |
-| Scheduled/batch job logic (ScheduleG, invoice quarters) | ✅ |
-| External integrations (Dynamics/Dataverse, SharePoint, Keycloak) | ✅ |
-| Date/time libraries (`moment`, `moment-timezone`) | ✅ |
-| Environment variables (`TZ`, `TIMEZONE`) | ✅ |
+| Area                                                             | Scanned |
+| ---------------------------------------------------------------- | ------- |
+| Angular frontend (TypeScript)                                    | ✅      |
+| ASP.NET Core backend (C#)                                        | ✅      |
+| Container configuration (Dockerfile, docker-compose)             | ✅      |
+| OpenShift legacy Dockerfiles (UBI8 .NET 3 / .NET 8)              | ✅      |
+| Scheduled/batch job logic (ScheduleG, invoice quarters)          | ✅      |
+| External integrations (Dynamics/Dataverse, SharePoint, Keycloak) | ✅      |
+| Date/time libraries (`moment`, `moment-timezone`)                | ✅      |
+| Environment variables (`TZ`, `TIMEZONE`)                         | ✅      |
 
 ---
 
@@ -94,16 +94,16 @@
 
 ## Findings Requiring No Code Change
 
-| Location | Finding | Rationale |
-|---|---|---|
-| `task-list.component.ts` | `moment().endOf("day")` for overdue task comparison | Plain `moment` (no `moment-timezone`) — uses browser OS timezone, updated by platform vendors when BC changes DST rules |
-| `program-summary-table.component.ts` | `moment()` for open/close hour arithmetic | Operates on HH:MM strings only; no timezone lookup |
-| `hours-to-dynamics.ts` | `moment().hour().minute().format("HH:mm")` | Time-string formatting with no timezone context |
-| `transmogrifier.class.ts` | `moment(date)` to find payment quarter | Extracts month/day from an ISO date to match a lookup table; no timezone conversion |
-| `ScheduleGController.cs` | `DateTime.Today.Year`, `DateTime.Today.AddMonths(1)` | Server runs in Alpine (UTC); year and relative-month math are DST-immune |
-| `openshift/Dockerfile.ubi8.*` (legacy) | No `TZ` set | UBI8 defaults to UTC; files are not used in the current build pipeline |
-| Dynamics / SharePoint integration layer | No local-time conversions found | All API dates are ISO 8601 UTC strings |
-| `docker-compose.yml` | No `TZ` env var | Development-only compose file; not a production concern |
+| Location                                | Finding                                              | Rationale                                                                                                               |
+| --------------------------------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `task-list.component.ts`                | `moment().endOf("day")` for overdue task comparison  | Plain `moment` (no `moment-timezone`) — uses browser OS timezone, updated by platform vendors when BC changes DST rules |
+| `program-summary-table.component.ts`    | `moment()` for open/close hour arithmetic            | Operates on HH:MM strings only; no timezone lookup                                                                      |
+| `hours-to-dynamics.ts`                  | `moment().hour().minute().format("HH:mm")`           | Time-string formatting with no timezone context                                                                         |
+| `transmogrifier.class.ts`               | `moment(date)` to find payment quarter               | Extracts month/day from an ISO date to match a lookup table; no timezone conversion                                     |
+| `ScheduleGController.cs`                | `DateTime.Today.Year`, `DateTime.Today.AddMonths(1)` | Server runs in Alpine (UTC); year and relative-month math are DST-immune                                                |
+| `openshift/Dockerfile.ubi8.*` (legacy)  | No `TZ` set                                          | UBI8 defaults to UTC; files are not used in the current build pipeline                                                  |
+| Dynamics / SharePoint integration layer | No local-time conversions found                      | All API dates are ISO 8601 UTC strings                                                                                  |
+| `docker-compose.yml`                    | No `TZ` env var                                      | Development-only compose file; not a production concern                                                                 |
 
 ---
 
