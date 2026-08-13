@@ -57,7 +57,7 @@
     "@vitest/coverage-v8": "^4.1.10",
     "codelyzer": "^6.0.2",
     "jsdom": "^30.0.1",
-    "orval": "^8.23.0",
+    "orval": "^8.24.0",
     "ts-node": "^10.9.2",
     "typescript": "~5.9.3",
     "vitest": "^4.1.10",
