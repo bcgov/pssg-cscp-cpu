@@ -7,7 +7,6 @@ import {
   withState,
 } from "@ngrx/signals";
 import { rxMethod } from "@ngrx/signals/rxjs-interop";
-import moment from "moment-timezone";
 import { catchError, of, pipe, switchMap, tap } from "rxjs";
 import { ConfigurationService } from "../api/services/configuration/configuration.service";
 import { Configuration } from "../models/configuration.interface";
@@ -44,10 +43,10 @@ export const ConfigurationStore = signalStore(
       const startDate = store.outageStartDate();
       const endDate = store.outageEndDate();
       if (!message || !startDate || !endDate) return false;
-      const current = moment().tz("America/Vancouver");
-      const start = moment(startDate).tz("America/Vancouver");
-      const end = moment(endDate).tz("America/Vancouver");
-      return current.isBetween(start, end, null, "[]");
+      const now = Date.now();
+      const start = new Date(startDate).getTime();
+      const end = new Date(endDate).getTime();
+      return now >= start && now <= end;
     }),
   })),
   withMethods((store) => {

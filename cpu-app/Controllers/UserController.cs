@@ -113,13 +113,13 @@ namespace Gov.Cscp.Victims.Public.Controllers
                 CookieOptions option = new CookieOptions();
                 if (Request.Cookies[".AspNetCore.Session"] != null)
                 {
-                    option.Expires = DateTime.Now.AddDays(-1);
+                    option.Expires = DateTime.UtcNow.AddDays(-1);
                     Response.Cookies.Append(".AspNetCore.Session", "", option);
                 }
 
                 if (Request.Cookies["AuthenticationToken"] != null)
                 {
-                    option.Expires = DateTime.Now.AddDays(-1);
+                    option.Expires = DateTime.UtcNow.AddDays(-1);
                     Response.Cookies.Append("AuthenticationToken", "", option);
                 }
 
