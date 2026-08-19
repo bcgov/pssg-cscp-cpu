@@ -6,8 +6,7 @@ import {
   withMethods,
   withState,
 } from "@ngrx/signals";
-import { rxMethod } from "@ngrx/signals/rxjs-interop";
-import { catchError, of, pipe, switchMap, tap } from "rxjs";
+import { firstValueFrom } from "rxjs";
 import { ConfigurationService } from "../api/services/configuration/configuration.service";
 import { Configuration } from "../models/configuration.interface";
 
@@ -31,6 +30,9 @@ export const ConfigurationStore = signalStore(
     featureHideReportSaveButton: computed(
       () => store.configuration()?.featureHideReportSaveButton ?? false,
     ),
+    maintenanceMode: computed(
+      () => store.configuration()?.maintenanceMode ?? false,
+    ),
     outageMessage: computed(() => store.configuration()?.outageMessage ?? null),
     outageStartDate: computed(
       () => store.configuration()?.outageStartDate ?? null,
@@ -49,43 +51,34 @@ export const ConfigurationStore = signalStore(
       return now >= start && now <= end;
     }),
   })),
-  withMethods((store) => {
-    const configurationService = inject(ConfigurationService);
+  withMethods((store, configurationService = inject(ConfigurationService)) => ({
+    async load(): Promise<void> {
+      if (store.configuration() || store.isLoading()) {
+        return;
+      }
 
-    return {
-      load: rxMethod<void>(
-        pipe(
-          tap(() => {
-            // Only load if not already loaded or loading
-            if (store.configuration() || store.isLoading()) {
-              return;
-            }
-            patchState(store, { isLoading: true, error: null });
-          }),
-          switchMap(() => {
-            // Skip API call if already loaded
-            if (store.configuration()) {
-              return of(store.configuration()!);
-            }
+      patchState(store, { isLoading: true, error: null });
 
-            return configurationService
-              .getApiConfiguration<Configuration>()
-              .pipe(
-                tap((configuration) => {
-                  console.log("Fetched Configuration:", configuration);
-                  patchState(store, { configuration, isLoading: false });
-                }),
-                catchError((error) => {
-                  console.error("Failed to load configuration:", error);
-                  const errorMessage =
-                    error?.message || "Failed to load configuration";
-                  patchState(store, { error: errorMessage, isLoading: false });
-                  return of(null);
-                }),
-              );
-          }),
-        ),
-      ),
-    };
-  }),
+      try {
+        const configuration = await firstValueFrom(
+          configurationService.getApiConfiguration<Configuration>(),
+        );
+
+        patchState(store, {
+          configuration,
+          isLoading: false,
+          error: null,
+        });
+      } catch (error) {
+        console.error("Failed to load configuration:", error);
+        patchState(store, {
+          isLoading: false,
+          error:
+            error instanceof Error
+              ? error.message
+              : "Failed to load configuration",
+        });
+      }
+    },
+  })),
 );

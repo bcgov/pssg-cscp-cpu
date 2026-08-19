@@ -21,8 +21,10 @@ import { SurplusReportComponent } from "./authenticated/surplus-report/surplus-r
 import { UploadDocumentComponent } from "./authenticated/upload-document/upload-document.component";
 import { AuthenticationGuard } from "./core/guards/authentication.guard";
 import { HealthGuard } from "./core/guards/health.guard";
+import { MaintenanceGuard } from "./core/guards/maintenance.guard";
 import { LandingPageComponent } from "./landing-page/landing-page.component";
 import { LoginPageComponent } from "./login/login.component";
+import { MaintenanceComponent } from "./maintenance/maintenance.component";
 import { NotFoundComponent } from "./shared/not-found/not-found.component";
 import { OutageComponent } from "./shared/outage/outage.component";
 import { TestComponent } from "./test/test.component";
@@ -33,14 +35,18 @@ const routes: Routes = [
     component: OutageComponent,
   },
   {
+    path: "maintenance",
+    component: MaintenanceComponent,
+  },
+  {
     path: "",
     component: LandingPageComponent,
-    canActivate: [HealthGuard],
+    canActivate: [HealthGuard, MaintenanceGuard],
   },
   {
     path: "test",
     component: TestComponent,
-    canActivate: [HealthGuard],
+    canActivate: [HealthGuard, MaintenanceGuard],
   },
   {
     // No HealthGuard here – this is the SiteMinder/BCeID auth-callback
@@ -51,7 +57,7 @@ const routes: Routes = [
   },
   {
     path: "authenticated",
-    canActivate: [HealthGuard, AuthenticationGuard],
+    canActivate: [HealthGuard, MaintenanceGuard, AuthenticationGuard],
     children: [
       {
         path: "",
@@ -153,7 +159,7 @@ const routes: Routes = [
   {
     path: "**",
     component: NotFoundComponent,
-    canActivate: [HealthGuard],
+    canActivate: [HealthGuard, MaintenanceGuard],
   },
 ];
 

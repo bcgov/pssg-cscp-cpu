@@ -1,10 +1,11 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, inject } from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "../../../environments/environment";
 import { nameAssemble } from "../../core/constants/name-assemble";
 import { HealthCheckService } from "../../core/services/health-check.service";
 import { StateService } from "../../core/services/state.service";
 import { UserDataService } from "../../core/services/user-data.service";
+import { ConfigurationStore } from "../../core/store/configuration.store";
 
 @Component({
   selector: "app-header",
@@ -21,6 +22,8 @@ export class HeaderComponent implements OnInit {
   window = window;
   isNewUserRegistration: boolean = false;
   apiPath = environment.apiRootUrl;
+  private readonly configStore = inject(ConfigurationStore);
+
   constructor(
     private router: Router,
     private stateService: StateService,
@@ -33,6 +36,7 @@ export class HeaderComponent implements OnInit {
 
   /** Exposed so the template can read the health signal. */
   readonly isHealthy = this.healthCheckService.isHealthy;
+  readonly maintenanceMode = this.configStore.maintenanceMode;
 
   ngOnInit() {
     this.stateService.loggedIn.subscribe((l: boolean) => {
@@ -49,6 +53,10 @@ export class HeaderComponent implements OnInit {
     this.stateService.loading.subscribe((l) => (this.loading = l));
   }
   login() {
+    if (this.maintenanceMode()) {
+      return;
+    }
+
     if (window.location.href.includes("localhost")) {
       this.stateService.login();
     } else {

@@ -31,15 +31,18 @@ namespace Gov.Cscp.Victims.Public.Controllers
                     OutageMessage = configuration.GetValue<string>("CONFIGURATION_OUTAGEINFORMATION_MESSAGE"),
                     OutageStartDate = configuration.GetValue<string>("CONFIGURATION_OUTAGEINFORMATION_STARTDATE"),
                     OutageEndDate = configuration.GetValue<string>("CONFIGURATION_OUTAGEINFORMATION_ENDDATE"),
+                    MaintenanceMode =
+                        bool.TryParse(configuration["CONFIGURATION_MAINTENANCE_MODE"], out var maintenanceMode)
+                        && maintenanceMode,
                     //check if it is prod env
-                    IsProdCpu  = !string.IsNullOrEmpty(configuration.GetValue<string>("PROD_CPU_PORT")),
+                    IsProdCpu = !string.IsNullOrEmpty(configuration.GetValue<string>("PROD_CPU_PORT")),
                     FeatureHideReportSaveButton = !string.IsNullOrEmpty(configuration.GetValue<string>("FEATURE_HIDE_REPORT_SAVE")),
 
                 };
 
                 if (string.IsNullOrEmpty(config.OutageMessage) || string.IsNullOrEmpty(config.OutageStartDate) || string.IsNullOrEmpty(config.OutageEndDate))
                 {
-                    return Ok(new { config.IsProdCpu, config.FeatureHideReportSaveButton });
+                    return Ok(new { config.IsProdCpu, config.FeatureHideReportSaveButton, config.MaintenanceMode });
                 }
                 ;
 
@@ -59,6 +62,7 @@ public class Configuration
     public string OutageMessage { get; set; }
     public string OutageStartDate { get; set; }
     public string OutageEndDate { get; set; }
+    public bool MaintenanceMode { get; set; }
     public bool IsProdCpu { get; set; }
     public bool FeatureHideReportSaveButton { get; set; }
 };
