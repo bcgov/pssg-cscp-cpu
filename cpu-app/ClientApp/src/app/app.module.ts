@@ -77,6 +77,7 @@ import { SafePipe } from "./core/pipes/safe.pipe";
 import { HealthCheckService } from "./core/services/health-check.service";
 import { LandingPageComponent } from "./landing-page/landing-page.component";
 import { LoginPageComponent } from "./login/login.component";
+import { MaintenanceComponent } from "./maintenance/maintenance.component";
 import { OutageComponent } from "./shared/outage/outage.component";
 import { ServiceNotAvailableComponent } from "./shared/service-not-available.component";
 import { SharedModule } from "./shared/shared.module";
@@ -151,6 +152,7 @@ import { TestComponent } from "./test/test.component";
     UppercaseDirective,
     ServiceNotAvailableComponent,
     OutageComponent,
+    MaintenanceComponent,
   ],
   imports: [
     AppRoutingModule,

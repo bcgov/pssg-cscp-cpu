@@ -8,44 +8,44 @@
           width="181"
           height="45"
           alt="B.C. Government Logo"
-          />
-          <img
-            class="img-fluid d-md-none"
-            src="assets/bc-logo.svg"
-            width="64"
-            height="45"
-            alt="B.C. Government Logo"
-            />
-            <span class="navbar-text ms-4 my-auto">
-              {{ title }}
-            </span>
+        />
+        <img
+          class="img-fluid d-md-none"
+          src="assets/bc-logo.svg"
+          width="64"
+          height="45"
+          alt="B.C. Government Logo"
+        />
+        <span class="navbar-text ms-4 my-auto">
+          {{ title }}
+        </span>
+      </a>
+      @if (loggedIn) {
+        <span class="navbar-text">
+          <a href="javascript:void(0)" (click)="logout()">
+            @if (currentUser) {
+              <span> {{ currentUser }}&nbsp;-&nbsp; </span>
+            }
+            Sign Out
           </a>
-          @if (loggedIn) {
-            <span class="navbar-text">
-              <a href="javascript:void(0)" (click)="logout()">
-                @if (currentUser) {
-                  <span> {{ currentUser }}&nbsp;-&nbsp; </span>
-                }
-                Sign Out
-              </a>
+        </span>
+      }
+      @if (!loggedIn && isHealthy() && !maintenanceMode()) {
+        <span class="navbar-text">
+          @if (!loading) {
+            <span>
+              <a href="javascript:void(0)" (click)="login()" class="nav-login"
+                >Log In</a
+              >
             </span>
           }
-          @if (!loggedIn && isHealthy()) {
-            <span class="navbar-text">
-              @if (!loading) {
-                <span>
-                  <a href="javascript:void(0)" (click)="login()" class="nav-login"
-                    >Log In</a
-                    >
-                  </span>
-                }
-                @if (loading) {
-                  <span>
-                    <a href="javascript:void(0)"> Loading... </a>
-                  </span>
-                }
-              </span>
-            }
-          </div>
-        </nav>
-      </header>
+          @if (loading) {
+            <span>
+              <a href="javascript:void(0)"> Loading... </a>
+            </span>
+          }
+        </span>
+      }
+    </div>
+  </nav>
+</header>

@@ -1,7 +1,7 @@
 <app-header></app-header>
 <app-notification-banner></app-notification-banner>
 @if (configStore.showAnnouncementBanner()) {
-  <app-alert [message]="configStore.outageMessage()!"></app-alert>
+  <app-alert [message]="configStore.outageMessage()!" type="danger"></app-alert>
 }
 <main class="container-fluid">
   <router-outlet></router-outlet>
