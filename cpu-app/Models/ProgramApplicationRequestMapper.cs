@@ -130,10 +130,9 @@ namespace Gov.Cscp.Victims.Public.Models
 
             if (c.vsd_name != null) entity.Vsd_Name = c.vsd_name;
 
-            // vsd_cpu_humanresourcepolices is a multi-select optionset; the DTO carries it as a
-            // raw string so no clean conversion to IEnumerable<Vsd_Contract_Vsd_Cpu_HumanResourcePolices>
-            // is possible — set the attribute directly.
-            SetString(entity, "vsd_cpu_humanresourcepolices", c.vsd_cpu_humanresourcepolices);
+            // vsd_cpu_humanresourcepolices is a multi-select optionset; the DTO carries it as a            
+            // convert to an OptionSetValueCollection, as required by Dataverse for multi-select optionset attributes.
+            SetEnumArray(entity, "vsd_cpu_humanresourcepolices", c.vsd_cpu_humanresourcepolices);
 
             if (c.vsd_cpu_specificunion != null) entity.Vsd_Cpu_SpecificUnion = c.vsd_cpu_specificunion;
             if (c.vsd_authorizedsigningofficersignature != null) entity.Vsd_AuthorizedSigningOfficerSignature = c.vsd_authorizedsigningofficersignature;
@@ -204,8 +203,8 @@ namespace Gov.Cscp.Victims.Public.Models
             if (Guid.TryParse(s.vsd_scheduleid, out var scheduleId))
                 entity.Id = scheduleId;
 
-            // vsd_days is a multi-select optionset; the DTO carries it as a string
-            SetString(entity, "vsd_days", s.vsd_days);
+            // convert the comma-separated string of option-set values (e.g. "100000000,100000001") into
+            SetEnumArray(entity, "vsd_days", s.vsd_days);
             if (s.vsd_scheduledstarttime != null) entity.Vsd_ScheduledStartTime = s.vsd_scheduledstarttime;
             if (s.vsd_scheduledendtime != null) entity.Vsd_ScheduledEndTime = s.vsd_scheduledendtime;
 
@@ -248,6 +247,22 @@ namespace Gov.Cscp.Victims.Public.Models
         {
             if (value != null)
                 entity[attributeName] = value;
+        }
+
+        // Converts a comma-separated string of option-set values (e.g. "100000000,100000001") into
+        // an OptionSetValueCollection, as required by Dataverse for multi-select optionset attributes.
+        private static void SetEnumArray(Entity entity, string attributeName, string value)
+        {
+            if (value == null) return;
+
+            var options = value
+                .Split(',')
+                .Select(s => s.Trim())
+                .Where(s => !string.IsNullOrEmpty(s))
+                .Select(s => new OptionSetValue(int.Parse(s)))
+                .ToList();
+
+            entity[attributeName] = new OptionSetValueCollection(options);
         }
 
         private static void SetEntityReference(Entity entity, string attributeName, string logicalName, string bindValue)
