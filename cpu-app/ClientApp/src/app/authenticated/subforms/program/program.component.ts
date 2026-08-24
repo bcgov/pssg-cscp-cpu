@@ -14,6 +14,7 @@ import {
   Validators,
 } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
+import * as _ from "lodash";
 import { Subscription } from "rxjs";
 import { perTypeDict } from "../../../core/constants/per-type";
 import {
@@ -183,9 +184,7 @@ export class ProgramComponent implements OnInit, OnDestroy {
     });
   }
   setAddressSameAsAgency(person: iPerson) {
-    let addressCopy = structuredClone(
-      this.trans.contactInformation.mainAddress,
-    );
+    let addressCopy = _.cloneDeep(this.trans.contactInformation.mainAddress);
     person.address = addressCopy;
   }
   clearAddress(person: iPerson) {

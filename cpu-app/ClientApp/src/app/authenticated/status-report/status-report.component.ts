@@ -10,6 +10,7 @@ import { TransmogrifierStatusReport } from "../../core/models/transmogrifier-sta
 import { Transmogrifier } from "../../core/models/transmogrifier.class";
 import { NotificationQueueService } from "../../core/services/notification-queue.service";
 import { StateService } from "../../core/services/state.service";
+import * as _ from "lodash";
 import {
   IconStepperService,
   iStepperElement,
@@ -101,7 +102,7 @@ export class StatusReportComponent implements OnInit, OnDestroy {
     );
     this.stepperService.currentStepperElement.subscribe((e) => {
       if (this.currentStepperElement) {
-        let originalStepper = structuredClone(this.currentStepperElement);
+        let originalStepper = _.cloneDeep(this.currentStepperElement);
         let formState = this.formHelper.getFormState();
         if (
           originalStepper.formState === "valid" &&
@@ -413,7 +414,7 @@ export class StatusReportComponent implements OnInit, OnDestroy {
     return isValid;
   }
   setNextStepper() {
-    let originalStepper = structuredClone(this.currentStepperElement);
+    let originalStepper = _.cloneDeep(this.currentStepperElement);
 
     if (!this.validateCurrentQuestionsAreFilledIn()) {
       this.stepperService.setStepperElementProperty(

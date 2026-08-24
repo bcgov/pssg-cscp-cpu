@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { Router } from "@angular/router";
+import * as _ from "lodash";
 import { Subscription } from "rxjs";
 import { OrgService } from "../../core/api/services/org/org.service";
 import { ContactInformationFormFactory } from "../../core/forms/contact-information-form.factory";
@@ -42,9 +43,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.stateSubscription = this.stateService.main.subscribe(
       (m: Transmogrifier) => {
         this.trans = m;
-        this.originalContactInfo = structuredClone(
-          this.trans.contactInformation,
-        );
+        this.originalContactInfo = _.cloneDeep(this.trans.contactInformation);
 
         // Initialize form with contact information
         this.contactForm =
@@ -232,7 +231,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
             );
             this.stateService.refresh();
             this.contactForm.markAsPristine();
-            this.originalContactInfo = structuredClone(
+            this.originalContactInfo = _.cloneDeep(
               this.trans.contactInformation,
             );
             if (shouldExit)

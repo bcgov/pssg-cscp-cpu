@@ -11,6 +11,7 @@ import { TransmogrifierExpenseReport } from "../../core/models/transmogrifier-ex
 import { Transmogrifier } from "../../core/models/transmogrifier.class";
 import { NotificationQueueService } from "../../core/services/notification-queue.service";
 import { StateService } from "../../core/services/state.service";
+import * as _ from "lodash";
 import {
   IconStepperService,
   iStepperElement,
@@ -121,7 +122,7 @@ export class ExpenseReportComponent implements OnInit, OnDestroy {
     );
     this.stepperService.currentStepperElement.subscribe((e) => {
       if (this.currentStepperElement) {
-        let originalStepper = structuredClone(this.currentStepperElement);
+        let originalStepper = _.cloneDeep(this.currentStepperElement);
         let formState = this.formHelper.getFormState();
 
         if (
@@ -337,7 +338,7 @@ export class ExpenseReportComponent implements OnInit, OnDestroy {
   }
 
   setNextStepper() {
-    let originalStepper = structuredClone(this.currentStepperElement);
+    let originalStepper = _.cloneDeep(this.currentStepperElement);
 
     if (!this.trans.expenseReport.executiveReview && !this.isCompleted) {
       setTimeout(() => {
