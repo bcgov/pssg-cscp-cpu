@@ -1,5 +1,6 @@
 import { Component, Inject } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import * as _ from "lodash";
 import { OrgService } from "../../../core/api/services/org/org.service";
 import { nameAssemble } from "../../../core/constants/name-assemble";
 import { FormHelper } from "../../../core/form-helper";
@@ -37,7 +38,7 @@ export class AddPersonDialog {
   }
 
   setAddressSameAsAgency(person: iPerson) {
-    let addressCopy = structuredClone(this.agencyAddress);
+    let addressCopy = _.cloneDeep(this.agencyAddress);
     person.address = addressCopy;
   }
   clearAddress(person: iPerson) {

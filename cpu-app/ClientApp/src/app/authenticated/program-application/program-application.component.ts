@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute, Router } from "@angular/router";
+import * as _ from "lodash";
 import { ProgramApplicationPost } from "../../core/api/models";
 import { ProgramApplicationService } from "../../core/api/services/program-application/program-application.service";
 import { FormHelper } from "../../core/form-helper";
@@ -124,7 +125,7 @@ export class ProgramApplicationComponent implements OnInit {
     );
     this.stepperService.currentStepperElement.subscribe((e) => {
       if (this.currentStepperElement) {
-        let originalStepper = structuredClone(this.currentStepperElement);
+        let originalStepper = _.cloneDeep(this.currentStepperElement);
         let formState = this.formHelper.getFormState();
 
         if (
@@ -242,7 +243,7 @@ export class ProgramApplicationComponent implements OnInit {
   save(showNotification: boolean = true, shouldExit: boolean = false) {
     return new Promise<void>((resolve, reject) => {
       try {
-        let originalStepper = structuredClone(this.currentStepperElement);
+        let originalStepper = _.cloneDeep(this.currentStepperElement);
         let currentTabHasInvalidClass =
           originalStepper.formState === "invalid" ? 1 : 0;
         if (
@@ -426,7 +427,7 @@ export class ProgramApplicationComponent implements OnInit {
   }
 
   setNextStepper() {
-    let originalStepper = structuredClone(this.currentStepperElement);
+    let originalStepper = _.cloneDeep(this.currentStepperElement);
     let currentTabHasInvalidClass =
       originalStepper.formState === "invalid" ? 1 : 0;
 
