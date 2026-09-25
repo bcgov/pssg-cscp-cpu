@@ -44,12 +44,12 @@ Install k6, or run it via Podman/Docker with the `grafana/k6` image (no local in
 
 `local` assumes `dotnet run` from `cpu-app` (Kestrel port 8080 per `docker-compose.yml`, `BASE_PATH` unset). If k6 itself is running inside a container and `local` needs to reach the host, override with `-e BASE_URL=http://host.containers.internal:8080`.
 
-| Environment | Base URL                       | API path             |
-| ----------- | ------------------------------ | --------------------- |
-| local       | http://localhost:8080          | /api                   |
-| dev         | https://dev.justice.gov.bc.ca  | /coastcontracts/api    |
-| test        | https://test.justice.gov.bc.ca | /coastcontracts/api    |
-| prod        | https://justice.gov.bc.ca      | /coastcontracts/api    |
+| Environment | Base URL                       | API path            |
+| ----------- | ------------------------------ | ------------------- |
+| local       | http://localhost:8080          | /api                |
+| dev         | https://dev.justice.gov.bc.ca  | /coastcontracts/api |
+| test        | https://test.justice.gov.bc.ca | /coastcontracts/api |
+| prod        | https://justice.gov.bc.ca      | /coastcontracts/api |
 
 **Confirmed against dev** (2026-09-25): `dev.justice.gov.bc.ca/coastcontracts` is correct - `smoke.js` and `anonymous-read.js` both pass cleanly (9/9 and 15/15 checks, p95 well under budget). **Requires the Cisco AnyConnect VPN** to be connected - without it, every request gets a TCP `connection reset by peer` (not a 404), which is easy to mistake for a wrong hostname/path or a WAF block. `test`/`prod` values are the same convention but not yet independently verified - confirm with `smoke` before trusting them.
 
