@@ -5,16 +5,16 @@ name: CI CPU SPA
 on:
   pull_request:
     branches: [development]
-    paths:
-      - "cpu-app/**"
-      - "Database/**"
-      - "Manager/**"
+    paths-ignore:
+      - "**/*.md"
+      - "LICENSE"
+      - "docs/**"
   push:
     branches: [development]
-    paths:
-      - "cpu-app/**"
-      - "Database/**"
-      - "Manager/**"
+    paths-ignore:
+      - "**/*.md"
+      - "LICENSE"
+      - "docs/**"
   schedule:
     - cron: "0 3 1,15 * *"
   workflow_dispatch:
