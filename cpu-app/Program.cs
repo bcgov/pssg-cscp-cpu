@@ -245,20 +245,19 @@ namespace Gov.Cscp.Victims.Public
                 // Reduce log level for specific endpoints
                 options.GetLevel = (httpContext, elapsed, ex) =>
                 {
-                    if (ex != null) return Serilog.Events.LogEventLevel.Error;
+                    if (ex != null)
+                        return Serilog.Events.LogEventLevel.Error;
 
                     var path = httpContext.Request.Path.ToString();
 
-                    // health checks and lookup endpoints
-                    var logIgnoreEndpoints = new[] { "/hc", "/api/lookup" };
+                    if (path.StartsWith("/hc", StringComparison.OrdinalIgnoreCase))
+                        return httpContext.Response.StatusCode >= 500
+                            ? Serilog.Events.LogEventLevel.Error
+                            : Serilog.Events.LogEventLevel.Verbose;
 
-                    // Suppress logging for ignored endpoints
-                    if (Array.Exists(logIgnoreEndpoints, e => path.StartsWith(e, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        return Serilog.Events.LogEventLevel.Verbose; // Below minimum level
-                    }
+                    if (path.StartsWith("/api/lookup", StringComparison.OrdinalIgnoreCase))
+                        return Serilog.Events.LogEventLevel.Verbose;
 
-                    // log warnings for requests that take longer than 1 second
                     return elapsed > 1000
                         ? Serilog.Events.LogEventLevel.Warning
                         : Serilog.Events.LogEventLevel.Information;
