@@ -51,7 +51,7 @@
     "@analogjs/vite-plugin-angular": "^2.6.4",
     "@analogjs/vitest-angular": "^2.6.4",
     "@angular/build": "^21.2.20",
-    "@angular/cli": "^21.2.20",
+    "@angular/cli": "^21.2.26",
     "@angular/compiler-cli": "^21.2.19",
     "@angular/language-service": "^21.2.19",
     "@types/lodash": "^4.17.25",
