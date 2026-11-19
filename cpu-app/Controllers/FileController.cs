@@ -71,7 +71,7 @@ namespace Gov.Cscp.Victims.Public.Controllers
             }
             catch (Exception e)
             {
-                _logger.Error(e, $"Unexpected error while getting contract documents info 'vsd_GetCPUContractDocuments'. contract id = {contractId}. Source = CPU");
+                _logger.Error(e, "Unexpected error while getting contract documents info 'vsd_GetCPUContractDocuments'. contract id = {ContractGuid}. Source = CPU", contractGuid);
                 return BadRequest();
             }
         }
@@ -113,7 +113,7 @@ namespace Gov.Cscp.Victims.Public.Controllers
             }
             catch (Exception e)
             {
-                _logger.Error(e, $"Unexpected error while getting account documents info 'vsd_GetCPUAccountDocuments'. account id = {accountId}. Source = CPU");
+                _logger.Error(e, "Unexpected error while getting account documents info 'vsd_GetCPUAccountDocuments'. Source = CPU");
                 return BadRequest();
             }
         }
@@ -153,7 +153,7 @@ namespace Gov.Cscp.Victims.Public.Controllers
             }
             catch (Exception e)
             {
-                _logger.Error(e, $"Unexpected error while getting document info 'vsd_DownloadDocumentFromSharePoint'. Document id = {docId}. Source = CPU");
+                _logger.Error(e, "Unexpected error while getting document info 'vsd_DownloadDocumentFromSharePoint'. Document id = {DocGuid}. Source = CPU", docGuid);
                 return BadRequest();
             }
         }
@@ -195,7 +195,7 @@ namespace Gov.Cscp.Victims.Public.Controllers
             }
             catch (Exception e)
             {
-                _logger.Error(e, $"Unexpected error while getting contract package info 'vsd_GetCPUContractPackage'. Task id = {taskId}. Source = CPU");
+                _logger.Error(e, "Unexpected error while getting contract package info 'vsd_GetCPUContractPackage'. Task id = {TaskGuid}. Source = CPU", taskGuid);
                 return BadRequest();
             }
         }
