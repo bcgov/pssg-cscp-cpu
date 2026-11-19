@@ -43,7 +43,7 @@ updates:
       nuget: { patterns: ["*"] }
   # Security fixes only for the other folders with NuGet packages: each fix still goes to its owner, and no daily pull request is opened
   - package-ecosystem: nuget
-    directories: ["/Database", "/Manager", "/Manager.Contract", "/Resources", "/Shared.Contract", "/Shared.Database", "/Tests"]
+    directories: ["/Database", "/Manager", "/Manager.Contract", "/Resources", "/Shared.Contract", "/Shared.Database"]
     schedule: { interval: daily }
     open-pull-requests-limit: 0
     assignees: [GeorgeWalker]
