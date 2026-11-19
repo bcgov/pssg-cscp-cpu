@@ -21,6 +21,16 @@ updates:
         update-types: ["version-update:semver-major"]
     groups:
       docker: { patterns: ["*"] }
+  # The npm packages
+  - package-ecosystem: npm
+    directories: ["/cpu-app/ClientApp"]
+    schedule: { interval: daily }
+    assignees: [GeorgeWalker]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      npm: { patterns: ["*"] }
   # The NuGet packages of the .NET apps
   - package-ecosystem: nuget
     directories: ["/cpu-app"]
@@ -31,3 +41,9 @@ updates:
         update-types: ["version-update:semver-major"]
     groups:
       nuget: { patterns: ["*"] }
+  # Security fixes only for the other folders with NuGet packages: each fix still goes to its owner, and no daily pull request is opened
+  - package-ecosystem: nuget
+    directories: ["/Database", "/Manager", "/Manager.Contract", "/Resources", "/Shared.Contract", "/Shared.Database", "/Tests"]
+    schedule: { interval: daily }
+    open-pull-requests-limit: 0
+    assignees: [GeorgeWalker]

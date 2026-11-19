@@ -28,7 +28,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { image: cpu-spa, dockerfile: cpu-app/Dockerfile, context: ., watch: '{cpu-app,Database,Shared.Database,Manager,Manager.Contract,Resources}/**', args: '--build-arg BUILD_IMAGE_NAME=cpu-spa --build-arg BUILD_VERSION=$GITHUB_SHA' }
+          - { image: cpu-spa, dockerfile: cpu-app/Dockerfile, context: ., watch: '{cpu-app,Database,Shared.Database,Manager,Manager.Contract,Resources,Shared.Contract}/**', args: '--build-arg BUILD_IMAGE_NAME=cpu-spa --build-arg BUILD_VERSION=$GITHUB_SHA' }
     name: ${{ matrix.image }}
     steps:
       # Get the code.
