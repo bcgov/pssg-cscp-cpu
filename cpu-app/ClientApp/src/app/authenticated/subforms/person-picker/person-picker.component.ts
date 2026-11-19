@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { StateService } from '../../../core/services/state.service';
 import { Transmogrifier } from '../../../core/models/transmogrifier.class';
 import { iPerson } from '../../../core/models/person.interface';
@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
     selector: 'app-person-picker',
     templateUrl: './person-picker.component.html',
     styleUrls: ['./person-picker.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PersonPickerComponent implements OnInit, OnDestroy {

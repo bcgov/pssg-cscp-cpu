@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Notification, NotificationQueueService } from '../../core/services/notification-queue.service';
 
@@ -21,6 +21,7 @@ import { Notification, NotificationQueueService } from '../../core/services/noti
             transition(':leave', animate(600, style({ opacity: 0 })))
         ])
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class NotificationBannerComponent implements OnInit {

@@ -4,6 +4,7 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
@@ -22,6 +23,7 @@ import { StateService } from "../../core/services/state.service";
   selector: "app-upload-document",
   templateUrl: "./upload-document.component.html",
   styleUrls: ["./upload-document.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class UploadDocumentComponent implements OnInit, OnDestroy {

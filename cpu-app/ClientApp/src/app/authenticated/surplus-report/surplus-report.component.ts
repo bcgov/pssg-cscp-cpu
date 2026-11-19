@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ProgramSurplusPost } from "../../core/api/models";
 import { ProgramSurplusService } from "../../core/api/services/program-surplus/program-surplus.service";
@@ -16,6 +16,7 @@ import { StateService } from "../../core/services/state.service";
   selector: "app-surplus-report",
   templateUrl: "./surplus-report.component.html",
   styleUrls: ["./surplus-report.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SurplusReportComponent implements OnInit {

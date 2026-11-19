@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import * as _ from "lodash";
 import { Subscription } from "rxjs";
@@ -24,6 +24,7 @@ import {
   selector: "app-budget-proposal",
   templateUrl: "./budget-proposal.component.html",
   styleUrls: ["./budget-proposal.component.css"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class BudgetProposalComponent implements OnInit, OnDestroy {

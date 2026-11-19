@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import moment from "moment";
 import { Subscription } from "rxjs";
 import {
@@ -29,6 +29,7 @@ enum StatusReasons {
   selector: "app-task-list",
   templateUrl: "./task-list.component.html",
   styleUrls: ["./task-list.component.css"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class TaskListComponent implements OnInit, OnDestroy {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from "@angular/core";
 import { COUNTRIES_ADDRESS_2 } from "../../../core/constants/country-list";
 import { POSTAL_CODE_PATTERN } from "../../../core/constants/regex.constants";
 import { FormHelper } from "../../../core/form-helper";
@@ -8,6 +8,7 @@ import { iAddress } from "../../../core/models/address.interface";
   selector: "app-address2",
   templateUrl: "./address2.component.html",
   styleUrls: ["./address2.component.css"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class Address2Component implements OnInit {

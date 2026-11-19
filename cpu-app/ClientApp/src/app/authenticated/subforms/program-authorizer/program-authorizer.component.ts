@@ -6,6 +6,7 @@ import {
   OnInit,
   Output,
   ViewChild,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import { Person } from "../../../core/models/person.class";
 import { iPerson } from "../../../core/models/person.interface";
@@ -21,6 +22,7 @@ export interface iSignature {
   selector: "app-program-authorizer",
   templateUrl: "./program-authorizer.component.html",
   styleUrls: ["./program-authorizer.component.css"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ProgramAuthorizerComponent implements OnInit {

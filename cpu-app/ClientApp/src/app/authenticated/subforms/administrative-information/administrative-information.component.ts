@@ -1,5 +1,5 @@
 import { AbstractControl } from '@angular/forms';
-import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { TransmogrifierProgramApplication } from '../../../core/models/transmogrifier-program-application.class';
 import { FormHelper } from '../../../core/form-helper';
 
@@ -7,6 +7,7 @@ import { FormHelper } from '../../../core/form-helper';
     selector: 'app-administrative-information',
     templateUrl: './administrative-information.component.html',
     styleUrls: ['./administrative-information.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AdministrativeInformationComponent implements OnInit {

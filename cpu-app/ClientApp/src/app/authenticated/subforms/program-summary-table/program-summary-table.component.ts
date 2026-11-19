@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import moment from "moment";
 import { iHours } from "../../../core/models/hours.interface";
 import { iProgramApplication } from "../../../core/models/program-application.interface";
@@ -7,6 +7,7 @@ import { iProgramApplication } from "../../../core/models/program-application.in
   selector: "app-program-summary-table",
   templateUrl: "./program-summary-table.component.html",
   styleUrls: ["./program-summary-table.component.css"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ProgramSummaryTableComponent implements OnInit {

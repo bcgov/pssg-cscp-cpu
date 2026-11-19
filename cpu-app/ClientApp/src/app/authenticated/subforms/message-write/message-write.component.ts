@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { iMessage } from '../../../core/models/message.interface';
 import { nameAssemble } from '../../../core/constants/name-assemble';
 import { FormHelper } from '../../../core/form-helper';
@@ -9,6 +9,7 @@ import { StateService } from '../../../core/services/state.service';
     selector: 'message-write-card',
     templateUrl: './message-write.component.html',
     styleUrls: ['./message-write.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MessageWriteComponent implements OnInit {

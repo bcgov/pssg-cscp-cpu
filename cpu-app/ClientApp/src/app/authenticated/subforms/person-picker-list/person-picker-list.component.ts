@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { iPerson } from '../../../core/models/person.interface';
 import { nameAssemble } from '../../../core/constants/name-assemble';
 import { StateService } from '../../../core/services/state.service';
@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
     selector: 'app-person-picker-list',
     templateUrl: './person-picker-list.component.html',
     styleUrls: ['./person-picker-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PersonPickerListComponent implements OnInit, OnDestroy {

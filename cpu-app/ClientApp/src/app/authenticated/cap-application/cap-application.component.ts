@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute, Router } from "@angular/router";
 import * as _ from "lodash";
@@ -25,6 +25,7 @@ import { ProgramEgilibilityDialog } from "../dialogs/program-egilibility/program
   selector: "app-cap-application",
   templateUrl: "./cap-application.component.html",
   styleUrls: ["./cap-application.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class CAPApplicationComponent implements OnInit {

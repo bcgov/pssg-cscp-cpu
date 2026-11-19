@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewChecked, ChangeDetectionStrategy } from '@angular/core';
 import { StateService } from '../../core/services/state.service';
 import { Transmogrifier } from '../../core/models/transmogrifier.class';
 import { iContract } from '../../core/models/contract.interface';
@@ -10,6 +10,7 @@ import { Roles } from '../../core/models/user-settings.interface';
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class DashboardComponent implements OnInit, OnDestroy {

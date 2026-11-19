@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { RevenueSource } from '../../../core/models/revenue-source.class';
 import { revenueSourceTypes } from '../../../core/constants/revenue-source-type';
 import { iRevenueSource } from '../../../core/models/revenue-source.interface';
@@ -8,6 +8,7 @@ import { FormHelper } from '../../../core/form-helper';
     selector: 'app-revenue-source-table',
     templateUrl: './revenue-source-table.component.html',
     styleUrls: ['./revenue-source-table.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RevenueSourceTableComponent implements OnInit {

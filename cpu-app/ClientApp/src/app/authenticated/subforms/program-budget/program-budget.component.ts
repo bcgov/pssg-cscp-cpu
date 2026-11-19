@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { iProgramBudget } from '../../../core/models/program-budget.interface';
 import { iExpenseTableMeta } from '../../subforms/expense-table/expense-table.component';
 import { iStepperElement } from '../../../shared/icon-stepper/icon-stepper.service';
@@ -10,6 +10,7 @@ import { VSCP_APPROVED_SOURCE_NAME } from '../../../core/models/revenue-source.i
     selector: 'app-program-budget',
     templateUrl: './program-budget.component.html',
     styleUrls: ['./program-budget.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ProgramBudgetComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { TransmogrifierProgramApplication } from '../../../core/models/transmogrifier-program-application.class';
 import { iProgramApplication } from '../../../core/models/program-application.interface';
 
@@ -6,6 +6,7 @@ import { iProgramApplication } from '../../../core/models/program-application.in
     selector: 'app-review-application',
     templateUrl: './review-application.component.html',
     styleUrls: ['./review-application.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ReviewApplicationComponent implements OnInit {

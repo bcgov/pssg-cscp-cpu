@@ -1,7 +1,8 @@
-import { AngularSignaturePadModule as SignaturePadModule } from "@almothafar/angular-signature-pad";
+import { SignaturePadComponent } from "@almothafar/angular-signature-pad";
 import {
   provideHttpClient,
   withInterceptorsFromDi,
+  withXhr,
 } from "@angular/common/http";
 import { APP_INITIALIZER, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -166,13 +167,13 @@ import { TestComponent } from "./test/test.component";
     ReactiveFormsModule,
     RouterModule,
     SharedModule,
-    SignaturePadModule,
+    SignaturePadComponent,
     NgxMaskDirective,
     NgxMaskPipe,
   ],
   providers: [
     provideNgxMask(),
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withXhr(), withInterceptorsFromDi()),
     {
       provide: APP_INITIALIZER,
       useFactory: (healthCheckService: HealthCheckService) => () =>

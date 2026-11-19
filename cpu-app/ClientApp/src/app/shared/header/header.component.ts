@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from "@angular/core";
+import { Component, OnInit, inject, ChangeDetectionStrategy } from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "../../../environments/environment";
 import { nameAssemble } from "../../core/constants/name-assemble";
@@ -11,6 +11,7 @@ import { ConfigurationStore } from "../../core/store/configuration.store";
   selector: "app-header",
   templateUrl: "./header.component.html",
   styleUrls: ["./header.component.css"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class HeaderComponent implements OnInit {

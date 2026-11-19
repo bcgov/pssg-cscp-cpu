@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { Option } from "../../../shared/form-field/form-field.component";
 
@@ -6,6 +6,7 @@ import { Option } from "../../../shared/form-field/form-field.component";
   selector: "app-person-editor-form",
   templateUrl: "./person-editor-form.component.html",
   styleUrls: ["./person-editor-form.component.css"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class PersonEditorFormComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AppendixADialog } from '../../dialogs/appendix-a/appendix-a.dialog';
 
@@ -6,6 +6,7 @@ import { AppendixADialog } from '../../dialogs/appendix-a/appendix-a.dialog';
     selector: 'app-cg-liability',
     templateUrl: './cg-liability.component.html',
     styleUrls: ['./cg-liability.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CgLiabilityComponent implements OnInit {

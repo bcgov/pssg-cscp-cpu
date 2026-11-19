@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { ContactInformation } from '../../../core/models/contact-information.class';
 import { UntypedFormGroup, Validators, UntypedFormControl } from '@angular/forms';
 import { StateService } from '../../../core/services/state.service';
@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
     selector: 'app-program-contact-information',
     templateUrl: './program-contact-information.component.html',
     styleUrls: ['./program-contact-information.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ProgramContactInformationComponent implements OnInit, OnDestroy {

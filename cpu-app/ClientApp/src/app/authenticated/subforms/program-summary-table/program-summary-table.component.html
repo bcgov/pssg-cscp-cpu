@@ -23,7 +23,7 @@
     </tr>
     <tr>
       <th scope="row">Estimated Contract Value</th>
-      <td>{{pa?.estimatedContractValue | currency}}</td>
+      <td>{{$safeNavigationMigration(pa?.estimatedContractValue) | currency}}</td>
     </tr>
     <tr>
       <th scope="row">Contracted Service Hours per Week</th>
@@ -35,11 +35,11 @@
     </tr>
     <tr>
       <th scope="row">Phone Number</th>
-      <td>{{pa?.phoneNumber | phone}}</td>
+      <td>{{$safeNavigationMigration(pa?.phoneNumber) | phone}}</td>
     </tr>
     <tr>
       <th scope="row">Fax Number</th>
-      <td>{{pa?.faxNumber | phone}}</td>
+      <td>{{$safeNavigationMigration(pa?.faxNumber) | phone}}</td>
     </tr>
   </tbody>
 </table>
@@ -104,7 +104,7 @@
   </table>
 }
 
-<app-person-table [title]="'Program Contact'" [person]="pa?.programContact"></app-person-table>
+<app-person-table [title]="'Program Contact'" [person]="$safeNavigationMigration(pa?.programContact)"></app-person-table>
 
 <table class="table table-striped">
   <thead>

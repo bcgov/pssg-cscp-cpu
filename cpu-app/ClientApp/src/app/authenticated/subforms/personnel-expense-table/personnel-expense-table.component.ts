@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { iExpenseTableMeta } from '../expense-table/expense-table.component';
 import { iSalaryAndBenefits } from '../../../core/models/salary-and-benefits.interface';
 import { SalaryAndBenefits } from '../../../core/models/salary-and-benefits.class';
@@ -8,6 +8,7 @@ import { FormHelper } from '../../../core/form-helper';
     selector: 'app-personnel-expense-table',
     templateUrl: './personnel-expense-table.component.html',
     styleUrls: ['./personnel-expense-table.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PersonnelExpenseTableComponent implements OnInit {

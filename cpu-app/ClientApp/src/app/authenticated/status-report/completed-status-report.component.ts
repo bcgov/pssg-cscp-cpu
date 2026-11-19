@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { StatusReportService } from "../../core/api/services/status-report/status-report.service";
 import { FormHelper } from "../../core/form-helper";
@@ -16,6 +16,7 @@ import {
   selector: "app-completed-status-report",
   templateUrl: "./completed-status-report.component.html",
   styleUrls: ["./completed-status-report.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class CompletedStatusReportComponent implements OnInit, OnDestroy {

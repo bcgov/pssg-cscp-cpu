@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Person } from '../../../core/models/person.class';
 import { SignaturePadComponent } from '@almothafar/angular-signature-pad';
 import { StateService } from '../../../core/services/state.service';
@@ -10,6 +10,7 @@ import { iSignature } from '../program-authorizer/program-authorizer.component';
     selector: 'app-contract-package-authorizer',
     templateUrl: './contract-package-authorizer.html',
     styleUrls: ['./contract-package-authorizer.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ContractPackageAuthorizerComponent implements OnInit {

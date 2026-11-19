@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from "@angular/core";
 import {
   EMAIL_PATTERN,
   LETTERS_SPACES_PATTERN,
@@ -12,6 +12,7 @@ import { iPerson } from "../../../core/models/person.interface";
   selector: "app-person-editor",
   templateUrl: "./person-editor.component.html",
   styleUrls: ["./person-editor.component.css"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class PersonEditorComponent implements OnInit {
