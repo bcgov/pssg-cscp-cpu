@@ -47,6 +47,7 @@ jobs:
             || echo "::notice::${{ matrix.image }} has no prod tag yet"
       # Scan it. This only reports and never fails the run.
       - name: Trivy
+        id: trivy
         if: steps.prod.outputs.there
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
@@ -69,9 +70,10 @@ jobs:
           else
             { echo "### Trivy, $IMAGE"; echo '```'; cat trivy.txt; echo '```'; } | tee -a "$GITHUB_STEP_SUMMARY"
           fi
-      # One issue per image for its fixable HIGH and CRITICAL: each scan adds its count, and one that finds none closes it.
+      # One issue per image for its fixable HIGH and CRITICAL: each scan that ran to the end adds its count, and one that
+      # finds none closes it. A scan that failed counts nothing here; the step below opens its own issue.
       - name: its issue
-        if: always() && hashFiles('trivy.sarif') != ''
+        if: always() && steps.trivy.outcome == 'success' && hashFiles('trivy.sarif') != ''
         env:
           GH_TOKEN: ${{ github.token }}
           IMAGE: ${{ matrix.image }}
