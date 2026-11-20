@@ -44,7 +44,7 @@
 # ======================
 # Angular  Build Stage
 # ======================
-FROM node:22.23.1-alpine@sha256:16e22a550f3863206a3f701448c45f7912c6896a62de43add43bb9c86130c3e2 AS angular-build 
+FROM node:22.23.5-alpine@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a AS angular-build 
 # as per package.json
 
 ARG BUILD_IMAGE_NAME
