@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { iPerson } from '../../../core/models/person.interface';
 import { nameAssemble } from '../../../core/constants/name-assemble';
 
@@ -6,6 +6,7 @@ import { nameAssemble } from '../../../core/constants/name-assemble';
     selector: 'app-person-card',
     templateUrl: './person-card.component.html',
     styleUrls: ['./person-card.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PersonCardComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Address } from '../../../core/models/address.class';
 import { TransmogrifierCAPApplication } from '../../../core/models/transmogrifier-cap-application.class';
 import { AddPersonDialog } from '../../dialogs/add-person/add-person.dialog';
@@ -10,6 +10,7 @@ import { FormHelper } from '../../../core/form-helper';
     selector: 'app-applicant-information',
     templateUrl: './applicant-information.component.html',
     styleUrls: ['./applicant-information.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ApplicantInformationComponent {

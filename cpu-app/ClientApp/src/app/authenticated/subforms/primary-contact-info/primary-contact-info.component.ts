@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from "@angular/core";
 import {
   EMAIL_PATTERN,
   PHONE_NUMBER_PATTERN,
@@ -10,6 +10,7 @@ import { iContactInformation } from "../../../core/models/contact-information.in
   selector: "app-primary-contact-info",
   templateUrl: "./primary-contact-info.component.html",
   styleUrls: ["./primary-contact-info.component.css"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class PrimaryContactInfoComponent implements OnInit {

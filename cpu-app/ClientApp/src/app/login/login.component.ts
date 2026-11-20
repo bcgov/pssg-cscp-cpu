@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserDataService } from '../core/services/user-data.service';
 import { StateService } from '../core/services/state.service';
@@ -8,6 +8,7 @@ import { UserSettings } from '../core/models/user-settings.class';
 @Component({
     selector: 'app-landing-page',
     templateUrl: './login.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class LoginPageComponent implements OnInit {

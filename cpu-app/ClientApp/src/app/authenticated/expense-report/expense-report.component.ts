@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { ExpenseReportPost } from "../../core/api/models/expenseReportPost";
@@ -21,6 +21,7 @@ import {
   selector: "app-expense-report",
   templateUrl: "./expense-report.component.html",
   styleUrls: ["./expense-report.component.css"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ExpenseReportComponent implements OnInit, OnDestroy {

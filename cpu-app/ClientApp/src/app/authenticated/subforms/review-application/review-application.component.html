@@ -21,11 +21,11 @@
         </tr>
         <tr>
           <th scope="row">Phone Number</th>
-          <td>{{trans?.contactInformation?.phoneNumber | phone}}</td>
+          <td>{{$safeNavigationMigration(trans?.contactInformation?.phoneNumber) | phone}}</td>
         </tr>
         <tr>
           <th scope="row">Fax Number</th>
-          <td>{{trans?.contactInformation?.faxNumber | phone}}</td>
+          <td>{{$safeNavigationMigration(trans?.contactInformation?.faxNumber) | phone}}</td>
         </tr>
       </tbody>
     </table>

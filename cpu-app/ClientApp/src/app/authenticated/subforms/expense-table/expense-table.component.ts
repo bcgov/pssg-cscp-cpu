@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { iExpenseItem } from '../../../core/models/expense-item.interface';
 import { ExpenseItem } from '../../../core/models/expense-item.class';
 import { FormHelper } from '../../../core/form-helper';
@@ -12,6 +12,7 @@ export interface iExpenseTableMeta {
     selector: 'app-expense-table',
     templateUrl: './expense-table.component.html',
     styleUrls: ['./expense-table.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ExpenseTableComponent implements OnInit {

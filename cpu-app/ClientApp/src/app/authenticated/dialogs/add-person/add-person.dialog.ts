@@ -1,4 +1,4 @@
-import { Component, Inject } from "@angular/core";
+import { Component, Inject, ChangeDetectionStrategy } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import * as _ from "lodash";
 import { OrgService } from "../../../core/api/services/org/org.service";
@@ -16,6 +16,7 @@ import { StateService } from "../../../core/services/state.service";
   selector: "add-person.dialog",
   templateUrl: "add-person.dialog.html",
   styleUrls: ["./add-person.dialog.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class AddPersonDialog {

@@ -1,4 +1,4 @@
-import { Component, effect, inject } from "@angular/core";
+import { Component, effect, inject, ChangeDetectionStrategy } from "@angular/core";
 import { Router } from "@angular/router";
 import { HealthCheckService } from "../../core/services/health-check.service";
 
@@ -87,6 +87,7 @@ import { HealthCheckService } from "../../core/services/health-check.service";
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class OutageComponent {

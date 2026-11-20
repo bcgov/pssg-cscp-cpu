@@ -5,6 +5,7 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
@@ -32,6 +33,7 @@ interface FileBundle {
   selector: "app-sign-contract",
   templateUrl: "./sign-contract.component.html",
   styleUrls: ["./sign-contract.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SignContractComponent implements OnInit, OnDestroy {

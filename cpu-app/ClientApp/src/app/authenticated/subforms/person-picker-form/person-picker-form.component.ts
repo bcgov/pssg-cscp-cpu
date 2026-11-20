@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { Subscription } from "rxjs";
 import { nameAssemble } from "../../../core/constants/name-assemble";
@@ -10,6 +10,7 @@ import { StateService } from "../../../core/services/state.service";
   selector: "app-person-picker-form",
   templateUrl: "./person-picker-form.component.html",
   styleUrls: ["./person-picker-form.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class PersonPickerFormComponent implements OnInit, OnDestroy {

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { FormHelper } from '../../../core/form-helper';
@@ -12,6 +12,7 @@ import { AddPersonDialog } from '../../dialogs/add-person/add-person.dialog';
     selector: 'app-cap-program',
     templateUrl: './cap-program.component.html',
     styleUrls: ['./cap-program.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CAPProgramComponent implements OnInit, OnDestroy {

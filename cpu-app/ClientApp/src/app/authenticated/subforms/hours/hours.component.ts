@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from "@angular/core";
 import { TIME_PATTERN } from "../../../core/constants/regex.constants";
 import { uuidv4 } from "../../../core/constants/uuidv4";
 import { FormHelper } from "../../../core/form-helper";
@@ -8,6 +8,7 @@ import { iHours } from "../../../core/models/hours.interface";
   selector: "app-hours",
   templateUrl: "./hours.component.html",
   styleUrls: ["./hours.component.css"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class HoursComponent implements OnInit {

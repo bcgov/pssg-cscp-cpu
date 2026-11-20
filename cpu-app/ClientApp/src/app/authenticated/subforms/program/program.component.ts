@@ -5,6 +5,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import {
   AbstractControl,
@@ -36,6 +37,7 @@ import { AddPersonDialog } from "../../dialogs/add-person/add-person.dialog";
   selector: "app-program",
   templateUrl: "./program.component.html",
   styleUrls: ["./program.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ProgramComponent implements OnInit, OnDestroy {

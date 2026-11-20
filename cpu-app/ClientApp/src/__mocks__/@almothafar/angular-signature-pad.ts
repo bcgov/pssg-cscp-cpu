@@ -1,8 +1,9 @@
-import { Component, Input, NgModule } from "@angular/core";
+import { Component, Input, NgModule, ChangeDetectionStrategy } from "@angular/core";
 
 @Component({
   selector: "signature-pad",
   template: "<canvas></canvas>",
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SignaturePadComponent {

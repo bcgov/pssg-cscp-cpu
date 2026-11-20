@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { StateService } from '../../../core/services/state.service';
 import { Transmogrifier } from '../../../core/models/transmogrifier.class';
 import { nameAssemble } from '../../../core/constants/name-assemble';
@@ -10,6 +10,7 @@ import { Roles } from '../../../core/models/user-settings.interface';
     selector: 'app-organization-profile-box',
     templateUrl: './organization-profile-box.component.html',
     styleUrls: ['./organization-profile-box.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class OrganizationProfileBoxComponent implements OnInit, OnDestroy {

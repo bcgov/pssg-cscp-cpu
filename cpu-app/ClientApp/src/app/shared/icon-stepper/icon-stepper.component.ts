@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { IconStepperService, iStepperElement } from './icon-stepper.service';
 @Component({
     selector: 'app-icon-stepper',
     templateUrl: './icon-stepper.component.html',
     styleUrls: ['./icon-stepper.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class IconStepperComponent implements OnInit {

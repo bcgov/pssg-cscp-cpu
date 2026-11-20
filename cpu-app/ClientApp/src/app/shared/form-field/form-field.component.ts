@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 
 export type InputType =
@@ -17,6 +17,7 @@ export type Option = { label: string; value: any };
   selector: "app-form-field",
   templateUrl: "./form-field.component.html",
   styleUrls: ["./form-field.component.css"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class FormFieldComponent {

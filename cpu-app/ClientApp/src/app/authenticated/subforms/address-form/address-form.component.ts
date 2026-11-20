@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { COUNTRIES_ADDRESS_2 } from "../../../core/constants/country-list";
 import { POSTAL_CODE_PATTERN } from "../../../core/constants/regex.constants";
@@ -8,6 +8,7 @@ import { Option } from "../../../shared/form-field/form-field.component";
   selector: "app-address-form",
   templateUrl: "./address-form.component.html",
   styleUrls: ["./address-form.component.css"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class AddressFormComponent implements OnInit {

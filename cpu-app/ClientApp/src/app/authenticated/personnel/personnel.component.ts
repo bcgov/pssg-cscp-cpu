@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import {
   FormBuilder,
   FormControl,
@@ -33,6 +33,7 @@ import {
   selector: "app-personnel",
   templateUrl: "./personnel.component.html",
   styleUrls: ["./personnel.component.css"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class PersonnelComponent implements OnInit, OnDestroy {

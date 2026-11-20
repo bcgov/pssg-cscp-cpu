@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute, Router } from "@angular/router";
 import * as _ from "lodash";
@@ -34,6 +34,7 @@ const PAGES = {
   selector: "app-program-application",
   templateUrl: "./program-application.component.html",
   styleUrls: ["./program-application.component.css"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ProgramApplicationComponent implements OnInit {

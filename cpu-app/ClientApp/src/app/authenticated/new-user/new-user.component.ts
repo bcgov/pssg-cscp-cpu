@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { Router } from "@angular/router";
 import { RegisterNewUserService } from "../../core/api/services/register-new-user/register-new-user.service";
 import {
@@ -17,6 +17,7 @@ import { StateService } from "../../core/services/state.service";
   selector: "app-new-user",
   templateUrl: "./new-user.component.html",
   styleUrls: ["./new-user.component.css"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class NewUserComponent implements OnInit {

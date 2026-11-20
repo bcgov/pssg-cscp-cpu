@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject } from "@angular/core";
+import { Component, OnDestroy, OnInit, inject, ChangeDetectionStrategy } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ConfigurationStore } from "../..//core/store/configuration.store";
 import { StatusReportService } from "../../core/api/services/status-report/status-report.service";
@@ -20,6 +20,7 @@ import {
   selector: "app-status-report",
   templateUrl: "./status-report.component.html",
   styleUrls: ["./status-report.component.css"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class StatusReportComponent implements OnInit, OnDestroy {

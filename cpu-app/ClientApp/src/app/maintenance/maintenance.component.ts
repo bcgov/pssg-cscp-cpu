@@ -1,4 +1,4 @@
-import { Component, effect, inject } from "@angular/core";
+import { Component, effect, inject, ChangeDetectionStrategy } from "@angular/core";
 import { Router } from "@angular/router";
 import { ConfigurationStore } from "../core/store/configuration.store";
 
@@ -59,6 +59,7 @@ import { ConfigurationStore } from "../core/store/configuration.store";
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class MaintenanceComponent {

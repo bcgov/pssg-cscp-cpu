@@ -4,6 +4,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import { AbstractControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -30,6 +31,7 @@ import { StateService } from "../../core/services/state.service";
   selector: "app-program-contact",
   templateUrl: "./program-contact.component.html",
   styleUrls: ["./program-contact.component.css"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ProgramContactComponent implements OnInit, OnDestroy {

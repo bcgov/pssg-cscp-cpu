@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { iSignature } from "../authenticated/subforms/program-authorizer/program-authorizer.component";
 import { DocumentItemDto } from "../core/api/models";
 import { FileService } from "../core/api/services/file/file.service";
@@ -8,6 +8,7 @@ import { convertContractPackageToDynamics } from "../core/models/converters/sign
   selector: "app-test",
   templateUrl: "./test.component.html",
   styleUrls: ["./test.component.css"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class TestComponent implements OnInit {
